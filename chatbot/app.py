@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 import json
 import re
 import os
@@ -9,12 +10,13 @@ import ast
 # ============================================================
 # CẤU HÌNH
 # ============================================================
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyDhQMLx29k7UmoKuY2ri672lg_gBzAyEJ4")   # hoặc paste key thẳng vào đây
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")   # Nhập API key mới tại đây hoặc qua sidebar
+GEMINI_MODEL   = "gemini-1.5-flash"                  # Model mặc định
 
 # Xác định đường dẫn file dựa trên thư mục chứa file app.py
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-IMDB_DATA_PATH = os.path.join(BASE_DIR, "merged_output", "imdb_movies_all_years.csv")
-ADVANCED_DATA_PATH = os.path.join(BASE_DIR, "merged_output", "advanced_movies_details_all_years.csv")
+IMDB_DATA_PATH = os.path.join(BASE_DIR, "data", "imdb_movies_all_years.csv")
+ADVANCED_DATA_PATH = os.path.join(BASE_DIR, "data", "advanced_movies_details_all_years.csv")
 
 # Mapping tên cột trong CSV của nhóm
 COL_TITLE    = "Title"               # tên phim
@@ -110,12 +112,15 @@ JSON: {{"intent":"chitchat","filters":{{"title":null,"genre":null,"director":nul
 # GEMINI — TẦNG 1: PARSE INTENT → JSON
 # ============================================================
 def parse_intent(user_message: str) -> dict:
-    genai.configure(api_key=GEMINI_API_KEY)
-    model = genai.GenerativeModel(
-        model_name="gemini-2.0-flash",
-        system_instruction=SYSTEM_PROMPT
+    client = genai.Client(api_key=GEMINI_API_KEY)
+    response = client.models.generate_content(
+        model=GEMINI_MODEL,
+        contents=user_message,
+        config=types.GenerateContentConfig(
+            system_instruction=SYSTEM_PROMPT,
+            temperature=0.1,
+        )
     )
-    response = model.generate_content(user_message)
     raw = response.text.strip()
 
     # Tách JSON ra khỏi markdown code block nếu có
@@ -169,8 +174,7 @@ def apply_filters(df: pd.DataFrame, filters: dict) -> pd.DataFrame:
 # GEMINI — TẦNG 2: GÓI KẾT QUẢ THÀNH CÂU TRẢ LỜI TỰ NHIÊN
 # ============================================================
 def generate_answer(user_message: str, movies_df: pd.DataFrame, intent: str) -> str:
-    genai.configure(api_key=GEMINI_API_KEY)
-    model = genai.GenerativeModel("gemini-2.0-flash")
+    client = genai.Client(api_key=GEMINI_API_KEY)
 
     if intent == "chitchat":
         prompt = f"""
@@ -195,7 +199,10 @@ Hãy giới thiệu các phim này bằng tiếng Việt, thân thiện và tự
 Đề cập tên phim, thể loại, đạo diễn, dàn diễn viên chính (stars) và điểm IMDB. Không bịa thêm thông tin.
 """
 
-    response = model.generate_content(prompt)
+    response = client.models.generate_content(
+        model=GEMINI_MODEL,
+        contents=prompt
+    )
     return response.text.strip()
 
 # ============================================================
@@ -231,9 +238,13 @@ st.caption("Hỏi bất kỳ điều gì về phim: thể loại, đạo diễn,
 # --- Sidebar: cấu hình ---
 with st.sidebar:
     st.header("⚙️ Cấu hình")
-    api_key_input = st.text_input("Gemini API Key", type="password", value=GEMINI_API_KEY)
+    api_key_input = st.text_input("Gemini API Key", type="password", value=GEMINI_API_KEY,
+                                   placeholder="Nhập API key tại https://aistudio.google.com/apikey")
     if api_key_input:
         GEMINI_API_KEY = api_key_input
+
+    model_options = ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-2.0-flash", "gemini-2.5-flash-preview-05-20"]
+    GEMINI_MODEL = st.selectbox("Model Gemini", model_options, index=0)
     st.divider()
     st.markdown("**Ví dụ câu hỏi:**")
     examples = [
