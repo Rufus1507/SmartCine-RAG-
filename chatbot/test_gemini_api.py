@@ -5,7 +5,7 @@ from google.genai import types
 # ============================================================
 # CAU HINH API KEY
 # ============================================================
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyDhQMLx29k7UmoKuY2ri672lg_gBzAyEJ4")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyALBqHfbrgyqiWFSe-8B9rl0Ajctxv88ik")
 
 print("=" * 50)
 print("TEST GEMINI API (google.genai)")
@@ -33,13 +33,13 @@ except Exception as e:
     print(f"  LOI: {e}")
 
 # ============================================================
-# TEST 2: Gui tin nhan voi gemini-1.5-flash
+# TEST 2: Gui tin nhan voi gemini-2.5-flash (model moi nhat)
 # ============================================================
-print("\n[TEST 2] Gui tin nhan voi gemini-1.5-flash:")
+print("\n[TEST 2] Gui tin nhan voi gemini-2.5-flash:")
 print("-" * 40)
 try:
     response = client.models.generate_content(
-        model="gemini-1.5-flash",
+        model="gemini-2.5-flash",
         contents="Xin chao! Hay gioi thieu ban than bang mot cau ngan."
     )
     print(f"  OK - Phan hoi: {response.text.strip()}")
@@ -47,13 +47,13 @@ except Exception as e:
     print(f"  LOI: {e}")
 
 # ============================================================
-# TEST 3: Gui tin nhan voi gemini-2.0-flash
+# TEST 3: Gui tin nhan voi gemini-2.0-flash-lite (nhe, it quota)
 # ============================================================
-print("\n[TEST 3] Gui tin nhan voi gemini-2.0-flash:")
+print("\n[TEST 3] Gui tin nhan voi gemini-2.0-flash-lite:")
 print("-" * 40)
 try:
     response = client.models.generate_content(
-        model="gemini-2.0-flash",
+        model="gemini-2.0-flash-lite",
         contents="Tra loi ngan gon: 1 + 1 = ?"
     )
     print(f"  OK - Phan hoi: {response.text.strip()}")
@@ -61,13 +61,13 @@ except Exception as e:
     print(f"  LOI: {e}")
 
 # ============================================================
-# TEST 4: Gui tin nhan voi gemini-2.5-flash (neu co quyen)
+# TEST 4: Gui tin nhan voi gemini-2.0-flash-001
 # ============================================================
-print("\n[TEST 4] Gui tin nhan voi gemini-2.5-flash-preview:")
+print("\n[TEST 4] Gui tin nhan voi gemini-2.0-flash-001:")
 print("-" * 40)
 try:
     response = client.models.generate_content(
-        model="gemini-2.5-flash-preview-05-20",
+        model="gemini-2.0-flash-001",
         contents="Tra loi ngan gon: 1 + 1 = ?"
     )
     print(f"  OK - Phan hoi: {response.text.strip()}")

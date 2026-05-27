@@ -1,17 +1,17 @@
 import streamlit as st
 import pandas as pd
-from google import genai
-from google.genai import types
+from openai import OpenAI
 import json
 import re
 import os
 import ast
 
 # ============================================================
-# CẤU HÌNH
+# CẤU HÌNH LOCAL LLM
 # ============================================================
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")   # Nhập API key mới tại đây hoặc qua sidebar
-GEMINI_MODEL   = "gemini-1.5-flash"                  # Model mặc định
+LLM_BASE_URL = os.getenv("LLM_BASE_URL", "http://localhost:20128/v1")
+LLM_API_KEY  = os.getenv("LLM_API_KEY",  "any")   # local server không cần key thật
+LLM_MODEL    = os.getenv("LLM_MODEL",    "cx/gpt-5.5")
 
 # Xác định đường dẫn file dựa trên thư mục chứa file app.py
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -75,7 +75,7 @@ def load_data():
     return df
 
 # ============================================================
-# PROMPT GỬI CHO GEMINI — TẦNG 1 (PARSE INTENT)
+# PROMPT — TẦNG 1 (PARSE INTENT)
 # ============================================================
 SYSTEM_PROMPT = f"""
 Bạn là bộ phân tích câu hỏi cho một chatbot phim.
@@ -109,19 +109,20 @@ JSON: {{"intent":"chitchat","filters":{{"title":null,"genre":null,"director":nul
 """
 
 # ============================================================
-# GEMINI — TẦNG 1: PARSE INTENT → JSON
+# LLM — TẦNG 1: PARSE INTENT → JSON
 # ============================================================
 def parse_intent(user_message: str) -> dict:
-    client = genai.Client(api_key=GEMINI_API_KEY)
-    response = client.models.generate_content(
-        model=GEMINI_MODEL,
-        contents=user_message,
-        config=types.GenerateContentConfig(
-            system_instruction=SYSTEM_PROMPT,
-            temperature=0.1,
-        )
+    client = OpenAI(base_url=LLM_BASE_URL, api_key=LLM_API_KEY)
+    response = client.chat.completions.create(
+        model=LLM_MODEL,
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user",   "content": user_message},
+        ],
+        temperature=0.1,
+        max_tokens=300,
     )
-    raw = response.text.strip()
+    raw = response.choices[0].message.content.strip()
 
     # Tách JSON ra khỏi markdown code block nếu có
     match = re.search(r"\{.*\}", raw, re.DOTALL)
@@ -171,39 +172,39 @@ def apply_filters(df: pd.DataFrame, filters: dict) -> pd.DataFrame:
     return result
 
 # ============================================================
-# GEMINI — TẦNG 2: GÓI KẾT QUẢ THÀNH CÂU TRẢ LỜI TỰ NHIÊN
+# LLM — TẦNG 2: GÓI KẾT QUẢ THÀNH CÂU TRẢ LỜI TỰ NHIÊN
 # ============================================================
 def generate_answer(user_message: str, movies_df: pd.DataFrame, intent: str) -> str:
-    client = genai.Client(api_key=GEMINI_API_KEY)
+    client = OpenAI(base_url=LLM_BASE_URL, api_key=LLM_API_KEY)
 
     if intent == "chitchat":
-        prompt = f"""
-Bạn là trợ lý phim thân thiện. Trả lời câu sau bằng tiếng Việt, ngắn gọn, tự nhiên.
-Câu: {user_message}
-"""
+        system_msg = "Bạn là trợ lý phim thân thiện. Trả lời bằng tiếng Việt, ngắn gọn, tự nhiên."
+        user_msg   = user_message
     elif movies_df.empty:
-        prompt = f"""
-Người dùng hỏi: "{user_message}"
-Không tìm thấy phim nào phù hợp trong cơ sở dữ liệu.
-Hãy trả lời thân thiện bằng tiếng Việt, gợi ý họ thử tìm kiếm với tiêu chí khác.
-"""
+        system_msg = "Bạn là trợ lý phim thân thiện. Trả lời bằng tiếng Việt."
+        user_msg   = (
+            f"Người dùng hỏi: \"{user_message}\"\n"
+            "Không tìm thấy phim nào phù hợp trong cơ sở dữ liệu. "
+            "Hãy trả lời thân thiện, gợi ý họ thử tìm kiếm với tiêu chí khác."
+        )
     else:
         movies_info = movies_df[[COL_TITLE, COL_GENRE, COL_DIRECTOR, COL_STARS, COL_YEAR, COL_RATING]].to_string(index=False)
-        prompt = f"""
-Người dùng hỏi: "{user_message}"
-Dưới đây là danh sách phim tìm được từ cơ sở dữ liệu:
+        system_msg = "Bạn là trợ lý phim thân thiện. Trả lời bằng tiếng Việt, thân thiện và tự nhiên. Không bịa thêm thông tin."
+        user_msg   = (
+            f"Người dùng hỏi: \"{user_message}\"\n"
+            f"Danh sách phim tìm được:\n{movies_info}\n\n"
+            "Hãy giới thiệu các phim này, đề cập tên phim, thể loại, đạo diễn, diễn viên và điểm IMDB."
+        )
 
-{movies_info}
-
-Hãy giới thiệu các phim này bằng tiếng Việt, thân thiện và tự nhiên.
-Đề cập tên phim, thể loại, đạo diễn, dàn diễn viên chính (stars) và điểm IMDB. Không bịa thêm thông tin.
-"""
-
-    response = client.models.generate_content(
-        model=GEMINI_MODEL,
-        contents=prompt
+    response = client.chat.completions.create(
+        model=LLM_MODEL,
+        messages=[
+            {"role": "system", "content": system_msg},
+            {"role": "user",   "content": user_msg},
+        ],
+        max_tokens=1024,
     )
-    return response.text.strip()
+    return response.choices[0].message.content.strip()
 
 # ============================================================
 # HIỂN THỊ KẾT QUẢ PHIM
@@ -238,13 +239,11 @@ st.caption("Hỏi bất kỳ điều gì về phim: thể loại, đạo diễn,
 # --- Sidebar: cấu hình ---
 with st.sidebar:
     st.header("⚙️ Cấu hình")
-    api_key_input = st.text_input("Gemini API Key", type="password", value=GEMINI_API_KEY,
-                                   placeholder="Nhập API key tại https://aistudio.google.com/apikey")
-    if api_key_input:
-        GEMINI_API_KEY = api_key_input
+    st.info(f"🔌 Endpoint: `{LLM_BASE_URL}`")
+    st.info(f"🤖 Model: `{LLM_MODEL}`")
 
-    model_options = ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-2.0-flash", "gemini-2.5-flash-preview-05-20"]
-    GEMINI_MODEL = st.selectbox("Model Gemini", model_options, index=0)
+    model_options = ["cx/gpt-5.5", "cx/gpt-5.4", "cx/gpt-5.3-codex", "cx/gpt-5.3-codex-high"]
+    LLM_MODEL = st.selectbox("Chọn Model", model_options, index=0)
     st.divider()
     st.markdown("**Ví dụ câu hỏi:**")
     examples = [
@@ -300,9 +299,6 @@ if user_input:
     # Xử lý
     with st.chat_message("assistant"):
         with st.spinner("Đang tìm kiếm..."):
-            if not GEMINI_API_KEY:
-                st.error("⚠️ Chưa có Gemini API Key. Vui lòng nhập vào sidebar.")
-                st.stop()
 
             # Tầng 1: parse intent
             parsed    = parse_intent(user_input)
