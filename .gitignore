@@ -1,1 +1,4 @@
-./test_code
+/test_code
+chatbot/description_embeddings.index
+**/__pycache__/
+*.pyc
