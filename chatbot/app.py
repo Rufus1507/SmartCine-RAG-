@@ -11,6 +11,14 @@ from typing import Optional
 import faiss
 import torch
 from sentence_transformers import SentenceTransformer
+from tools import (
+    search_movies_tool,
+    semantic_search_tool,
+    get_movie_detail_tool,
+    recommend_by_actor_tool,
+    recommend_by_director_tool,
+    compare_movies_tool
+)
 
 # ============================================================
 # CẤU HÌNH MẶC ĐỊNH
@@ -133,17 +141,9 @@ def load_embedder_model():
 
 def semantic_search(query: str, df: pd.DataFrame, model, index, k=100) -> pd.DataFrame:
     """
-    Tìm kiếm ngữ nghĩa (semantic search) trên cột description của DataFrame.
-    Trả về DataFrame con chứa top K kết quả phù hợp nhất.
+    Wrapper gọi semantic_search_tool từ tools.py.
     """
-    try:
-        q_emb = model.encode([query]).astype('float32')
-        _, indices = index.search(q_emb, k)
-        # Lọc ra các chỉ mục hợp lệ nằm trong phạm vi dòng của DataFrame
-        valid_indices = [idx for idx in indices[0] if 0 <= idx < len(df)]
-        return df.iloc[valid_indices].copy()
-    except Exception:
-        return df.copy()
+    return semantic_search_tool(query, df, index, model, k)
 
 def detect_entities(user_message: str, keyword_dict: dict, aliases_dict: dict) -> dict:
     """
@@ -271,30 +271,41 @@ Bạn là bộ phân tích câu hỏi cho một chatbot phim.
 Nhiệm vụ: đọc câu hỏi của người dùng và trả về JSON hợp lệ DUY NHẤT,
 không có bất kỳ văn bản nào khác ngoài JSON.
 
+Hướng dẫn xác định "intent":
+- "search": Khi người dùng muốn tìm kiếm, lọc phim theo tiêu chí cụ thể (thể loại, đạo diễn, diễn viên, năm, điểm số, hoặc mô tả/yêu cầu tìm phim như "phim lượt xem cao nhất", "phim có lượt vote nhiều", "phim hài hước", "tìm phim...").
+- "recommend": Khi người dùng yêu cầu gợi ý phim chung chung hoặc theo sở thích không có tiêu chí lọc cụ thể ("gợi ý phim hay", "phim gì nên xem tối nay", "tôi đang buồn nên xem phim gì").
+- "info": Khi người dùng hỏi thông tin chi tiết của một bộ phim cụ thể ("nội dung phim Inception", "ai đóng phim Titanic").
+- "chitchat": Chỉ khi người dùng nói chuyện phiếm, chào hỏi hoặc nói các câu không liên quan gì đến phim ảnh.
+
 Schema JSON:
 {{
   "intent": "search" | "recommend" | "info" | "chitchat",
   "filters": {{
-    "title":    <string hoặc null>,
-    "genre":    <string hoặc null>,
-    "director": <string hoặc null>,
-    "star":     <string hoặc null>,
-    "year_min": <int hoặc null>,
-    "year_max": <int hoặc null>,
-    "rating_min": <float hoặc null>
+    "title":      <string hoặc null>,
+    "genre":      <string hoặc null>,
+    "director":   <string hoặc null>,
+    "star":       <string hoặc null>,
+    "year_min":   <int hoặc null>,
+    "year_max":   <int hoặc null>,
+    "rating_min": <float hoặc null>,
+    "sort_by":    "rating" | "votes" | "year" | null,
+    "sort_order": "asc" | "desc" | null
   }},
   "free_text": <câu hỏi gốc của user, dùng cho chitchat>
 }}
 
 Ví dụ:
 User: "Tìm phim hành động của Christopher Nolan trên 8 điểm"
-JSON: {{"intent":"search","filters":{{"title":null,"genre":"Action","director":"Christopher Nolan","star":null,"year_min":null,"year_max":null,"rating_min":8.0}},"free_text":"Tìm phim hành động của Christopher Nolan trên 8 điểm"}}
+JSON: {{"intent":"search","filters":{{"title":null,"genre":"Action","director":"Christopher Nolan","star":null,"year_min":null,"year_max":null,"rating_min":8.0,"sort_by":"rating","sort_order":"desc"}},"free_text":"Tìm phim hành động của Christopher Nolan trên 8 điểm"}}
 
-User: "Phim nào hay nhất năm 2020?"
-JSON: {{"intent":"search","filters":{{"title":null,"genre":null,"director":null,"star":null,"year_min":2020,"year_max":2020,"rating_min":null}},"free_text":"Phim nào hay nhất năm 2020?"}}
+User: "tìm bộ phim có lượt xem cao nhất"
+JSON: {{"intent":"search","filters":{{"title":null,"genre":null,"director":null,"star":null,"year_min":null,"year_max":null,"rating_min":null,"sort_by":"votes","sort_order":"desc"}},"free_text":"tìm bộ phim có lượt xem cao nhất"}}
+
+User: "phim nào cũ nhất?"
+JSON: {{"intent":"search","filters":{{"title":null,"genre":null,"director":null,"star":null,"year_min":null,"year_max":null,"rating_min":null,"sort_by":"year","sort_order":"asc"}},"free_text":"phim nào cũ nhất?"}}
 
 User: "Xin chào"
-JSON: {{"intent":"chitchat","filters":{{"title":null,"genre":null,"director":null,"star":null,"year_min":null,"year_max":null,"rating_min":null}},"free_text":"Xin chào"}}
+JSON: {{"intent":"chitchat","filters":{{"title":null,"genre":null,"director":null,"star":null,"year_min":null,"year_max":null,"rating_min":null,"sort_by":null,"sort_order":null}},"free_text":"Xin chào"}}
 """
 
 # ============================================================
@@ -308,6 +319,8 @@ class Filters(BaseModel):
     year_min: Optional[int] = None
     year_max: Optional[int] = None
     rating_min: Optional[float] = None
+    sort_by: Optional[str] = None
+    sort_order: Optional[str] = None
 
     @field_validator('year_min', 'year_max', mode='before')
     @classmethod
@@ -453,6 +466,16 @@ def parse_intent(user_message: str, detected_entities: dict = None, chat_history
         parsed["intent"] = "search"
         intent = "search"
         
+    # Phục hồi intent nếu LLM phân loại nhầm thành chitchat khi có các từ khóa tìm kiếm tiếng Việt đặc trưng
+    search_indicators = {
+        "tìm", "tim", "kiếm", "kiem", "lọc", "loc", "gợi ý", "goi y", "đề xuất", "de xuat",
+        "lượt xem", "luot xem", "điểm số", "diem so", "bộ phim", "bo phim", "phim nào", "phim co", "phim có"
+    }
+    words_in_msg = set(re.findall(r'\b\w+\b', user_message.lower()))
+    if intent == "chitchat" and not words_in_msg.isdisjoint(search_indicators):
+        parsed["intent"] = "search"
+        intent = "search"
+        
     if detected_entities and intent in ("search", "recommend", "info"):
         filters = parsed.setdefault("filters", {})
         if detected_entities.get("genres") and not filters.get("genre"):
@@ -468,39 +491,10 @@ def parse_intent(user_message: str, detected_entities: dict = None, chat_history
 # PANDAS FILTER — áp dụng bộ lọc từ JSON
 # ============================================================
 def apply_filters(df: pd.DataFrame, filters: dict) -> pd.DataFrame:
-    result = df.copy()
-
-    # Loại bỏ các phim có quá ít lượt vote để tránh kết quả rác (phim vô danh điểm 10)
-    # Không áp dụng nếu người dùng đang tìm đích danh tên phim (title)
-    if 'num_votes' in result.columns and not filters.get("title"):
-        result = result[result['num_votes'] >= 1000]
-
-    if filters.get("genre"):
-        result = result[result[COL_GENRE].str.contains(
-            filters["genre"], case=False, na=False
-        )]
-    if filters.get("director"):
-        result = result[result[COL_DIRECTOR].str.contains(
-            filters["director"], case=False, na=False
-        )]
-    if filters.get("star"):
-        result = result[result[COL_STARS].str.contains(
-            filters["star"], case=False, na=False
-        )]
-    if filters.get("title"):
-        result = result[result[COL_TITLE].str.contains(
-            filters["title"], case=False, na=False
-        )]
-    if filters.get("year_min"):
-        result = result[result[COL_YEAR] >= filters["year_min"]]
-    if filters.get("year_max"):
-        result = result[result[COL_YEAR] <= filters["year_max"]]
-    if filters.get("rating_min"):
-        result = result[result[COL_RATING] >= filters["rating_min"]]
-
-    # Sắp xếp theo rating giảm dần, lấy top 5
-    result = result.sort_values(COL_RATING, ascending=False).head(5)
-    return result
+    """
+    Wrapper gọi search_movies_tool từ tools.py.
+    """
+    return search_movies_tool(df, filters, top_k=5)
 
 # ============================================================
 # LLM — TẦNG 2: GÓI KẾT QUẢ THÀNH CÂU TRẢ LỜI TỰ NHIÊN
@@ -524,12 +518,28 @@ def generate_answer(user_message: str, movies_df: pd.DataFrame, intent: str) -> 
                 "Hãy trả lời thân thiện, gợi ý họ thử tìm kiếm với tiêu chí khác."
             )
     else:
-        movies_info = movies_df[[COL_TITLE, COL_GENRE, COL_DIRECTOR, COL_STARS, COL_YEAR, COL_RATING]].to_string(index=False)
+        movies_info_list = []
+        for _, row in movies_df.iterrows():
+            movie_str = (
+                f"- Tên phim: {row[COL_TITLE]}\n"
+                f"  Thể loại: {row[COL_GENRE]}\n"
+                f"  Đạo diễn: {row[COL_DIRECTOR]}\n"
+                f"  Diễn viên: {row[COL_STARS]}\n"
+                f"  Năm: {row[COL_YEAR]}\n"
+                f"  Điểm: {row[COL_RATING]}\n"
+            )
+            if COL_OVERVIEW in row and pd.notna(row[COL_OVERVIEW]):
+                movie_str += f"  Tóm tắt: {row[COL_OVERVIEW]}\n"
+            if COL_LINK in row and pd.notna(row[COL_LINK]):
+                movie_str += f"  Link IMDb: {row[COL_LINK]}\n"
+            movies_info_list.append(movie_str)
+        movies_info = "\n".join(movies_info_list)
+        
         system_msg = "Bạn là trợ lý phim thân thiện. Trả lời bằng tiếng Việt, thân thiện và tự nhiên. Không bịa thêm thông tin."
         user_msg   = (
             f"Người dùng hỏi: \"{user_message}\"\n"
             f"Danh sách phim tìm được:\n{movies_info}\n\n"
-            "Hãy giới thiệu các phim này, đề cập tên phim, thể loại, đạo diễn, diễn viên và điểm IMDB."
+            "Hãy giới thiệu các phim này, đề cập đầy đủ tên phim, thể loại, đạo diễn, diễn viên, điểm IMDB, tóm tắt nội dung ngắn gọn và kèm theo link IMDb để người dùng click."
         )
 
     try:
@@ -539,7 +549,12 @@ def generate_answer(user_message: str, movies_df: pd.DataFrame, intent: str) -> 
         if not movies_df.empty:
             movie_list = []
             for _, row in movies_df.head(5).iterrows():
-                movie_list.append(f"- {row[COL_TITLE]} ({int(row[COL_YEAR]) if pd.notna(row[COL_YEAR]) else 'N/A'}) - ⭐ {row[COL_RATING]}")
+                movie_item = f"- **{row[COL_TITLE]}** ({int(row[COL_YEAR]) if pd.notna(row[COL_YEAR]) else 'N/A'}) - ⭐ {row[COL_RATING]}"
+                if COL_OVERVIEW in row and pd.notna(row[COL_OVERVIEW]):
+                    movie_item += f"\n  *Tóm tắt:* {row[COL_OVERVIEW][:120]}..."
+                if COL_LINK in row and pd.notna(row[COL_LINK]):
+                    movie_item += f"\n  *Link IMDb:* {row[COL_LINK]}"
+                movie_list.append(movie_item)
             movies_str = "\n".join(movie_list)
             return (
                 f"Chào bạn! Kết nối với trí tuệ nhân tạo đang gặp sự cố nhỏ ({e}), "
@@ -564,6 +579,13 @@ def render_movie_cards(df: pd.DataFrame):
                 # Hiển thị tối đa 3 diễn viên đầu để card gọn gàng
                 stars_list = [s.strip() for s in row[COL_STARS].split(",")]
                 st.caption(f"👥 Diễn viên: {', '.join(stars_list[:3])}")
+            if COL_OVERVIEW in row and pd.notna(row[COL_OVERVIEW]):
+                desc = str(row[COL_OVERVIEW]).strip()
+                if len(desc) > 120:
+                    desc = desc[:120] + "..."
+                st.caption(f"📝 Tóm tắt: {desc}")
+            if COL_LINK in row and pd.notna(row[COL_LINK]):
+                st.markdown(f"[🔗 Xem trên IMDb]({row[COL_LINK]})")
 
 # ============================================================
 # STREAMLIT APP
@@ -761,28 +783,69 @@ if user_input:
             }
 
             # Lọc phim (Kết hợp Semantic Search và Metadata Filters)
-            if intent in ("search", "recommend", "info"):
-                has_metadata_filters = any(filters.get(k) for k in [
-                    "genre", "director", "star", "title", "year_min", "year_max", "rating_min"
-                ])
+            similar_movie_found = False
+            if faiss_index is not None and embedder_model is not None:
+                # Nhận diện rộng các từ so sánh/tương tự trong Tiếng Việt và Tiếng Anh
+                similar_patterns = [
+                    r'(?:phim\s+)?(?:giống|tương\s+tự|tựa\s+như|tựa\s+với|như)\s+(?:phim\s+)?([^,.?]+)',
+                    r'(?:tương\s+tự|tựa)\s+với\s+(?:phim\s+)?([^,.?]+)',
+                    r'similar\s+to\s+([^,.?]+)',
+                    r'like\s+([^,.?]+)'
+                ]
+                candidate_title = None
+                for pat in similar_patterns:
+                    match = re.search(pat, user_input, re.IGNORECASE)
+                    if match:
+                        candidate_title = match.group(1).strip()
+                        # Loại bỏ các từ đệm phổ biến ở đầu/cuối nếu có
+                        candidate_title = re.sub(r'^(bộ\s+phim|phim|cái|con|những|các|tựa|tựa\s+phim)\s+', '', candidate_title, flags=re.IGNORECASE)
+                        break
+                
+                # Nếu không khớp regex nhưng LLM parse được title và user hỏi so sánh
+                words_in_msg = set(re.findall(r'\b\w+\b', user_input.lower()))
+                if not candidate_title and filters.get("title") and not words_in_msg.isdisjoint({"giống", "giong", "tương tự", "tuong tu", "như", "nhu"}):
+                    candidate_title = filters["title"]
 
-                if intent == "info" and not has_metadata_filters:
-                    # Nếu intent là info nhưng không có bộ lọc thuộc tính nào, trả về DataFrame rỗng để chatbot hỏi làm rõ
-                    filtered_df = pd.DataFrame()
-                elif has_metadata_filters:
-                    # Nếu user hỏi rõ đạo diễn / diễn viên / thể loại / năm / điểm
-                    # thì lọc trực tiếp trên toàn bộ dataset
-                    filtered_df = apply_filters(df, filters)
+                if candidate_title:
+                    # Tìm thông tin phim gốc để lấy description
+                    base_movie = get_movie_detail_tool(df, candidate_title)
+                    if not base_movie.empty:
+                        base_title = base_movie[COL_TITLE].values[0]
+                        base_desc = base_movie[COL_OVERVIEW].values[0] if COL_OVERVIEW in base_movie.columns else ""
+                        
+                        if base_desc:
+                            # 1. Tìm kiếm ngữ nghĩa bằng mô tả của phim gốc
+                            filtered_df = semantic_search(base_desc, df, embedder_model, faiss_index, k=100)
+                            # 2. Loại bỏ chính phim gốc khỏi danh sách gợi ý
+                            if COL_TITLE in filtered_df.columns:
+                                filtered_df = filtered_df[filtered_df[COL_TITLE].str.lower() != base_title.lower()]
+                            # 3. Áp dụng thêm các bộ lọc phụ (ví dụ: điểm số, năm nếu có)
+                            # Nhưng bỏ qua bộ lọc title phim gốc để tránh triệt tiêu kết quả
+                            filters_copy = filters.copy()
+                            filters_copy["title"] = None
+                            filtered_df = apply_filters(filtered_df, filters_copy)
+                            similar_movie_found = True
 
-                elif faiss_index is not None and embedder_model is not None:
-                    # Chỉ dùng semantic search khi user hỏi kiểu mô tả nội dung
-                    filtered_df = semantic_search(user_input, df, embedder_model, faiss_index, k=100)
-                    filtered_df = apply_filters(filtered_df, filters)
+            if not similar_movie_found:
+                if intent in ("search", "recommend", "info"):
+                    has_metadata_filters = any(filters.get(k) for k in [
+                        "genre", "director", "star", "title", "year_min", "year_max", "rating_min"
+                    ])
 
+                    if intent == "info" and not has_metadata_filters:
+                        # Nếu intent là info nhưng không có bộ lọc thuộc tính nào, trả về DataFrame rỗng để chatbot hỏi làm rõ
+                        filtered_df = pd.DataFrame()
+                    elif has_metadata_filters or filters.get("sort_by"):
+                        # Nếu có bộ lọc thuộc tính hoặc yêu cầu sắp xếp cụ thể thì áp dụng trực tiếp trên toàn bộ dataset
+                        filtered_df = apply_filters(df, filters)
+                    elif faiss_index is not None and embedder_model is not None:
+                        # Chỉ dùng semantic search khi user hỏi mô tả nội dung không kèm bộ lọc / sắp xếp cụ thể
+                        filtered_df = semantic_search(user_input, df, embedder_model, faiss_index, k=100)
+                        filtered_df = apply_filters(filtered_df, filters)
+                    else:
+                        filtered_df = apply_filters(df, filters)
                 else:
-                    filtered_df = apply_filters(df, filters)
-            else:
-                filtered_df = pd.DataFrame()
+                    filtered_df = pd.DataFrame()
 
             # Tầng 2: sinh câu trả lời
             answer = generate_answer(user_input, filtered_df, intent)
