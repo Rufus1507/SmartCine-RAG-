@@ -5,7 +5,7 @@ from google.genai import types
 # ============================================================
 # CAU HINH API KEY
 # ============================================================
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyALBqHfbrgyqiWFSe-8B9rl0Ajctxv88ik")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 
 print("=" * 50)
 print("TEST GEMINI API (google.genai)")

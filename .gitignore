@@ -1,4 +1,13 @@
-/test_code
+# Folder exclusions
+movies_crawl_data/
+test_code/
+
+# File exclusions
+*.md
+!readme.md
+!README.md
+
+# Python and cache files
 chatbot/description_embeddings.index
 **/__pycache__/
 *.pyc

@@ -1,0 +1,468 @@
+{
+  "total_tests": 18,
+  "overall_pass_rate": 1.0,
+  "intent_accuracy": 1.0,
+  "filter_accuracy": 1.0,
+  "retrieval_accuracy": 1.0,
+  "country_accuracy": 1.0,
+  "similar_movie_quality": 1.0,
+  "average_latency_seconds": 25.45038143793742,
+  "details": [
+    {
+      "case_id": 1,
+      "group": "Basic Filters",
+      "query": "Tìm phim hành động của Christopher Nolan trên 8 điểm",
+      "expected_intent": "search",
+      "predicted_intent": "search",
+      "intent_correct": true,
+      "expected_filters": {
+        "genre": "Action",
+        "director": "Christopher Nolan",
+        "rating_min": 8.0
+      },
+      "filters_applied": {
+        "genre": "Action",
+        "director": "Christopher Nolan",
+        "rating_min": 8.0,
+        "sort_by": "rating",
+        "sort_order": "desc"
+      },
+      "filters_correct": true,
+      "movies_retrieved": 3,
+      "retrieval_correct": true,
+      "latency_seconds": 26.575,
+      "status": "PASS"
+    },
+    {
+      "case_id": 2,
+      "group": "Basic Filters",
+      "query": "Gợi ý phim khoa học viễn tưởng hay nhất năm 2019",
+      "expected_intent": "search",
+      "predicted_intent": "search",
+      "intent_correct": true,
+      "expected_filters": {
+        "genre": "Sci-Fi",
+        "year_min": 2019
+      },
+      "filters_applied": {
+        "title": null,
+        "genre": "Sci-Fi",
+        "director": null,
+        "star": null,
+        "country": null,
+        "year_min": 2019,
+        "year_max": 2019,
+        "rating_min": null,
+        "sort_by": "rating",
+        "sort_order": "desc"
+      },
+      "filters_correct": true,
+      "movies_retrieved": 5,
+      "retrieval_correct": true,
+      "latency_seconds": 24.098,
+      "status": "PASS"
+    },
+    {
+      "case_id": 3,
+      "group": "Basic Filters",
+      "query": "Thông tin tóm tắt nội dung phim Titanic",
+      "expected_intent": "info",
+      "predicted_intent": "info",
+      "intent_correct": true,
+      "expected_filters": {
+        "title": "Titanic"
+      },
+      "filters_applied": {
+        "title": "Titanic"
+      },
+      "filters_correct": true,
+      "movies_retrieved": 5,
+      "retrieval_correct": true,
+      "latency_seconds": 22.417,
+      "status": "PASS"
+    },
+    {
+      "case_id": 4,
+      "group": "Chitchat",
+      "query": "Thời tiết hôm nay ở Hà Nội thế nào?",
+      "expected_intent": "chitchat",
+      "predicted_intent": "chitchat",
+      "intent_correct": true,
+      "expected_filters": {},
+      "filters_applied": {
+        "title": null,
+        "genre": null,
+        "director": null,
+        "star": null,
+        "country": null,
+        "year_min": null,
+        "year_max": null,
+        "rating_min": null,
+        "sort_by": null,
+        "sort_order": null
+      },
+      "filters_correct": true,
+      "movies_retrieved": 0,
+      "retrieval_correct": true,
+      "latency_seconds": 11.404,
+      "status": "PASS"
+    },
+    {
+      "case_id": 5,
+      "group": "Basic Filters",
+      "query": "Phim hài của Leonardo DiCaprio sau năm 2010",
+      "expected_intent": "search",
+      "predicted_intent": "search",
+      "intent_correct": true,
+      "expected_filters": {
+        "genre": "Comedy",
+        "star": "Leonardo DiCaprio"
+      },
+      "filters_applied": {
+        "genre": "Comedy",
+        "star": "Leonardo DiCaprio",
+        "year_min": 2011
+      },
+      "filters_correct": true,
+      "movies_retrieved": 5,
+      "retrieval_correct": true,
+      "latency_seconds": 23.043,
+      "status": "PASS"
+    },
+    {
+      "case_id": 6,
+      "group": "BM25 Keyword",
+      "query": "Iron Man",
+      "expected_intent": [
+        "search",
+        "info"
+      ],
+      "predicted_intent": "info",
+      "intent_correct": true,
+      "expected_filters": {
+        "title": "Iron Man"
+      },
+      "filters_applied": {
+        "title": "Iron Man"
+      },
+      "filters_correct": true,
+      "movies_retrieved": 5,
+      "retrieval_correct": true,
+      "latency_seconds": 34.356,
+      "status": "PASS"
+    },
+    {
+      "case_id": 7,
+      "group": "BM25 Keyword",
+      "query": "Titanic",
+      "expected_intent": [
+        "search",
+        "info"
+      ],
+      "predicted_intent": "info",
+      "intent_correct": true,
+      "expected_filters": {
+        "title": "Titanic"
+      },
+      "filters_applied": {
+        "title": "Titanic"
+      },
+      "filters_correct": true,
+      "movies_retrieved": 5,
+      "retrieval_correct": true,
+      "latency_seconds": 23.181,
+      "status": "PASS"
+    },
+    {
+      "case_id": 8,
+      "group": "BM25 Keyword",
+      "query": "Phim siêu anh hùng Marvel",
+      "expected_intent": "search",
+      "predicted_intent": "search",
+      "intent_correct": true,
+      "expected_filters": {},
+      "filters_applied": {
+        "title": null,
+        "genre": "Superhero",
+        "director": null,
+        "star": null,
+        "country": null,
+        "year_min": null,
+        "year_max": null,
+        "rating_min": null,
+        "sort_by": null,
+        "sort_order": null
+      },
+      "filters_correct": true,
+      "movies_retrieved": 2,
+      "retrieval_correct": true,
+      "latency_seconds": 15.857,
+      "status": "PASS"
+    },
+    {
+      "case_id": 9,
+      "group": "Actor Search",
+      "query": "Tìm phim của diễn viên Leonardo DiCaprio",
+      "expected_intent": "search",
+      "predicted_intent": "search",
+      "intent_correct": true,
+      "expected_filters": {
+        "star": "Leonardo DiCaprio"
+      },
+      "filters_applied": {
+        "title": null,
+        "genre": null,
+        "director": null,
+        "star": "Leonardo DiCaprio",
+        "country": null,
+        "year_min": null,
+        "year_max": null,
+        "rating_min": null,
+        "sort_by": null,
+        "sort_order": null
+      },
+      "filters_correct": true,
+      "movies_retrieved": 5,
+      "retrieval_correct": true,
+      "latency_seconds": 32.379,
+      "status": "PASS"
+    },
+    {
+      "case_id": 10,
+      "group": "Actor Search",
+      "query": "Phim của Tom Cruise",
+      "expected_intent": "search",
+      "predicted_intent": "search",
+      "intent_correct": true,
+      "expected_filters": {
+        "star": "Tom Cruise"
+      },
+      "filters_applied": {
+        "title": null,
+        "genre": null,
+        "director": null,
+        "star": "Tom Cruise",
+        "country": null,
+        "year_min": null,
+        "year_max": null,
+        "rating_min": null,
+        "sort_by": null,
+        "sort_order": null
+      },
+      "filters_correct": true,
+      "movies_retrieved": 5,
+      "retrieval_correct": true,
+      "latency_seconds": 16.888,
+      "status": "PASS"
+    },
+    {
+      "case_id": 11,
+      "group": "Director Search",
+      "query": "Các phim do Christopher Nolan đạo diễn",
+      "expected_intent": "search",
+      "predicted_intent": "search",
+      "intent_correct": true,
+      "expected_filters": {
+        "director": "Christopher Nolan"
+      },
+      "filters_applied": {
+        "director": "Christopher Nolan"
+      },
+      "filters_correct": true,
+      "movies_retrieved": 5,
+      "retrieval_correct": true,
+      "latency_seconds": 21.076,
+      "status": "PASS"
+    },
+    {
+      "case_id": 12,
+      "group": "Director Search",
+      "query": "James Cameron director",
+      "expected_intent": "search",
+      "predicted_intent": "search",
+      "intent_correct": true,
+      "expected_filters": {
+        "director": "James Cameron"
+      },
+      "filters_applied": {
+        "title": null,
+        "genre": null,
+        "director": "James Cameron",
+        "star": null,
+        "country": null,
+        "year_min": null,
+        "year_max": null,
+        "rating_min": null,
+        "sort_by": null,
+        "sort_order": null
+      },
+      "filters_correct": true,
+      "movies_retrieved": 5,
+      "retrieval_correct": true,
+      "latency_seconds": 19.511,
+      "status": "PASS"
+    },
+    {
+      "case_id": 13,
+      "group": "Country Search",
+      "query": "Phim sản xuất tại Việt Nam",
+      "expected_intent": "search",
+      "predicted_intent": "search",
+      "intent_correct": true,
+      "expected_filters": {
+        "country": "Vietnam"
+      },
+      "filters_applied": {
+        "title": null,
+        "genre": null,
+        "director": null,
+        "star": null,
+        "country": "Vietnam",
+        "year_min": null,
+        "year_max": null,
+        "rating_min": null,
+        "sort_by": null,
+        "sort_order": null
+      },
+      "filters_correct": true,
+      "movies_retrieved": 5,
+      "retrieval_correct": true,
+      "latency_seconds": 24.473,
+      "status": "PASS"
+    },
+    {
+      "case_id": 14,
+      "group": "Country Search",
+      "query": "Phim Hàn Quốc tuyển chọn",
+      "expected_intent": "search",
+      "predicted_intent": "search",
+      "intent_correct": true,
+      "expected_filters": {
+        "country": "South Korea"
+      },
+      "filters_applied": {
+        "title": null,
+        "genre": null,
+        "director": null,
+        "star": null,
+        "country": "South Korea",
+        "year_min": null,
+        "year_max": null,
+        "rating_min": null,
+        "sort_by": "rating",
+        "sort_order": "desc"
+      },
+      "filters_correct": true,
+      "movies_retrieved": 5,
+      "retrieval_correct": true,
+      "latency_seconds": 21.844,
+      "status": "PASS"
+    },
+    {
+      "case_id": 15,
+      "group": "Country Search",
+      "query": "Tìm phim Nhật Bản hay nhất",
+      "expected_intent": "search",
+      "predicted_intent": "search",
+      "intent_correct": true,
+      "expected_filters": {
+        "country": "Japan"
+      },
+      "filters_applied": {
+        "title": null,
+        "genre": null,
+        "director": null,
+        "star": null,
+        "country": "Japan",
+        "year_min": null,
+        "year_max": null,
+        "rating_min": null,
+        "sort_by": "rating",
+        "sort_order": "desc"
+      },
+      "filters_correct": true,
+      "movies_retrieved": 5,
+      "retrieval_correct": true,
+      "latency_seconds": 29.678,
+      "status": "PASS"
+    },
+    {
+      "case_id": 16,
+      "group": "Similar Movie V2",
+      "query": "Phim nào giống phim Inception",
+      "expected_intent": "search",
+      "predicted_intent": "search",
+      "intent_correct": true,
+      "expected_filters": {},
+      "filters_applied": {
+        "title": "Inception",
+        "genre": null,
+        "director": null,
+        "star": null,
+        "country": null,
+        "year_min": null,
+        "year_max": null,
+        "rating_min": null,
+        "sort_by": null,
+        "sort_order": null
+      },
+      "filters_correct": true,
+      "movies_retrieved": 5,
+      "retrieval_correct": true,
+      "latency_seconds": 45.517,
+      "status": "PASS"
+    },
+    {
+      "case_id": 17,
+      "group": "Similar Movie V2",
+      "query": "Phim tương tự Titanic",
+      "expected_intent": "search",
+      "predicted_intent": "search",
+      "intent_correct": true,
+      "expected_filters": {},
+      "filters_applied": {
+        "title": "Titanic",
+        "genre": null,
+        "director": null,
+        "star": null,
+        "country": null,
+        "year_min": null,
+        "year_max": null,
+        "rating_min": null,
+        "sort_by": null,
+        "sort_order": null
+      },
+      "filters_correct": true,
+      "movies_retrieved": 5,
+      "retrieval_correct": true,
+      "latency_seconds": 39.353,
+      "status": "PASS"
+    },
+    {
+      "case_id": 18,
+      "group": "Similar Movie V2",
+      "query": "Gợi ý phim giống phim Interstellar",
+      "expected_intent": "search",
+      "predicted_intent": "search",
+      "intent_correct": true,
+      "expected_filters": {},
+      "filters_applied": {
+        "title": "Interstellar",
+        "genre": null,
+        "director": null,
+        "star": null,
+        "country": null,
+        "year_min": null,
+        "year_max": null,
+        "rating_min": null,
+        "sort_by": null,
+        "sort_order": null
+      },
+      "filters_correct": true,
+      "movies_retrieved": 5,
+      "retrieval_correct": true,
+      "latency_seconds": 26.456,
+      "status": "PASS"
+    }
+  ]
+}

@@ -7,34 +7,16 @@ import torch
 from sentence_transformers import SentenceTransformer
 import faiss
 
-# Thêm thư mục chatbot vào path để có cấu hình đồng nhất
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# Thêm thư mục gốc vào path để import dạng 'from chatbot.xyz'
+chatbot_dir = os.path.dirname(os.path.abspath(__file__))
+workspace_dir = os.path.dirname(chatbot_dir)
+sys.path.append(workspace_dir)
 
 # Đảm bảo in UTF-8
 sys.stdout.reconfigure(encoding='utf-8')
 
-# Cấu hình đường dẫn
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-IMDB_DATA_PATH = os.path.join(BASE_DIR, "data", "imdb_movies_all_years.csv")
-ADVANCED_DATA_PATH = os.path.join(BASE_DIR, "data", "advanced_movies_details_all_years.csv")
-INDEX_PATH = os.path.join(BASE_DIR, "chatbot", "description_embeddings.index")
-
-# Bản sao hàm load_data của app.py để đảm bảo tính nhất quán
-def load_data():
-    try:
-        df1 = pd.read_csv(IMDB_DATA_PATH, encoding='latin-1', low_memory=False)
-        df1.columns = df1.columns.str.replace(r'^\xef\xbb\xbf', '', regex=True)
-    except Exception:
-        df1 = pd.read_csv(IMDB_DATA_PATH, low_memory=False)
-        
-    try:
-        df2 = pd.read_csv(ADVANCED_DATA_PATH, encoding='latin-1', low_memory=False)
-        df2.columns = df2.columns.str.replace(r'^\xef\xbb\xbf', '', regex=True)
-    except Exception:
-        df2 = pd.read_csv(ADVANCED_DATA_PATH, low_memory=False)
-        
-    df = pd.merge(df1, df2, left_on="Movie Link", right_on="link", how="inner")
-    return df
+from chatbot.config import INDEX_PATH
+from chatbot.data_loader import load_data
 
 def main():
     print("🚀 Đang tải dữ liệu phim...")

@@ -11,6 +11,60 @@ COL_RATING   = "Rating"              # điểm IMDB
 COL_OVERVIEW = "description"         # mô tả phim
 COL_VOTES    = "num_votes"           # số lượt vote đã làm sạch
 
+def normalize_genre(genre_str: str) -> str:
+    if not genre_str:
+        return genre_str
+    genre_lower = genre_str.strip().lower()
+    
+    mapping = {
+        "science fiction": "Sci-Fi",
+        "sci fi": "Sci-Fi",
+        "sci-fi": "Sci-Fi",
+        "khoa học viễn tưởng": "Sci-Fi",
+        "viễn tưởng": "Sci-Fi",
+        "hành động": "Action",
+        "action": "Action",
+        "hài": "Comedy",
+        "hài hước": "Comedy",
+        "comedy": "Comedy",
+        "kinh dị": "Horror",
+        "horror": "Horror",
+        "kịch tính": "Drama",
+        "chính kịch": "Drama",
+        "drama": "Drama",
+        "lãng mạn": "Romance",
+        "tình cảm": "Romance",
+        "romance": "Romance",
+        "hoạt hình": "Animation",
+        "animation": "Animation",
+        "phiêu lưu": "Adventure",
+        "adventure": "Adventure",
+        "tội phạm": "Crime",
+        "hình sự": "Crime",
+        "crime": "Crime",
+        "bí ẩn": "Mystery",
+        "mystery": "Mystery",
+        "giật gân": "Thriller",
+        "thriller": "Thriller",
+        "thần thoại": "Fantasy",
+        "fantasy": "Fantasy",
+        "lịch sử": "History",
+        "history": "History",
+        "chiến tranh": "War",
+        "war": "War",
+        "tài liệu": "Documentary",
+        "documentary": "Documentary",
+        "gia đình": "Family",
+        "family": "Family",
+        "nhạc": "Music",
+        "ca nhạc": "Music",
+        "âm nhạc": "Music",
+        "music": "Music",
+        "miền tây": "Western",
+        "western": "Western"
+    }
+    return mapping.get(genre_lower, genre_str)
+
 def search_movies_tool(df: pd.DataFrame, filters: dict, top_k: int = 5) -> pd.DataFrame:
     """
     Filter movies from dataframe based on parsed filters.
@@ -33,8 +87,9 @@ def search_movies_tool(df: pd.DataFrame, filters: dict, top_k: int = 5) -> pd.Da
         # Lọc thể loại (Genre)
         if filters.get("genre") and COL_GENRE in result.columns:
             try:
+                genre_val = normalize_genre(filters["genre"])
                 result = result[result[COL_GENRE].astype(str).str.contains(
-                    filters["genre"], case=False, na=False
+                    genre_val, case=False, na=False
                 )]
             except Exception:
                 pass
@@ -53,6 +108,20 @@ def search_movies_tool(df: pd.DataFrame, filters: dict, top_k: int = 5) -> pd.Da
             try:
                 result = result[result[COL_STARS].astype(str).str.contains(
                     filters["star"], case=False, na=False
+                )]
+            except Exception:
+                pass
+
+        # Lọc quốc gia (Country)
+        if filters.get("country") and "countries_origin" in result.columns:
+            try:
+                from chatbot.data_loader import load_country_aliases
+                country_aliases = load_country_aliases()
+                country_query = str(filters["country"]).strip().lower()
+                standard_country = country_aliases.get(country_query, filters["country"])
+                
+                result = result[result["countries_origin"].astype(str).str.contains(
+                    standard_country, case=False, na=False
                 )]
             except Exception:
                 pass
@@ -146,6 +215,35 @@ def get_movie_detail_tool(df: pd.DataFrame, title: str) -> pd.DataFrame:
             # Khớp chuỗi con nếu không có phim khớp chính xác
             match = df[df[COL_TITLE].astype(str).str.contains(title.strip(), case=False, na=False)]
             
+        if not match.empty:
+            # Sắp xếp các kết quả tìm thấy theo số lượt vote (độ phổ biến) giảm dần
+            votes_col = "num_votes" if "num_votes" in match.columns else ("Votes" if "Votes" in match.columns else None)
+            if votes_col:
+                try:
+                    if votes_col == "Votes":
+                        # Làm sạch cột Votes thô để phục vụ sắp xếp
+                        def clean_votes(val):
+                            if pd.isna(val):
+                                return 0
+                            val_str = str(val).strip().upper()
+                            if not val_str:
+                                return 0
+                            try:
+                                if val_str.endswith('K'):
+                                    return int(float(val_str[:-1]) * 1000)
+                                elif val_str.endswith('M'):
+                                    return int(float(val_str[:-1]) * 1000000)
+                                val_str = val_str.replace(',', '')
+                                return int(float(val_str))
+                            except Exception:
+                                return 0
+                        temp_votes = match["Votes"].apply(clean_votes)
+                        match = match.loc[temp_votes.sort_values(ascending=False).index]
+                    else:
+                        match = match.sort_values(by=votes_col, ascending=False)
+                except Exception:
+                    pass
+            
         return match.head(1).copy()
     except Exception:
         return pd.DataFrame()
@@ -226,3 +324,87 @@ def compare_movies_tool(df: pd.DataFrame, movie_titles: list) -> pd.DataFrame:
         return result.copy()
     except Exception:
         return pd.DataFrame()
+
+# ============================================================
+# LANGCHAIN TOOL WRAPPERS & ADVANCED RETRIEVAL (similar movies)
+# ============================================================
+import re
+from langchain_core.tools import tool
+from chatbot.config import SEMANTIC_TOP_K
+
+def find_similar_movies(df: pd.DataFrame, index, model, user_input: str, filters: dict) -> tuple[pd.DataFrame, bool]:
+    """
+    Truy vấn các phim tương tự phim được hỏi trong user_input:
+    1. Nhận diện tên phim mẫu bằng regex hoặc filter title.
+    2. Lấy thông tin chi tiết phim gốc.
+    3. Thực hiện Semantic Search bằng mô tả của phim gốc.
+    4. Loại bỏ phim gốc khỏi kết quả và áp dụng bộ lọc phụ.
+    """
+    if index is None or model is None:
+        return pd.DataFrame(), False
+
+    similar_patterns = [
+        r'(?:phim\s+)?(?:giống|tương\s+tự|tựa\s+như|tựa\s+với|như)\s+(?:phim\s+)?([^,.?]+)',
+        r'(?:tương\s+tự|tựa)\s+với\s+(?:phim\s+)?([^,.?]+)',
+        r'(?:phim\s+)?tựa\s+(?:bộ\s+|phim\s+)?([^,.?]+)',
+        r'similar\s+to\s+([^,.?]+)',
+        r'like\s+([^,.?]+)'
+    ]
+    
+    candidate_title = None
+    for pat in similar_patterns:
+        match = re.search(pat, user_input, re.IGNORECASE)
+        if match:
+            candidate_title = match.group(1).strip()
+            break
+            
+    words_in_msg = set(re.findall(r'\b\w+\b', user_input.lower()))
+    if not candidate_title and filters.get("title") and not words_in_msg.isdisjoint({"giống", "giong", "tương tự", "tuong tu", "như", "nhu", "tựa", "tua"}):
+        candidate_title = filters["title"]
+        
+    if candidate_title:
+        candidate_title = re.sub(r'^(bộ\s+phim|phim|bộ|cái|con|những|các|tựa|tựa\s+phim)\s+', '', candidate_title, flags=re.IGNORECASE).strip()
+        
+        base_movie = get_movie_detail_tool(df, candidate_title)
+        if not base_movie.empty:
+            base_title = base_movie[COL_TITLE].values[0]
+            base_desc = base_movie[COL_OVERVIEW].values[0] if COL_OVERVIEW in base_movie.columns else ""
+            
+            if base_desc:
+                filtered_df = semantic_search_tool(base_desc, df, index, model, top_k=SEMANTIC_TOP_K)
+                if COL_TITLE in filtered_df.columns:
+                    filtered_df = filtered_df[filtered_df[COL_TITLE].str.lower() != base_title.lower()]
+                filters_copy = filters.copy()
+                filters_copy["title"] = None
+                filtered_df = search_movies_tool(filtered_df, filters_copy)
+                return filtered_df, True
+                
+        title_matches = df[df[COL_TITLE].astype(str).str.contains(candidate_title, case=False, na=False)]
+        if not title_matches.empty:
+            filtered_df = search_movies_tool(title_matches, filters)
+            return filtered_df, True
+        else:
+            filtered_df = semantic_search_tool(candidate_title, df, index, model, top_k=SEMANTIC_TOP_K)
+            filters_copy = filters.copy()
+            filters_copy["title"] = None
+            filtered_df = search_movies_tool(filtered_df, filters_copy)
+            return filtered_df, True
+            
+    return pd.DataFrame(), False
+
+@tool
+def movie_search_tool(df: pd.DataFrame, filters: dict, top_k: int = 5) -> pd.DataFrame:
+    """
+    Tìm kiếm và lọc phim trong cơ sở dữ liệu (DataFrame) theo các bộ lọc:
+    thể loại (genre), đạo diễn (director), diễn viên (star), tên phim (title), năm, điểm số, và sắp xếp.
+    Không gọi LLM.
+    """
+    return search_movies_tool(df, filters, top_k)
+
+@tool
+def movie_info_tool(df: pd.DataFrame, title: str) -> pd.DataFrame:
+    """
+    Truy vấn thông tin chi tiết của một bộ phim cụ thể trong cơ sở dữ liệu dựa trên tiêu đề (title).
+    Không gọi LLM.
+    """
+    return get_movie_detail_tool(df, title)
