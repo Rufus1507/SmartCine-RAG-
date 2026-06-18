@@ -7,32 +7,38 @@ import faiss
 import torch
 from sentence_transformers import SentenceTransformer
 from chatbot.config import (
-    IMDB_DATA_PATH, ADVANCED_DATA_PATH, KEYWORD_DICT_PATH, ALIASES_PATH, INDEX_PATH,
+    MOVIE_DATA_PATH, KEYWORD_DICT_PATH, ALIASES_PATH, INDEX_PATH,
     CHATBOT_DIR, COL_GENRE, COL_DIRECTOR, COL_STARS, COL_RATING, COL_YEAR
 )
-from chatbot.bm25_retriever import build_bm25_index
+from chatbot.retrieval.bm25_retriever import build_bm25_index
+
 
 @st.cache_data
 def load_data():
     """
-    Nạp dữ liệu từ 2 file CSV, thực hiện kết hợp (merge) và làm sạch định dạng.
+    Nạp dữ liệu từ file gộp movie_master.csv và làm sạch định dạng.
     """
     try:
-        df1 = pd.read_csv(IMDB_DATA_PATH, encoding='latin-1', low_memory=False)
-        df1.columns = df1.columns.str.replace(r'^\xef\xbb\xbf', '', regex=True)
+        df = pd.read_csv(MOVIE_DATA_PATH, encoding='utf-8', low_memory=False)
+        df.columns = df.columns.str.replace(r'^\xef\xbb\xbf', '', regex=True)
     except Exception:
-        df1 = pd.read_csv(IMDB_DATA_PATH, low_memory=False)
-        
-    try:
-        df2 = pd.read_csv(ADVANCED_DATA_PATH, encoding='latin-1', low_memory=False)
-        df2.columns = df2.columns.str.replace(r'^\xef\xbb\xbf', '', regex=True)
-    except Exception:
-        df2 = pd.read_csv(ADVANCED_DATA_PATH, low_memory=False)
-        
-    # Merge 2 bảng thông qua link phim
-    df = pd.merge(df1, df2, left_on="Movie Link", right_on="link", how="inner")
+        try:
+            df = pd.read_csv(MOVIE_DATA_PATH, encoding='latin-1', low_memory=False)
+            df.columns = df.columns.str.replace(r'^\xef\xbb\xbf', '', regex=True)
+        except Exception:
+            df = pd.read_csv(MOVIE_DATA_PATH, low_memory=False)
+            
+    # Rename các cột cho tương thích ngược với logic cũ
+    df = df.rename(columns={
+        "title": "Title",
+        "year": "Year",
+        "rating": "Rating",
+        "Movie_Link": "Movie Link",
+        "votes": "Votes",
+        "languages": "Languages"
+    })
     
-    # Làm sạch các cột danh sách chuỗi (genres, directors, stars)
+    # Làm sạch các cột danh sách chuỗi (genres, directors, stars, Languages, countries_origin)
     def clean_list_column(val):
         if pd.isna(val):
             return ""
@@ -46,11 +52,19 @@ def load_data():
                 return ", ".join(lst)
             except Exception:
                 pass
+        # Hỗ trợ phân tách bằng dấu đứng "|" cho dữ liệu mới
+        if "|" in val_str:
+            lst = [item.strip() for item in val_str.split("|") if item.strip() and item.strip() != "None"]
+            return ", ".join(lst)
         return val_str
         
     df[COL_GENRE] = df[COL_GENRE].apply(clean_list_column)
     df[COL_DIRECTOR] = df[COL_DIRECTOR].apply(clean_list_column)
     df[COL_STARS] = df[COL_STARS].apply(clean_list_column)
+    if "Languages" in df.columns:
+        df["Languages"] = df["Languages"].apply(clean_list_column)
+    if "countries_origin" in df.columns:
+        df["countries_origin"] = df["countries_origin"].apply(clean_list_column)
     
     # Ép kiểu dữ liệu số
     df[COL_RATING] = pd.to_numeric(df[COL_RATING], errors="coerce")
@@ -60,6 +74,8 @@ def load_data():
     def clean_votes(val):
         if pd.isna(val):
             return 0
+        if isinstance(val, (int, float)):
+            return int(val)
         val_str = str(val).strip().upper()
         if not val_str:
             return 0

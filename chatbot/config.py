@@ -6,8 +6,7 @@ import os
 CHATBOT_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(CHATBOT_DIR)
 
-IMDB_DATA_PATH = os.path.join(BASE_DIR, "data", "imdb_movies_all_years.csv")
-ADVANCED_DATA_PATH = os.path.join(BASE_DIR, "data", "advanced_movies_details_all_years.csv")
+MOVIE_DATA_PATH = os.path.join(BASE_DIR, "movie_master", "movie_master.csv")
 KEYWORD_DICT_PATH = os.path.join(CHATBOT_DIR, "keyword_dict.json")
 ALIASES_PATH = os.path.join(CHATBOT_DIR, "aliases.json")
 INDEX_PATH = os.path.join(CHATBOT_DIR, "description_embeddings.index")
@@ -24,6 +23,13 @@ COL_YEAR     = "Year"                # Năm phát hành
 COL_RATING   = "Rating"              # Điểm IMDB
 COL_OVERVIEW = "description"         # Mô tả phim
 COL_LINK     = "Movie Link"          # Link phim (IMDB Link)
+
+# Các cột thuộc tính mới từ movie_master.csv
+COL_OSCAR      = "has_oscar"         # Đạt giải Oscar (1/0)
+COL_AWARDS     = "has_awards"        # Đạt giải thưởng bất kỳ (1/0)
+COL_NOMINATION = "has_nomination"    # Có đề cử (1/0)
+COL_DURATION   = "duration_min"      # Thời lượng phim (phút)
+COL_METASCORE  = "meta_score"        # Điểm Metacritic
 
 # ============================================================
 # CẤU HÌNH LLM (LOCAL & GEMINI)

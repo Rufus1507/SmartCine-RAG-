@@ -3,7 +3,7 @@ from langchain_core.language_models import BaseChatModel
 from chatbot.entity_extractor import detect_entities, is_refine_query
 from chatbot.chains.intent_chain import run_intent_chain
 from chatbot.chains.answer_chain import run_answer_chain
-from chatbot.hybrid_search import hybrid_search
+from chatbot.retrieval.hybrid_search import hybrid_search
 from chatbot.tools import find_similar_movies
 from rapidfuzz import fuzz
 
@@ -85,7 +85,13 @@ def run_rag_pipeline(
             filtered_df = pd.DataFrame()
             route_name = "info_clarify"
         else:
-            from chatbot.retrieval_router import route_retrieval
+            from chatbot.retrieval.retrieval_router import route_retrieval
+            from chatbot.retrieval.retrieval_router import is_similar_movie_query
+            
+            # Nếu là truy vấn tìm phim tương đương, đổi intent thành search
+            if is_similar_movie_query(user_input, filters):
+                intent = "search"
+                
             filtered_df, route_name = route_retrieval(
                 query=user_input,
                 df=df,
@@ -94,8 +100,6 @@ def run_rag_pipeline(
                 faiss_index=faiss_index,
                 embedder_model=embedder_model
             )
-            if route_name == "similar_movie_v2":
-                intent = "search"
     else:
         filtered_df = pd.DataFrame()
 

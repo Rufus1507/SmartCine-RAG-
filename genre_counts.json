@@ -1,0 +1,794 @@
+[
+  [
+    "Drama",
+    76386
+  ],
+  [
+    "Short",
+    47711
+  ],
+  [
+    "Comedy",
+    44962
+  ],
+  [
+    "Documentary",
+    34071
+  ],
+  [
+    "Romance",
+    21744
+  ],
+  [
+    "Thriller",
+    17010
+  ],
+  [
+    "Crime",
+    16237
+  ],
+  [
+    "Action",
+    15930
+  ],
+  [
+    "Horror",
+    14386
+  ],
+  [
+    "Adventure",
+    12453
+  ],
+  [
+    "Mystery",
+    9181
+  ],
+  [
+    "Animation",
+    8702
+  ],
+  [
+    "Fantasy",
+    7415
+  ],
+  [
+    "Music",
+    7373
+  ],
+  [
+    "Family",
+    7255
+  ],
+  [
+    "Sci-Fi",
+    6435
+  ],
+  [
+    "Biography",
+    5842
+  ],
+  [
+    "History",
+    5358
+  ],
+  [
+    "Western",
+    4586
+  ],
+  [
+    "War",
+    4483
+  ],
+  [
+    "Musical",
+    4270
+  ],
+  [
+    "Sport",
+    3391
+  ],
+  [
+    "Dark Comedy",
+    1828
+  ],
+  [
+    "Satire",
+    1151
+  ],
+  [
+    "Period Drama",
+    1092
+  ],
+  [
+    "Slapstick",
+    953
+  ],
+  [
+    "Film Noir",
+    942
+  ],
+  [
+    "Reality-TV",
+    853
+  ],
+  [
+    "Parody",
+    756
+  ],
+  [
+    "Romantic Comedy",
+    700
+  ],
+  [
+    "Tragedy",
+    629
+  ],
+  [
+    "Slasher Horror",
+    624
+  ],
+  [
+    "Psychological Thriller",
+    561
+  ],
+  [
+    "Supernatural Horror",
+    545
+  ],
+  [
+    "Psychological Drama",
+    535
+  ],
+  [
+    "Talk-Show",
+    527
+  ],
+  [
+    "News",
+    521
+  ],
+  [
+    "Coming-of-Age",
+    428
+  ],
+  [
+    "Superhero",
+    405
+  ],
+  [
+    "Docudrama",
+    388
+  ],
+  [
+    "True Crime",
+    381
+  ],
+  [
+    "Anime",
+    358
+  ],
+  [
+    "Classical Western",
+    356
+  ],
+  [
+    "Martial Arts",
+    317
+  ],
+  [
+    "Buddy Comedy",
+    315
+  ],
+  [
+    "Spaghetti Western",
+    306
+  ],
+  [
+    "Farce",
+    305
+  ],
+  [
+    "Whodunnit",
+    287
+  ],
+  [
+    "Computer Animation",
+    287
+  ],
+  [
+    "Game-Show",
+    277
+  ],
+  [
+    "Screwball Comedy",
+    277
+  ],
+  [
+    "Epic",
+    270
+  ],
+  [
+    "Space Sci-Fi",
+    246
+  ],
+  [
+    "Quest",
+    243
+  ],
+  [
+    "Animal Adventure",
+    242
+  ],
+  [
+    "Jungle Adventure",
+    232
+  ],
+  [
+    "One-Person Army Action",
+    230
+  ],
+  [
+    "Dark Fantasy",
+    230
+  ],
+  [
+    "Teen Drama",
+    225
+  ],
+  [
+    "Supernatural Fantasy",
+    224
+  ],
+  [
+    "Teen Comedy",
+    223
+  ],
+  [
+    "Political Drama",
+    217
+  ],
+  [
+    "Psychological Horror",
+    214
+  ],
+  [
+    "Caper",
+    212
+  ],
+  [
+    "Spy",
+    209
+  ],
+  [
+    "Adult Animation",
+    206
+  ],
+  [
+    "B-Horror",
+    204
+  ],
+  [
+    "Tragic Romance",
+    196
+  ],
+  [
+    "Teen Horror",
+    195
+  ],
+  [
+    "Feel-Good Romance",
+    191
+  ],
+  [
+    "Erotic Thriller",
+    191
+  ],
+  [
+    "Swashbuckler",
+    190
+  ],
+  [
+    "Survival",
+    188
+  ],
+  [
+    "Hand-Drawn Animation",
+    186
+  ],
+  [
+    "Road Trip",
+    184
+  ],
+  [
+    "Suspense Mystery",
+    181
+  ],
+  [
+    "Monster Horror",
+    179
+  ],
+  [
+    "Quirky Comedy",
+    177
+  ],
+  [
+    "Dystopian Sci-Fi",
+    177
+  ],
+  [
+    "Body Horror",
+    176
+  ],
+  [
+    "Action Epic",
+    173
+  ],
+  [
+    "Raunchy Comedy",
+    169
+  ],
+  [
+    "Alien Invasion",
+    166
+  ],
+  [
+    "Political Thriller",
+    165
+  ],
+  [
+    "Adventure Epic",
+    157
+  ],
+  [
+    "Costume Drama",
+    156
+  ],
+  [
+    "Steamy Romance",
+    146
+  ],
+  [
+    "Serial Killer",
+    141
+  ],
+  [
+    "High-Concept Comedy",
+    140
+  ],
+  [
+    "Teen Romance",
+    140
+  ],
+  [
+    "Workplace Drama",
+    138
+  ],
+  [
+    "Conspiracy Thriller",
+    136
+  ],
+  [
+    "Gangster",
+    128
+  ],
+  [
+    "Vampire Horror",
+    126
+  ],
+  [
+    "Kaiju",
+    126
+  ],
+  [
+    "Zombie Horror",
+    123
+  ],
+  [
+    "Holiday",
+    122
+  ],
+  [
+    "Dark Romance",
+    120
+  ],
+  [
+    "Urban Adventure",
+    120
+  ],
+  [
+    "Heist",
+    119
+  ],
+  [
+    "Legal Drama",
+    119
+  ],
+  [
+    "War Epic",
+    118
+  ],
+  [
+    "Film-Noir",
+    114
+  ],
+  [
+    "Fairy Tale",
+    108
+  ],
+  [
+    "Sea Adventure",
+    105
+  ],
+  [
+    "Showbiz Drama",
+    105
+  ],
+  [
+    "Sci-Fi Epic",
+    103
+  ],
+  [
+    "Folk Horror",
+    103
+  ],
+  [
+    "Sword & Sorcery",
+    102
+  ],
+  [
+    "Splatter Horror",
+    101
+  ],
+  [
+    "Prison Drama",
+    96
+  ],
+  [
+    "Disaster",
+    96
+  ],
+  [
+    "Giallo",
+    96
+  ],
+  [
+    "Globetrotting Adventure",
+    92
+  ],
+  [
+    "Time Travel",
+    92
+  ],
+  [
+    "Desert Adventure",
+    91
+  ],
+  [
+    "Fantasy Epic",
+    90
+  ],
+  [
+    "Historical Epic",
+    89
+  ],
+  [
+    "Dinosaur Adventure",
+    88
+  ],
+  [
+    "Kung Fu",
+    87
+  ],
+  [
+    "B-Action",
+    87
+  ],
+  [
+    "Police Procedural",
+    85
+  ],
+  [
+    "Boxing",
+    84
+  ],
+  [
+    "Cyberpunk",
+    83
+  ],
+  [
+    "Classic Musical",
+    82
+  ],
+  [
+    "Pop Musical",
+    80
+  ],
+  [
+    "Gun Fu",
+    78
+  ],
+  [
+    "Artificial Intelligence",
+    77
+  ],
+  [
+    "Holiday Romance",
+    74
+  ],
+  [
+    "Teen Adventure",
+    73
+  ],
+  [
+    "Holiday Comedy",
+    73
+  ],
+  [
+    "Cop Drama",
+    73
+  ],
+  [
+    "Buddy Cop",
+    71
+  ],
+  [
+    "Found Footage Horror",
+    71
+  ],
+  [
+    "Basketball",
+    66
+  ],
+  [
+    "Contemporary Western",
+    66
+  ],
+  [
+    "Medical Drama",
+    64
+  ],
+  [
+    "Stop Motion Animation",
+    63
+  ],
+  [
+    "Romantic Epic",
+    62
+  ],
+  [
+    "Car Action",
+    62
+  ],
+  [
+    "Sword & Sandal",
+    61
+  ],
+  [
+    "Samurai",
+    61
+  ],
+  [
+    "Teen Fantasy",
+    60
+  ],
+  [
+    "Mountain Adventure",
+    60
+  ],
+  [
+    "Legal Thriller",
+    57
+  ],
+  [
+    "Werewolf Horror",
+    55
+  ],
+  [
+    "Jukebox Musical",
+    53
+  ],
+  [
+    "Music Documentary",
+    53
+  ],
+  [
+    "Football",
+    53
+  ],
+  [
+    "Wuxia",
+    52
+  ],
+  [
+    "Cyber Thriller",
+    51
+  ],
+  [
+    "Sports Documentary",
+    51
+  ],
+  [
+    "Steampunk",
+    50
+  ],
+  [
+    "Baseball",
+    49
+  ],
+  [
+    "Drug Crime",
+    49
+  ],
+  [
+    "Concert",
+    48
+  ],
+  [
+    "Sketch Comedy",
+    48
+  ],
+  [
+    "Stoner Comedy",
+    45
+  ],
+  [
+    "Rock Musical",
+    42
+  ],
+  [
+    "Body Swap Comedy",
+    41
+  ],
+  [
+    "Witch Horror",
+    41
+  ],
+  [
+    "Holiday Family",
+    40
+  ],
+  [
+    "Motorsport",
+    40
+  ],
+  [
+    "Western Epic",
+    40
+  ],
+  [
+    "Extreme Sport",
+    39
+  ],
+  [
+    "Faith & Spirituality Documentary",
+    39
+  ],
+  [
+    "Bumbling Detective",
+    38
+  ],
+  [
+    "Hard-boiled Detective",
+    37
+  ],
+  [
+    "Stand-Up",
+    35
+  ],
+  [
+    "Crime Documentary",
+    33
+  ],
+  [
+    "Nature Documentary",
+    33
+  ],
+  [
+    "Political Documentary",
+    32
+  ],
+  [
+    "Military Documentary",
+    31
+  ],
+  [
+    "Water Sport",
+    31
+  ],
+  [
+    "Adult",
+    30
+  ],
+  [
+    "Cozy Mystery",
+    29
+  ],
+  [
+    "Mockumentary",
+    27
+  ],
+  [
+    "Financial Drama",
+    27
+  ],
+  [
+    "History Documentary",
+    27
+  ],
+  [
+    "Mecha",
+    27
+  ],
+  [
+    "Shōnen",
+    27
+  ],
+  [
+    "Science & Technology Documentary",
+    26
+  ],
+  [
+    "Food Documentary",
+    25
+  ],
+  [
+    "Soccer",
+    24
+  ],
+  [
+    "Seinen",
+    14
+  ],
+  [
+    "Travel Documentary",
+    13
+  ],
+  [
+    "Shōjo",
+    13
+  ],
+  [
+    "Slice of Life",
+    11
+  ],
+  [
+    "Isekai",
+    10
+  ],
+  [
+    "Iyashikei",
+    9
+  ],
+  [
+    "Holiday Animation",
+    8
+  ],
+  [
+    "Soap Opera",
+    8
+  ],
+  [
+    "Korean Drama",
+    7
+  ],
+  [
+    "Sitcom",
+    4
+  ],
+  [
+    "Talk Show",
+    1
+  ],
+  [
+    "Reality TV",
+    1
+  ],
+  [
+    "Josei",
+    1
+  ],
+  [
+    "Game Show",
+    1
+  ]
+]

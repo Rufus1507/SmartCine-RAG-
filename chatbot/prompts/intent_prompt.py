@@ -22,7 +22,12 @@ Schema JSON:
     "year_min":   <int hoặc null>,
     "year_max":   <int hoặc null>,
     "rating_min": <float hoặc null>,
-    "sort_by":    "rating" | "votes" | "year" | null,
+    "has_oscar":    <boolean hoặc null>, # Điền true nếu hỏi phim đoạt giải Oscar hoặc phim có Oscar
+    "has_awards":   <boolean hoặc null>, # Điền true nếu hỏi phim đoạt giải thưởng nói chung (hoặc liên hoan phim)
+    "duration_min": <int hoặc null>,     # Thời lượng tối thiểu (phút), ví dụ: "trên 2 tiếng" -> 120
+    "duration_max": <int hoặc null>,     # Thời lượng tối đa (phút), ví dụ: "dưới 90 phút" -> 90
+    "meta_score_min": <int hoặc null>,   # Điểm Metacritic tối thiểu, ví dụ: "metascore trên 80" -> 80
+    "sort_by":    "rating" | "votes" | "year" | "metascore" | null,
     "sort_order": "asc" | "desc" | null
   }},
   "free_text": <câu hỏi gốc của user, dùng cho chitchat>
@@ -33,8 +38,8 @@ Hướng dẫn lọc "country":
 - KHÔNG điền country nếu người dùng yêu cầu phim về nội dung/bối cảnh ở quốc gia đó (ví dụ: "phim về nước Mỹ", "phim chiến tranh Việt Nam" -> lúc này country=null).
 
 Ví dụ:
-User: "Tìm phim hành động của Christopher Nolan trên 8 điểm"
-JSON: {{"intent":"search","filters":{{"title":null,"genre":"Action","director":"Christopher Nolan","star":null,"country":null,"year_min":null,"year_max":null,"rating_min":8.0,"sort_by":"rating","sort_order":"desc"}},"free_text":"Tìm phim hành động của Christopher Nolan trên 8 điểm"}}
+User: "Tìm phim hành động đoạt giải Oscar dưới 2 tiếng có metascore trên 80"
+JSON: {{"intent":"search","filters":{{"title":null,"genre":"Action","director":null,"star":null,"country":null,"year_min":null,"year_max":null,"rating_min":null,"has_oscar":true,"has_awards":true,"duration_min":null,"duration_max":120,"meta_score_min":80,"sort_by":"metascore","sort_order":"desc"}},"free_text":"Tìm phim hành động đoạt giải Oscar dưới 2 tiếng có metascore trên 80"}}
 
 {hints_str}
 {history_str}

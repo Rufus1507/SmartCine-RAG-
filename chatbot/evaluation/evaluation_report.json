@@ -6,7 +6,7 @@
   "retrieval_accuracy": 1.0,
   "country_accuracy": 1.0,
   "similar_movie_quality": 1.0,
-  "average_latency_seconds": 25.45038143793742,
+  "average_latency_seconds": 28.863778127564323,
   "details": [
     {
       "case_id": 1,
@@ -28,9 +28,9 @@
         "sort_order": "desc"
       },
       "filters_correct": true,
-      "movies_retrieved": 3,
+      "movies_retrieved": 4,
       "retrieval_correct": true,
-      "latency_seconds": 26.575,
+      "latency_seconds": 50.004,
       "status": "PASS"
     },
     {
@@ -59,7 +59,7 @@
       "filters_correct": true,
       "movies_retrieved": 5,
       "retrieval_correct": true,
-      "latency_seconds": 24.098,
+      "latency_seconds": 28.213,
       "status": "PASS"
     },
     {
@@ -78,7 +78,7 @@
       "filters_correct": true,
       "movies_retrieved": 5,
       "retrieval_correct": true,
-      "latency_seconds": 22.417,
+      "latency_seconds": 27.076,
       "status": "PASS"
     },
     {
@@ -104,7 +104,7 @@
       "filters_correct": true,
       "movies_retrieved": 0,
       "retrieval_correct": true,
-      "latency_seconds": 11.404,
+      "latency_seconds": 10.489,
       "status": "PASS"
     },
     {
@@ -121,12 +121,14 @@
       "filters_applied": {
         "genre": "Comedy",
         "star": "Leonardo DiCaprio",
-        "year_min": 2011
+        "year_min": 2011,
+        "sort_by": "year",
+        "sort_order": "desc"
       },
       "filters_correct": true,
-      "movies_retrieved": 5,
+      "movies_retrieved": 4,
       "retrieval_correct": true,
-      "latency_seconds": 23.043,
+      "latency_seconds": 21.179,
       "status": "PASS"
     },
     {
@@ -137,18 +139,27 @@
         "search",
         "info"
       ],
-      "predicted_intent": "info",
+      "predicted_intent": "search",
       "intent_correct": true,
       "expected_filters": {
         "title": "Iron Man"
       },
       "filters_applied": {
-        "title": "Iron Man"
+        "title": "Iron Man",
+        "genre": null,
+        "director": "man",
+        "star": "man",
+        "country": null,
+        "year_min": null,
+        "year_max": null,
+        "rating_min": null,
+        "sort_by": null,
+        "sort_order": null
       },
       "filters_correct": true,
-      "movies_retrieved": 5,
+      "movies_retrieved": 0,
       "retrieval_correct": true,
-      "latency_seconds": 34.356,
+      "latency_seconds": 15.385,
       "status": "PASS"
     },
     {
@@ -170,7 +181,7 @@
       "filters_correct": true,
       "movies_retrieved": 5,
       "retrieval_correct": true,
-      "latency_seconds": 23.181,
+      "latency_seconds": 25.104,
       "status": "PASS"
     },
     {
@@ -194,9 +205,9 @@
         "sort_order": null
       },
       "filters_correct": true,
-      "movies_retrieved": 2,
+      "movies_retrieved": 5,
       "retrieval_correct": true,
-      "latency_seconds": 15.857,
+      "latency_seconds": 35.128,
       "status": "PASS"
     },
     {
@@ -224,7 +235,7 @@
       "filters_correct": true,
       "movies_retrieved": 5,
       "retrieval_correct": true,
-      "latency_seconds": 32.379,
+      "latency_seconds": 47.781,
       "status": "PASS"
     },
     {
@@ -252,7 +263,7 @@
       "filters_correct": true,
       "movies_retrieved": 5,
       "retrieval_correct": true,
-      "latency_seconds": 16.888,
+      "latency_seconds": 26.25,
       "status": "PASS"
     },
     {
@@ -271,7 +282,7 @@
       "filters_correct": true,
       "movies_retrieved": 5,
       "retrieval_correct": true,
-      "latency_seconds": 21.076,
+      "latency_seconds": 26.959,
       "status": "PASS"
     },
     {
@@ -299,7 +310,7 @@
       "filters_correct": true,
       "movies_retrieved": 5,
       "retrieval_correct": true,
-      "latency_seconds": 19.511,
+      "latency_seconds": 25.451,
       "status": "PASS"
     },
     {
@@ -327,7 +338,7 @@
       "filters_correct": true,
       "movies_retrieved": 5,
       "retrieval_correct": true,
-      "latency_seconds": 24.473,
+      "latency_seconds": 24.907,
       "status": "PASS"
     },
     {
@@ -349,13 +360,13 @@
         "year_min": null,
         "year_max": null,
         "rating_min": null,
-        "sort_by": "rating",
-        "sort_order": "desc"
+        "sort_by": null,
+        "sort_order": null
       },
       "filters_correct": true,
       "movies_retrieved": 5,
       "retrieval_correct": true,
-      "latency_seconds": 21.844,
+      "latency_seconds": 35.714,
       "status": "PASS"
     },
     {
@@ -383,7 +394,7 @@
       "filters_correct": true,
       "movies_retrieved": 5,
       "retrieval_correct": true,
-      "latency_seconds": 29.678,
+      "latency_seconds": 32.746,
       "status": "PASS"
     },
     {
@@ -395,7 +406,7 @@
       "intent_correct": true,
       "expected_filters": {},
       "filters_applied": {
-        "title": "Inception",
+        "title": null,
         "genre": null,
         "director": null,
         "star": null,
@@ -409,7 +420,7 @@
       "filters_correct": true,
       "movies_retrieved": 5,
       "retrieval_correct": true,
-      "latency_seconds": 45.517,
+      "latency_seconds": 43.163,
       "status": "PASS"
     },
     {
@@ -435,7 +446,7 @@
       "filters_correct": true,
       "movies_retrieved": 5,
       "retrieval_correct": true,
-      "latency_seconds": 39.353,
+      "latency_seconds": 25.954,
       "status": "PASS"
     },
     {
@@ -459,9 +470,9 @@
         "sort_order": null
       },
       "filters_correct": true,
-      "movies_retrieved": 5,
+      "movies_retrieved": 3,
       "retrieval_correct": true,
-      "latency_seconds": 26.456,
+      "latency_seconds": 18.044,
       "status": "PASS"
     }
   ]

@@ -1,0 +1,4802 @@
+[
+  {
+    "query": "phim tương tự phim Without a Trace",
+    "seed_movie": "Without a Trace",
+    "relevant_movies": [
+      "Grimm",
+      "The Sentinel",
+      "21 Bridges",
+      "Elementary",
+      "Alert: Missing Persons Unit",
+      "The Killer",
+      "Paradiso infernale",
+      "One Good Cop",
+      "Do or Die",
+      "Breaker! Breaker!"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Human Voice",
+    "seed_movie": "The Human Voice",
+    "relevant_movies": [
+      "If Only",
+      "Monica",
+      "The Eternal Daughter",
+      "Closed Curtain",
+      "Closed Curtain",
+      "La Jetée",
+      "Everything Will Be Okay",
+      "Sorry, Baby",
+      "Father and Daughter",
+      "Julieta"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Beowulf & Grendel",
+    "seed_movie": "Beowulf & Grendel",
+    "relevant_movies": [
+      "Creation of the Gods I: Kingdom of Storms",
+      "The Bastard Son & The Devil Himself",
+      "When the Raven Flies",
+      "Mythica: A Quest for Heroes",
+      "Troll",
+      "Mortal",
+      "Hagen",
+      "Troy: Fall of a City",
+      "The Girl with All the Gifts",
+      "The Lord of the Rings: The Rings of Power"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Gotham",
+    "seed_movie": "Gotham",
+    "relevant_movies": [
+      "Jessica Jones",
+      "The Batman",
+      "Batman Begins",
+      "The Dark Knight",
+      "The Punisher",
+      "Jesse Stone: Benefit of the Doubt",
+      "Banshee",
+      "Desperate Measures",
+      "Law Abiding Citizen",
+      "Broken City"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Pyramid",
+    "seed_movie": "The Pyramid",
+    "relevant_movies": [
+      "V/H/S",
+      "V/H/S",
+      "The Gallows",
+      "As Above, So Below",
+      "6 Souls",
+      "I See You",
+      "Slender Man",
+      "V/H/S/94",
+      "The Curse of La Llorona",
+      "The Black Water Vampire"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Dance of Reality",
+    "seed_movie": "The Dance of Reality",
+    "relevant_movies": [
+      "Endless Poetry",
+      "Endless Poetry",
+      "Petite Maman",
+      "Petite Maman",
+      "Tom of Finland",
+      "Loro",
+      "Loro",
+      "Mirror",
+      "Mirror",
+      "The Science of Sleep"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Tom & Jerry",
+    "seed_movie": "Tom & Jerry",
+    "relevant_movies": [
+      "The Tom and Jerry Show",
+      "Latte & the Magic Waterstone",
+      "Thunder and the House of Magic",
+      "Dead End: Paranormal Park",
+      "The Ice Age Adventures of Buck Wild",
+      "Pickle and Peanut",
+      "Lloyd in Space",
+      "Rick and Morty",
+      "Mickey Mouse Clubhouse",
+      "Woody Woodpecker"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Voyeurs",
+    "seed_movie": "The Voyeurs",
+    "relevant_movies": [
+      "Burning Betrayal",
+      "The Scarlet Letter",
+      "Girls on Film",
+      "Alone",
+      "Girls on Film",
+      "Alone",
+      "Pretty Little Liars",
+      "Rebecca",
+      "Addicted",
+      "Honeymoon"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Day of the Beast",
+    "seed_movie": "The Day of the Beast",
+    "relevant_movies": [
+      "Bitch Slap",
+      "Perdita Durango",
+      "Even Angels Eat Beans",
+      "The Mafia Kills Only in Summer",
+      "The Mafia Kills Only in Summer",
+      "Jackpot",
+      "Time of the Gypsies",
+      "Beyond Re-Animator",
+      "Caught Stealing",
+      "Time of the Gypsies"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Decline",
+    "seed_movie": "The Decline",
+    "relevant_movies": [
+      "Turbulence 2: Fear of Flying",
+      "Greenland",
+      "Dangerous",
+      "Deadly Prey",
+      "Deadlock",
+      "The Mother",
+      "Ballerina",
+      "Butterfly",
+      "Sky Force",
+      "Take Cover"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Runaway Bride",
+    "seed_movie": "Runaway Bride",
+    "relevant_movies": [
+      "The Nanny",
+      "Dharma & Greg",
+      "Love by Chance",
+      "Happy Endings",
+      "B&B Merry",
+      "You Should Meet My Son!",
+      "Rhino King",
+      "My Favorite Wedding",
+      "Lights, Camera, Christmas!",
+      "See Jane Date"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Panic in Needle Park",
+    "seed_movie": "The Panic in Needle Park",
+    "relevant_movies": [
+      "How She Move",
+      "Goldie",
+      "Sex Madness",
+      "Spa Night",
+      "Urchin",
+      "The Girlfriend Experience",
+      "The Deer",
+      "Pvt Chat",
+      "Kalina krasnaya",
+      "Sommer vorm Balkon"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Stanford Prison Experiment",
+    "seed_movie": "The Stanford Prison Experiment",
+    "relevant_movies": [
+      "American Animals",
+      "Maze",
+      "The Professor and the Madman",
+      "For Life",
+      "Dread",
+      "Emergency",
+      "The Experiment",
+      "Dread",
+      "Brotherhood",
+      "Prison 77"
+    ]
+  },
+  {
+    "query": "phim tương tự phim 300",
+    "seed_movie": "300",
+    "relevant_movies": [
+      "300: Rise of an Empire",
+      "300: Rise of an Empire",
+      "Saints and Soldiers",
+      "Aravindha Sametha",
+      "The 100",
+      "The Duelist",
+      "Masters of the Air",
+      "Resurrection: Ertugrul",
+      "9th Company",
+      "A Knight of the Seven Kingdoms"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Swarm",
+    "seed_movie": "The Swarm",
+    "relevant_movies": [
+      "Il demonio",
+      "Inside",
+      "A Virgin Among the Living Dead",
+      "The Dark and the Wicked",
+      "Starve Acre",
+      "Hagazussa",
+      "The Wailing",
+      "Satan's Slave",
+      "Season of the Witch",
+      "The Empty Man"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Kai Po Che",
+    "seed_movie": "Kai Po Che",
+    "relevant_movies": [
+      "Ghoomer",
+      "The Slaughter Rule",
+      "Crooked Arrows",
+      "The Power of One",
+      "Legendary",
+      "Ferrari Ki Sawaari",
+      "The Natural",
+      "The Legend of Bagger Vance",
+      "He Got Game",
+      "Boogie"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Afraid",
+    "seed_movie": "Afraid",
+    "relevant_movies": [
+      "Pod",
+      "Area 51",
+      "Cube",
+      "Cube",
+      "Black Box",
+      "Paranormal Activity: The Ghost Dimension",
+      "Paranormal Activity: The Ghost Dimension",
+      "Bird Box",
+      "Area 51",
+      "Paranormal Activity 2"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Air America",
+    "seed_movie": "Air America",
+    "relevant_movies": [
+      "Into the Sun",
+      "Braddock: Missing in Action III",
+      "The Sympathizer",
+      "Hard Ticket to Hawaii",
+      "Memphis Belle",
+      "Whiskey Cavalier",
+      "My Spy",
+      "The Men Who Stare at Goats",
+      "The Corporal and Others",
+      "Three Kings"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Wind Will Carry Us",
+    "seed_movie": "The Wind Will Carry Us",
+    "relevant_movies": [
+      "Taste of Cherry",
+      "Taste of Cherry",
+      "Winter Sleep",
+      "Eternity and a Day",
+      "Eternity and a Day",
+      "The Chekist",
+      "About Dry Grasses",
+      "About Dry Grasses",
+      "Trilogia II: I skoni tou hronou",
+      "Memories of the Wind"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Eye",
+    "seed_movie": "The Eye",
+    "relevant_movies": [
+      "The Call of Cthulhu",
+      "The Call of Cthulhu",
+      "Paranormal Activity: The Ghost Dimension",
+      "Ringu",
+      "Paranormal Activity 4",
+      "Witchboard 2",
+      "Witchboard 2",
+      "Sorority Row",
+      "The Ring",
+      "The Nun II"
+    ]
+  },
+  {
+    "query": "phim tương tự phim King of the Hill",
+    "seed_movie": "King of the Hill",
+    "relevant_movies": [
+      "The Motel",
+      "Dr. Katz, Professional Therapist",
+      "Geography Club",
+      "BoJack Horseman",
+      "Gekijô-ban Dôbutsu no Mori",
+      "Shakes the Clown",
+      "Dottie Gets Spanked",
+      "Friday",
+      "Shower",
+      "Friday"
+    ]
+  },
+  {
+    "query": "phim tương tự phim God Bless America",
+    "seed_movie": "God Bless America",
+    "relevant_movies": [
+      "Down Terrace",
+      "Bad Boy Bubby",
+      "The Angels' Share",
+      "The Mafia Kills Only in Summer",
+      "The Mafia Kills Only in Summer",
+      "Once Upon a Time in America",
+      "Double Whammy",
+      "Dead to Me",
+      "This World, Then the Fireworks",
+      "The Doom Generation"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Dead Presidents",
+    "seed_movie": "Dead Presidents",
+    "relevant_movies": [
+      "Hollywood Homicide",
+      "Combat Shock",
+      "Warfare",
+      "The Rookie",
+      "Breaking",
+      "Soldier Boyz",
+      "48 Hrs.",
+      "Detective Byomkesh Bakshy!",
+      "Uncommon Valor",
+      "Trouble Bound"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Vampire Lovers",
+    "seed_movie": "The Vampire Lovers",
+    "relevant_movies": [
+      "Lust for a Vampire",
+      "Lust for a Vampire",
+      "Terror",
+      "Virgin Witch",
+      "The Reincarnation of Isabel",
+      "The Velvet Vampire",
+      "Scars of Dracula",
+      "Hellbender",
+      "Lake of Dracula",
+      "The Cellar"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Kinds of Kindness",
+    "seed_movie": "Kinds of Kindness",
+    "relevant_movies": [
+      "Bad Biology",
+      "Bad Biology",
+      "Brain Damage",
+      "The Life List",
+      "The Book of Solutions",
+      "30 Nights of Paranormal Activity with the Devil Inside the Girl with the Dragon Tattoo",
+      "Spookies",
+      "Sorry, Baby",
+      "A Field in England",
+      "The Shining"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Over the Edge",
+    "seed_movie": "Over the Edge",
+    "relevant_movies": [
+      "Pixote",
+      "A Guide to Recognizing Your Saints",
+      "The Gathering",
+      "Illegal Tender",
+      "True Confessions",
+      "River's Edge",
+      "When the Streetlights Go On",
+      "City of Hope",
+      "Please Don't Feed the Children",
+      "South Central"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Charlie's Angels",
+    "seed_movie": "Charlie's Angels",
+    "relevant_movies": [
+      "Charlie's Angels: Full Throttle",
+      "Charlie's Angels: Full Throttle",
+      "Game Night",
+      "Kingsman: The Golden Circle",
+      "Bitch Slap",
+      "The Spy Who Dumped Me",
+      "Bad Boys: Ride or Die",
+      "Look",
+      "To the Limit",
+      "A Hard Day"
+    ]
+  },
+  {
+    "query": "phim tương tự phim All the Bright Places",
+    "seed_movie": "All the Bright Places",
+    "relevant_movies": [
+      "The Summer I Turned Pretty",
+      "Elena Undone",
+      "Big Sky River",
+      "Watercolors",
+      "Watercolors",
+      "Touch",
+      "Touch",
+      "Raising Victor Vargas",
+      "Wheel of Fortune and Fantasy",
+      "Looking for Alaska"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Science of Sleep",
+    "seed_movie": "The Science of Sleep",
+    "relevant_movies": [
+      "Mascarpone",
+      "The Little Thief",
+      "A Dog's Will",
+      "The Taste of Others",
+      "The Taste of Others",
+      "Window to Paris",
+      "Rough Magic",
+      "Promise at Dawn",
+      "Four Nights of a Dreamer",
+      "Four Nights of a Dreamer"
+    ]
+  },
+  {
+    "query": "phim tương tự phim I'm Still Here",
+    "seed_movie": "I'm Still Here",
+    "relevant_movies": [
+      "Victoria",
+      "Milada",
+      "Nowhere in Africa",
+      "Jewel in the Palace",
+      "Women at War",
+      "Queen Margot",
+      "Madame Satã",
+      "Domina",
+      "Jeanne du Barry",
+      "The Glorias"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Sunday Bloody Sunday",
+    "seed_movie": "Sunday Bloody Sunday",
+    "relevant_movies": [
+      "Mother's Child",
+      "The Pumpkin Eater",
+      "The Pumpkin Eater",
+      "Fruit of Paradise",
+      "Menashe",
+      "Father and Son",
+      "The Killing of Two Lovers",
+      "All Is Well",
+      "Caught in the Web",
+      "Nausea"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Child's Play",
+    "seed_movie": "Child's Play",
+    "relevant_movies": [
+      "Demonic",
+      "The Hamiltons",
+      "Toad Road",
+      "Hypochondriac",
+      "Cube Zero",
+      "The Wretched",
+      "Escape from Tomorrow",
+      "In the Earth",
+      "Firestarter",
+      "The Kiss"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Baby Driver",
+    "seed_movie": "Baby Driver",
+    "relevant_movies": [
+      "Turn It Up",
+      "Lurker",
+      "Nouba",
+      "Don't. Get. Out!",
+      "Aranyélet",
+      "Gangster's Paradise: Jerusalema",
+      "Adanga Maru",
+      "Public Disorder",
+      "The Longest Night",
+      "The Oath"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Tucker and Dale vs Evil",
+    "seed_movie": "Tucker and Dale vs Evil",
+    "relevant_movies": [
+      "Bhabiji Ghar Par Hain: Fun on the Run",
+      "Adi Kapyare Kootamani",
+      "Scare Me",
+      "Zombeavers",
+      "Deadstream",
+      "The Babysitter",
+      "Evil Breed: The Legend of Samhain",
+      "Basket Case 2",
+      "The Undertaker and His Pals",
+      "There's Nothing Out There"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Student of the Year",
+    "seed_movie": "Student of the Year",
+    "relevant_movies": [
+      "Love Aaj Kal",
+      "Love Aaj Kal",
+      "Student of the Year 2",
+      "Pyaar Ka Punchnama 2",
+      "96",
+      "Chhichhore",
+      "Tiny Furniture",
+      "ATL",
+      "Tiny Furniture",
+      "Dev.D"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Truth",
+    "seed_movie": "The Truth",
+    "relevant_movies": [
+      "Housekeeping for Beginners",
+      "You're Sleeping, Nicole",
+      "Girls",
+      "A House on Fire",
+      "Wetlands",
+      "Masaba Masaba",
+      "Sweetie",
+      "A Summer at Grandpa's",
+      "Sweet Dreams",
+      "The Day I Became a Woman"
+    ]
+  },
+  {
+    "query": "phim tương tự phim House of Gucci",
+    "seed_movie": "House of Gucci",
+    "relevant_movies": [
+      "The Murders at White House Farm",
+      "Believe Me: The Abduction of Lisa McVey",
+      "The Clan",
+      "Madame Satã",
+      "Bad Blood",
+      "A Friend of the Family",
+      "Broken Pieces",
+      "Alias Grace",
+      "Murder, Inc.",
+      "Gangs of London"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Cloverfield",
+    "seed_movie": "Cloverfield",
+    "relevant_movies": [
+      "The First Purge",
+      "S.O.Z: Soldados o Zombies",
+      "The Toxic Avenger Part II",
+      "Critters 4",
+      "Transformers: Rise of the Beasts",
+      "Y2K",
+      "Alien: Romulus",
+      "A Quiet Place: Day One",
+      "Transformers: Rise of the Beasts",
+      "Area 51"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Robe",
+    "seed_movie": "The Robe",
+    "relevant_movies": [
+      "The Chosen",
+      "The Last Relic",
+      "Plymouth Adventure",
+      "Quo Vadis",
+      "Demetrius and the Gladiators",
+      "Agora",
+      "The Virgin Queen",
+      "The Rains of Ranchipur",
+      "Son of God",
+      "Men of Anjolos"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Crash Landing on You",
+    "seed_movie": "Crash Landing on You",
+    "relevant_movies": [
+      "Descendants of the Sun",
+      "The Day He Arrives",
+      "The Day He Arrives",
+      "Because This Is My First Life",
+      "Okja",
+      "School 2017",
+      "Legend of the Blue Sea",
+      "Heirs",
+      "Sinkhole",
+      "Swept Away"
+    ]
+  },
+  {
+    "query": "phim tương tự phim A Day in the Country",
+    "seed_movie": "A Day in the Country",
+    "relevant_movies": [
+      "The Red Balloon",
+      "An Exercise in Discipline: Peel",
+      "Songs from the Second Floor",
+      "Once in a Lifetime",
+      "Songs from the Second Floor",
+      "Me You Them",
+      "Graduate First",
+      "Graduate First",
+      "Peppermint Soda",
+      "The Strange Little Cat"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Birth/Rebirth",
+    "seed_movie": "Birth/Rebirth",
+    "relevant_movies": [
+      "Grace",
+      "Hypochondriac",
+      "Malum",
+      "Burning Bright",
+      "Tooth and Nail",
+      "Tooth and Nail",
+      "Blood and Lace",
+      "No Exit",
+      "Don't Move",
+      "Demonic"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Padaiyappa",
+    "seed_movie": "Padaiyappa",
+    "relevant_movies": [
+      "Thevar Magan",
+      "Maheshinte Prathikaaram",
+      "Baahubali: The Beginning",
+      "Baahubali 2: The Conclusion",
+      "Chhichhore",
+      "Bedurulanka 2012",
+      "Mifune",
+      "Deewana",
+      "Singh Is Bliing",
+      "Long Live Love!"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Annabelle",
+    "seed_movie": "Annabelle",
+    "relevant_movies": [
+      "The Slayer",
+      "The Forest",
+      "Night Swim",
+      "The Night",
+      "The Night",
+      "Death of Me",
+      "Sinister 2",
+      "The Visit",
+      "Night Swim",
+      "Held"
+    ]
+  },
+  {
+    "query": "phim tương tự phim TMNT",
+    "seed_movie": "TMNT",
+    "relevant_movies": [
+      "Lupin the 3rd: The Mystery of Mamo",
+      "Godzilla vs. Megalon",
+      "Lightyear",
+      "Godzilla vs. Gigan",
+      "Gamera vs. Viras",
+      "Six-String Samurai",
+      "Wonderful Days",
+      "Incredibles 2",
+      "Godzilla vs. Hedorah",
+      "Felix the Cat: The Movie"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Cabbage Soup",
+    "seed_movie": "The Cabbage Soup",
+    "relevant_movies": [
+      "Crimes of the Future",
+      "Dark Star",
+      "Snow, Tea and Love",
+      "Illegal Aliens",
+      "The Gendarme and the Extra-Terrestrials",
+      "Visit to a Small Planet",
+      "My Stepmother Is an Alien",
+      "The Green Planet",
+      "The Mating Habits of the Earthbound Human",
+      "Mutant Action"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Ed Wood",
+    "seed_movie": "Ed Wood",
+    "relevant_movies": [
+      "Private Parts",
+      "Tucker: The Man and His Dream",
+      "Tucker: The Man and His Dream",
+      "Saving Mr. Banks",
+      "The Big Short",
+      "Bingo: The King of the Mornings",
+      "Riding in Cars with Boys",
+      "Riding in Cars with Boys",
+      "One Foot in the Grave",
+      "Grey Gardens"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Holmes & Watson",
+    "seed_movie": "Holmes & Watson",
+    "relevant_movies": [
+      "Trial & Error",
+      "See How They Run",
+      "Playing Dead",
+      "Nobody Else But You",
+      "Year of the Rabbit",
+      "Yeh Kaali Kaali Ankhein",
+      "Deadloch",
+      "Without a Clue",
+      "Hit Man",
+      "The Mysteries of Laura"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Road to Bali",
+    "seed_movie": "Road to Bali",
+    "relevant_movies": [
+      "Road to Rio",
+      "Pearl in Paradise",
+      "The Adventures of Baron Munchausen",
+      "Abbott and Costello Meet Captain Kidd",
+      "The Adventures of Baron Munchausen",
+      "Road to Morocco",
+      "The Portable Door",
+      "The Mole",
+      "The Road to El Dorado",
+      "Dora and the Search for Sol Dorado"
+    ]
+  },
+  {
+    "query": "phim tương tự phim To Each His Own Cinema",
+    "seed_movie": "To Each His Own Cinema",
+    "relevant_movies": [
+      "The Worst Ones",
+      "The Book of Solutions",
+      "Superboys of Malegaon",
+      "Diamonds",
+      "Outnumbered",
+      "Red Post on Escher Street",
+      "Me You Them",
+      "Fresh Meat",
+      "Muxmäuschenstill",
+      "The Strange Little Cat"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Basquiat",
+    "seed_movie": "Basquiat",
+    "relevant_movies": [
+      "I Shot Andy Warhol",
+      "Tom of Finland",
+      "Mapplethorpe",
+      "Daliland",
+      "Pollock",
+      "Jobs",
+      "Never Look Away",
+      "Seraphine",
+      "Yves Saint Laurent",
+      "Downtown 81"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Dumplin'",
+    "seed_movie": "Dumplin'",
+    "relevant_movies": [
+      "Girls",
+      "The Divine Order",
+      "Confessions of an Invisible Girl",
+      "You're Sleeping, Nicole",
+      "Dream for an Insomniac",
+      "Miss Juneteenth",
+      "Lemonade Mouth",
+      "My Suicide",
+      "Love Don't Cost a Thing",
+      "The Cheetah Girls"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Irreversible",
+    "seed_movie": "Irreversible",
+    "relevant_movies": [
+      "Anatomy of a Fall",
+      "The Night of the 12th",
+      "Deadwind",
+      "Ugly",
+      "Wire in the Blood",
+      "Hukkle",
+      "Missing You",
+      "Rellik",
+      "Springfloden",
+      "Two Graves"
+    ]
+  },
+  {
+    "query": "phim tương tự phim 2001 Maniacs",
+    "seed_movie": "2001 Maniacs",
+    "relevant_movies": [
+      "Psycho Cop",
+      "Evil Laugh",
+      "There's Nothing Out There",
+      "Shredder",
+      "Untitled Horror Movie",
+      "Adi Kapyare Kootamani",
+      "Evil Laugh",
+      "House",
+      "Zombeavers",
+      "The Convent"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Only Angels Have Wings",
+    "seed_movie": "Only Angels Have Wings",
+    "relevant_movies": [
+      "The Precocious and Brief Life of Sabina Rivas",
+      "Tabu: A Story of the South Seas",
+      "Tanna",
+      "Una noche",
+      "Along for the Ride",
+      "The Philadelphia Experiment",
+      "Barbary Coast",
+      "The Love Boat",
+      "Jingle Bell Bride",
+      "After"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Titus",
+    "seed_movie": "Titus",
+    "relevant_movies": [
+      "Manhunt",
+      "Tell Me a Story",
+      "Alexander the Great",
+      "The Big Fake",
+      "Waking Sleeping Beauty",
+      "Wendy",
+      "JFK",
+      "A Field in England",
+      "Home Movie",
+      "Men of Anjolos"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Annie",
+    "seed_movie": "Annie",
+    "relevant_movies": [
+      "Andi Mack",
+      "Brittany Runs a Marathon",
+      "Boy Meets World",
+      "All You Can Dream",
+      "Waitress: The Musical",
+      "Camp",
+      "The Comedy",
+      "I Just Want My Pants Back",
+      "Only When I Laugh",
+      "The Letter Writer"
+    ]
+  },
+  {
+    "query": "phim tương tự phim North Face",
+    "seed_movie": "North Face",
+    "relevant_movies": [
+      "Stefan Zweig: Farewell to Europe",
+      "Race to the Summit",
+      "Jungle",
+      "The Tunnel",
+      "Touching the Void",
+      "Seven Years in Tibet",
+      "The Himalayas",
+      "Everest",
+      "Conspiracy",
+      "Kon-Tiki"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Closer",
+    "seed_movie": "The Closer",
+    "relevant_movies": [
+      "Cold Case",
+      "Law & Order: Trial by Jury",
+      "Bones",
+      "A Beautiful Place to Die: A Martha's Vineyard Mystery",
+      "Redemption",
+      "Emergence",
+      "The Lady in the Car with Glasses and a Gun",
+      "Behzat Ç: An Ankara Detective Story",
+      "In Plain Sight",
+      "Lynley"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Kick",
+    "seed_movie": "Kick",
+    "relevant_movies": [
+      "Por Thozhil",
+      "A Hard Day",
+      "Identity",
+      "Sleepless Night",
+      "Cingöz Recai",
+      "Believer",
+      "The Bannen Way",
+      "Hotline Miami",
+      "Murder 2",
+      "Extreme Job"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Shot Caller",
+    "seed_movie": "Shot Caller",
+    "relevant_movies": [
+      "Mea Culpa",
+      "Ms .45",
+      "Complications",
+      "The Bad Kids",
+      "Killer's Kiss",
+      "Karma",
+      "Headshot",
+      "Bullet Ballet",
+      "Bullet Ballet",
+      "Gemini"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Shaun the Sheep",
+    "seed_movie": "Shaun the Sheep",
+    "relevant_movies": [
+      "Mr. Bean: The Animated Series",
+      "Three Little Pigs",
+      "Porky in Wackyland",
+      "Shaun the Sheep Movie",
+      "The Madagascar Penguins in a Christmas Caper",
+      "Fantastic Mr. Fox",
+      "Barnyard",
+      "Shaun the Sheep Movie",
+      "Gekijô-ban Dôbutsu no Mori",
+      "Chicken Run"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Masterminds",
+    "seed_movie": "Masterminds",
+    "relevant_movies": [
+      "Whitey: United States of America v. James J. Bulger",
+      "MoviePass, MovieCrash",
+      "Exit Through the Gift Shop",
+      "Exit Through the Gift Shop",
+      "Trial & Error",
+      "The Informant!",
+      "Bernie",
+      "Find Me Guilty",
+      "BlacKkKlansman",
+      "American Animals"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Boiling Point",
+    "seed_movie": "Boiling Point",
+    "relevant_movies": [
+      "The Passenger",
+      "Hunger",
+      "Unspeakable Sins",
+      "Rest in Peace",
+      "Lurker",
+      "The Hater",
+      "Simmer",
+      "The Isle",
+      "Straw",
+      "The Passenger"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Shane",
+    "seed_movie": "Shane",
+    "relevant_movies": [
+      "A Soldier's Revenge",
+      "Horizon: An American Saga - Chapter 2",
+      "Heaven with a Gun",
+      "Ride a Crooked Trail",
+      "Once Upon a Time in the West",
+      "Ride Clear of Diablo",
+      "'Doc'",
+      "Hickok",
+      "The Missouri Breaks",
+      "Heartland"
+    ]
+  },
+  {
+    "query": "phim tương tự phim That Sugar Film",
+    "seed_movie": "That Sugar Film",
+    "relevant_movies": [
+      "Hack Your Health: The Secrets of Your Gut",
+      "Is Genesis History?",
+      "Freakonomics",
+      "The Subtle Art of Not Giving a F*ck",
+      "SOMM",
+      "GMO OMG",
+      "Louis Theroux: Savile",
+      "I Like Killing Flies",
+      "Client 9",
+      "Client 9"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Mother's Day",
+    "seed_movie": "Mother's Day",
+    "relevant_movies": [
+      "Abigail",
+      "The Vagrant",
+      "Bride of Chucky",
+      "The Mutilator",
+      "The Dentist",
+      "Anguish",
+      "Texas Chainsaw Massacre: The Next Generation",
+      "Cheerleader Camp",
+      "Die My Love",
+      "Nightmare Man"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Veronica Guerin",
+    "seed_movie": "Veronica Guerin",
+    "relevant_movies": [
+      "The Murders at White House Farm",
+      "The Law According to Lidia Poët",
+      "Jackal of Nahueltoro",
+      "Believe Me: The Abduction of Lisa McVey",
+      "Burning Body",
+      "Maharaj",
+      "The Act",
+      "The Staircase",
+      "Murder, Inc.",
+      "Redemption"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Major and the Minor",
+    "seed_movie": "The Major and the Minor",
+    "relevant_movies": [
+      "The Seven Year Itch",
+      "Bachelor Mother",
+      "Touch Your Heart",
+      "World Gone Mad",
+      "Mr. Malcolm's List",
+      "Fifth Avenue Girl",
+      "The Palm Beach Story",
+      "The Bachelor and the Bobby-Soxer",
+      "Under the Yum Yum Tree",
+      "Melvin Goes to Dinner"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Pain Hustlers",
+    "seed_movie": "Pain Hustlers",
+    "relevant_movies": [
+      "Wanda",
+      "Sight Unseen",
+      "Divines",
+      "Daughter of the Nile",
+      "Blinded by the Lights",
+      "Kak Vitka Chesnok vyoz Lyokhu Shtyrya v dom invalidov",
+      "Kak Vitka Chesnok vyoz Lyokhu Shtyrya v dom invalidov",
+      "Money",
+      "Broken Pieces",
+      "Lilya 4-Ever"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Body and Soul",
+    "seed_movie": "Body and Soul",
+    "relevant_movies": [
+      "They Made Me a Criminal",
+      "Killer's Kiss",
+      "The Harder They Fall",
+      "Champion",
+      "Above the Rim",
+      "The Set-Up",
+      "Kids Return",
+      "Ms .45",
+      "Catch the Fair One",
+      "Above the Rim"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Bitch",
+    "seed_movie": "The Bitch",
+    "relevant_movies": [
+      "Next Stop Paradise",
+      "In the Shadow of Women",
+      "Sir",
+      "Café de Flore",
+      "The Vertical Ray of the Sun",
+      "What Time Is It There?",
+      "What Time Is It There?",
+      "The Man Who Copied",
+      "No Regret",
+      "No Regret"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Players",
+    "seed_movie": "The Players",
+    "relevant_movies": [
+      "The Strange Little Cat",
+      "Outnumbered",
+      "Rain Dogs",
+      "Nede Vidudala",
+      "Superboys of Malegaon",
+      "Alles op tafel",
+      "Red Post on Escher Street",
+      "Diamonds",
+      "Aanchhi",
+      "Sitcom"
+    ]
+  },
+  {
+    "query": "phim tương tự phim I Can Quit Whenever I Want",
+    "seed_movie": "I Can Quit Whenever I Want",
+    "relevant_movies": [
+      "Thieves and Robbers",
+      "Ruby & Quentin",
+      "Ruby & Quentin",
+      "Fiasco in Milan",
+      "The World Is Yours",
+      "Fiasco in Milan",
+      "The Gentleman from Epsom",
+      "The Gentleman from Epsom",
+      "Crazy on the Outside",
+      "We're the Millers"
+    ]
+  },
+  {
+    "query": "phim tương tự phim My Life in Ruins",
+    "seed_movie": "My Life in Ruins",
+    "relevant_movies": [
+      "A Simple Wedding",
+      "You Should Meet My Son!",
+      "Happy Endings",
+      "Bad Girls from Valley High",
+      "Dirty Love",
+      "The Nanny",
+      "The Last Summer",
+      "Cheap Smokes",
+      "Going the Distance",
+      "A Dash of Love"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Saving Silverman",
+    "seed_movie": "Saving Silverman",
+    "relevant_movies": [
+      "Happy Endings",
+      "Dirty Love",
+      "You Should Meet My Son!",
+      "Going the Distance",
+      "Straight Up",
+      "Dharma & Greg",
+      "A Dash of Love",
+      "Strictly Sexual",
+      "I Am a Sex Addict",
+      "Touch Your Heart"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Willard",
+    "seed_movie": "Willard",
+    "relevant_movies": [
+      "Visitor Q",
+      "The Hamiltons",
+      "Big Bad Wolves",
+      "Martin",
+      "Mother's Day",
+      "The Scary of Sixty-First",
+      "Hypochondriac",
+      "Emergency",
+      "The Signal",
+      "Taxidermia"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Norm of the North",
+    "seed_movie": "Norm of the North",
+    "relevant_movies": [
+      "Space Jam",
+      "Minuscule 2: Mandibles from Far Away",
+      "Little Bear",
+      "Little Bird's Big Adventure",
+      "Tad: The Lost Explorer",
+      "Big City Greens",
+      "Dunno on the Moon",
+      "Space Dandy",
+      "Fraggle Rock",
+      "Open Season"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Air Up There",
+    "seed_movie": "The Air Up There",
+    "relevant_movies": [
+      "Ping Pong Playa",
+      "Lady Ballers",
+      "Overcomer",
+      "Rebound",
+      "The Big Green",
+      "The Fish That Saved Pittsburgh",
+      "The World's Greatest Athlete",
+      "Ladybugs",
+      "The Big Green",
+      "White Men Can't Jump"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Boots",
+    "seed_movie": "Boots",
+    "relevant_movies": [
+      "Dog",
+      "Sun Dogs",
+      "The Miseducation of Cameron Post",
+      "The Miseducation of Cameron Post",
+      "Matinee",
+      "Matinee",
+      "Krystal",
+      "Cyrano de Bergerac",
+      "The Last Detail",
+      "Biloxi Blues"
+    ]
+  },
+  {
+    "query": "phim tương tự phim All the Light We Cannot See",
+    "seed_movie": "All the Light We Cannot See",
+    "relevant_movies": [
+      "All Quiet on the Western Front",
+      "The Zone of Interest",
+      "Women at War",
+      "The Rotterdam Bombing",
+      "La Commune (Paris, 1871)",
+      "La Commune (Paris, 1871)",
+      "The Bridge",
+      "The Bridge",
+      "Europa Europa",
+      "In the Fog"
+    ]
+  },
+  {
+    "query": "phim tương tự phim An Officer and a Gentleman",
+    "seed_movie": "An Officer and a Gentleman",
+    "relevant_movies": [
+      "Gabriela",
+      "Charlotte Sometimes",
+      "Watercolors",
+      "Watercolors",
+      "Loving Annabelle",
+      "After",
+      "Looking for Alaska",
+      "Come Undone",
+      "Goodbye First Love",
+      "Goodbye First Love"
+    ]
+  },
+  {
+    "query": "phim tương tự phim House of Wax",
+    "seed_movie": "House of Wax",
+    "relevant_movies": [
+      "Headless",
+      "Terrifier",
+      "The Outing",
+      "Graveyard Shift",
+      "The Offering",
+      "The House on Tombstone Hill",
+      "The Touch of Satan",
+      "Tarot",
+      "Dawn of the Mummy",
+      "I Know What You Did Last Summer"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Bélier Family",
+    "seed_movie": "The Bélier Family",
+    "relevant_movies": [
+      "Ténor",
+      "Aline",
+      "Mes meilleurs copains",
+      "La La Land",
+      "What's in a Name?",
+      "What's in a Name?",
+      "Begin Again",
+      "Come as You Are",
+      "Back to Burgundy",
+      "Back to Burgundy"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Salmer fra kjøkkenet",
+    "seed_movie": "Salmer fra kjøkkenet",
+    "relevant_movies": [
+      "My Life as a Dog",
+      "Screwed in Tallinn",
+      "Devil's Island",
+      "The Magician",
+      "My Life as a Dog",
+      "Human Resources",
+      "Driving Madeleine",
+      "Driving Madeleine",
+      "The Second Mother",
+      "Me You Them"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Drifting Clouds",
+    "seed_movie": "Drifting Clouds",
+    "relevant_movies": [
+      "On My Way",
+      "A Coffee in Berlin",
+      "The Players",
+      "Tamo i ovde",
+      "The Northerners",
+      "The Northerners",
+      "Lamerica",
+      "House of Angels",
+      "My Afternoons with Margueritte",
+      "And the Woman Shall Fear Her Husband"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Mountain Between Us",
+    "seed_movie": "The Mountain Between Us",
+    "relevant_movies": [
+      "Arctic",
+      "The Grey",
+      "Survive",
+      "Island in the Sky",
+      "Departure",
+      "The Flash",
+      "Stoker",
+      "Adulterers",
+      "The High and the Mighty",
+      "The Grey"
+    ]
+  },
+  {
+    "query": "phim tương tự phim What Will People Say",
+    "seed_movie": "What Will People Say",
+    "relevant_movies": [
+      "Silent Waters",
+      "L'attesa",
+      "L'attesa",
+      "The Day Will Come",
+      "Jealousy",
+      "All Is Well",
+      "Winter Sleep",
+      "I Am Dina",
+      "Louder Than Bombs",
+      "The Girl on the Train"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Venus",
+    "seed_movie": "Venus",
+    "relevant_movies": [
+      "Get Real",
+      "Garçon stupide",
+      "Everything I Know About Love",
+      "Dev.D",
+      "Happy Times",
+      "Text for You",
+      "Twenty",
+      "Tiny Furniture",
+      "What Do We See When We Look at the Sky?",
+      "Love Today"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Utopia",
+    "seed_movie": "Utopia",
+    "relevant_movies": [
+      "Cloud Atlas",
+      "The Prestige",
+      "Between",
+      "Cloud Atlas",
+      "The Ark",
+      "The Peripheral",
+      "I Think We're Alone Now",
+      "Atlas Shrugged: Who Is John Galt?",
+      "Silo",
+      "The Quiet Earth"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Street Kings",
+    "seed_movie": "Street Kings",
+    "relevant_movies": [
+      "Time and Tide",
+      "John Wick",
+      "The Gangster, the Cop, the Devil",
+      "Special Delivery",
+      "Kiss of the Dragon",
+      "2 Fast 2 Furious",
+      "Bangkok Dangerous",
+      "Bangkok Dangerous",
+      "Por Thozhil",
+      "The Roundup: Punishment"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Five Feet Apart",
+    "seed_movie": "Five Feet Apart",
+    "relevant_movies": [
+      "Raising Victor Vargas",
+      "Timeless Love",
+      "After",
+      "Grey's Anatomy",
+      "Leap Year",
+      "Leap Year",
+      "Love at First Sight",
+      "Love at First Sight",
+      "Watercolors",
+      "Watercolors"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Zorba the Greek",
+    "seed_movie": "Zorba the Greek",
+    "relevant_movies": [
+      "The Bold Type",
+      "Ghostlight",
+      "Ghostlight",
+      "Chance",
+      "Donald Cried",
+      "Mrs",
+      "Sorry, Baby",
+      "Black Peter",
+      "Me You Them",
+      "Life is All You Get"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Despicable Me 3",
+    "seed_movie": "Despicable Me 3",
+    "relevant_movies": [
+      "Despicable Me 2",
+      "Despicable Me",
+      "Minions: The Rise of Gru",
+      "Despicable Me 4",
+      "Minions",
+      "Despicable Me 4",
+      "Despicable Me 2",
+      "Minions: The Rise of Gru",
+      "Wallace & Gromit: Vengeance Most Fowl",
+      "Pickle and Peanut"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Nines",
+    "seed_movie": "The Nines",
+    "relevant_movies": [
+      "Scales",
+      "Scales",
+      "Tru Calling",
+      "The Jacket",
+      "The Devil's Advocate",
+      "Dexter",
+      "Proof",
+      "Girl on the Third Floor",
+      "Sound of My Voice",
+      "A House Built on Water"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Scavengers Reign",
+    "seed_movie": "Scavengers Reign",
+    "relevant_movies": [
+      "Watership Down",
+      "Children Who Chase Lost Voices",
+      "My Oni Girl",
+      "Kensuke's Kingdom",
+      "Once Upon a Forest",
+      "Last Breath",
+      "The Sea Wolf",
+      "Deep Sea",
+      "Blush",
+      "The House"
+    ]
+  },
+  {
+    "query": "phim tương tự phim In the Company of Men",
+    "seed_movie": "In the Company of Men",
+    "relevant_movies": [
+      "Spanking the Monkey",
+      "Chance",
+      "The Bold Type",
+      "The Maid",
+      "Mrs",
+      "Fathers and Mothers",
+      "Bleak Moments",
+      "Bleak Moments",
+      "Soulless",
+      "The Sea"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Knife + Heart",
+    "seed_movie": "Knife + Heart",
+    "relevant_movies": [
+      "Au-delà des murs",
+      "Incident in a Ghostland",
+      "The Canal",
+      "Cam",
+      "Brand New Cherry Flavor",
+      "The Exorcist",
+      "Last Night in Soho",
+      "Spirits of the Dead",
+      "Spirits of the Dead",
+      "Rings"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Searching for Sugar Man",
+    "seed_movie": "Searching for Sugar Man",
+    "relevant_movies": [
+      "Beware of Mr. Baker",
+      "Jimi Hendrix",
+      "I Am: Celine Dion",
+      "God Bless Ozzy Osbourne",
+      "I Am: Celine Dion",
+      "Once Were Brothers",
+      "Ryuichi Sakamoto: Coda",
+      "Ryuichi Sakamoto: Coda",
+      "It's All Gone Pete Tong",
+      "José and Pilar"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Best of the Best",
+    "seed_movie": "Best of the Best",
+    "relevant_movies": [
+      "Crooked Arrows",
+      "Make It or Break It",
+      "WWE Smackdown!",
+      "Brothers",
+      "Perfect Addiction",
+      "WCW Monday Nitro",
+      "My Way",
+      "Champion",
+      "Warrior",
+      "China O'Brien"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Lover Come Back",
+    "seed_movie": "Lover Come Back",
+    "relevant_movies": [
+      "Mr. Malcolm's List",
+      "Side Effects",
+      "Love Bites",
+      "Befikre",
+      "Yo soy Betty, la fea",
+      "Office Romance",
+      "Send Me No Flowers",
+      "Love Affair, or The Case of the Missing Switchboard Operator",
+      "Love Affair, or The Case of the Missing Switchboard Operator",
+      "Afonya"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Whisky",
+    "seed_movie": "Whisky",
+    "relevant_movies": [
+      "Life is All You Get",
+      "Life is All You Get",
+      "Hesher",
+      "The Go-Getter",
+      "A House on Fire",
+      "Frozen Stiff",
+      "Mid-August Lunch",
+      "Duane Hopwood",
+      "Up and Down",
+      "Kikujiro"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Postman Always Rings Twice",
+    "seed_movie": "The Postman Always Rings Twice",
+    "relevant_movies": [
+      "Mea Culpa",
+      "Girls on Film",
+      "Body and Soul",
+      "Murder",
+      "Addicted",
+      "Frank & Lola",
+      "Girls on Film",
+      "Rage",
+      "Kansas",
+      "The Double Hour"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Suicide Squad",
+    "seed_movie": "Suicide Squad",
+    "relevant_movies": [
+      "Dungeons & Dragons: Wrath of the Dragon God",
+      "Power Rangers S.P.D.",
+      "The Thousand Faces of Dunjia",
+      "The Thousand Faces of Dunjia",
+      "Shadow of the Colossus",
+      "The Tsunami Warrior",
+      "Attack on Titan: Part 2",
+      "Descendants: The Rise of Red",
+      "Kong: Skull Island",
+      "Godzilla: King of the Monsters"
+    ]
+  },
+  {
+    "query": "phim tương tự phim I Love LA",
+    "seed_movie": "I Love LA",
+    "relevant_movies": [
+      "Buddy Games",
+      "Traffic Light",
+      "Adults",
+      "Holly Slept Over",
+      "Relax... It's Just Sex",
+      "Dollface",
+      "The Exes",
+      "Old Dads",
+      "Old Dads",
+      "Cheaters"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Silence",
+    "seed_movie": "The Silence",
+    "relevant_movies": [
+      "The Seed of the Sacred Fig",
+      "Penoza",
+      "Silenced",
+      "Boundless",
+      "Unforgiven",
+      "The Bad Kids",
+      "The Night of the Sunflowers",
+      "Interrogation",
+      "Interrogation",
+      "Cargo 200"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Anora",
+    "seed_movie": "Anora",
+    "relevant_movies": [
+      "You Hurt My Feelings",
+      "Dr. T & the Women",
+      "The Good Girl",
+      "Used People",
+      "The Big Wedding",
+      "Nobody Wants This",
+      "Father of the Bride",
+      "Secretary",
+      "Barcelona",
+      "Metropolitan"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Smart Guy",
+    "seed_movie": "Smart Guy",
+    "relevant_movies": [
+      "Boy Meets World",
+      "Think Like a Dog",
+      "The Trouble with Angels",
+      "Diary of a Wimpy Kid",
+      "My Bodyguard",
+      "Martian Child",
+      "Wide Awake",
+      "Wide Awake",
+      "The Cheetah Girls",
+      "Diary of a Wimpy Kid"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Monkey Trouble",
+    "seed_movie": "Monkey Trouble",
+    "relevant_movies": [
+      "Baby's Day Out",
+      "Maya",
+      "Barney's Great Adventure",
+      "Trailer Park Boys: The Movie",
+      "Goodbye Pork Pie",
+      "Swarm",
+      "Pickle and Peanut",
+      "Recess",
+      "Please Don't Feed the Children",
+      "The Grim Adventures of Billy & Mandy"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Heist",
+    "seed_movie": "Heist",
+    "relevant_movies": [
+      "Girls to Buy",
+      "Don't. Get. Out!",
+      "The Bag Man",
+      "Raayan",
+      "Clean, Shaven",
+      "Armor",
+      "Aranyélet",
+      "Fear Is the Key",
+      "Term Life",
+      "Faster"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Central Station",
+    "seed_movie": "Central Station",
+    "relevant_movies": [
+      "Recollections of the Yellow House",
+      "Recollections of the Yellow House",
+      "Me You Them",
+      "Aelita, the Queen of Mars",
+      "Confessions of an Invisible Girl",
+      "Songs from the Second Floor",
+      "Songs from the Second Floor",
+      "City of Men",
+      "Hour of the Star",
+      "A House on Fire"
+    ]
+  },
+  {
+    "query": "phim tương tự phim O Lucky Man!",
+    "seed_movie": "O Lucky Man!",
+    "relevant_movies": [
+      "The Ballad of Wallis Island",
+      "Room 104",
+      "Bleak Moments",
+      "Bleak Moments",
+      "You, the Living",
+      "Meet the Feebles",
+      "A Pigeon Sat on a Branch Reflecting on Existence",
+      "Saturday Night Live",
+      "Do Do Sol Sol La La Sol",
+      "Spanking the Monkey"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Edge of Seventeen",
+    "seed_movie": "Edge of Seventeen",
+    "relevant_movies": [
+      "Tadpole",
+      "My So-Called Life",
+      "My First Mister",
+      "Melvin Goes to Dinner",
+      "Melvin Goes to Dinner",
+      "Stonewall",
+      "The Fluffer",
+      "Good Dick",
+      "Dorian Blues",
+      "Storytelling"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Donovan's Reef",
+    "seed_movie": "Donovan's Reef",
+    "relevant_movies": [
+      "Another Time",
+      "You, Me & Tuscany",
+      "Long Weekend",
+      "Dirty Love",
+      "You Should Meet My Son!",
+      "Zombie Tidal Wave",
+      "Cabin Boy",
+      "The Love Boat",
+      "Back Roads",
+      "Father Goose"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Wizard of Oz",
+    "seed_movie": "The Wizard of Oz",
+    "relevant_movies": [
+      "The Wizard of the Emerald City",
+      "The Wizard of the Emerald City",
+      "Emerald City",
+      "The Flying Carpet",
+      "The Chronicles of Narnia: The Lion, the Witch and the Wardrobe",
+      "The Chronicles of Narnia: The Lion, the Witch and the Wardrobe",
+      "Descendants: The Rise of Red",
+      "Snow White",
+      "Alice Through the Looking Glass",
+      "Five Children and It"
+    ]
+  },
+  {
+    "query": "phim tương tự phim We Are the Nobles",
+    "seed_movie": "We Are the Nobles",
+    "relevant_movies": [
+      "The Great Madcap",
+      "After the Ball",
+      "Housefull 3",
+      "Bad Moms",
+      "Dickie Roberts: Former Child Star",
+      "Kenan",
+      "Being Frank",
+      "Mr. D",
+      "A.C.O.D.",
+      "Speechless"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Dark Knight Rises",
+    "seed_movie": "The Dark Knight Rises",
+    "relevant_movies": [
+      "The Dark Knight",
+      "Batman Begins",
+      "Batman Begins",
+      "Batman: The Doom That Came to Gotham",
+      "Code 8",
+      "Mr. X",
+      "The Batman",
+      "The Dark Knight",
+      "El Chicano",
+      "Athena"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Miller's Crossing",
+    "seed_movie": "Miller's Crossing",
+    "relevant_movies": [
+      "Blood Simple",
+      "Rounders",
+      "Red Rock West",
+      "The Talented Mr. Ripley",
+      "Circus",
+      "Disco Godfather",
+      "Nightcrawler",
+      "Nightcrawler",
+      "The 24th Day",
+      "The Talented Mr. Ripley"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Coming to America",
+    "seed_movie": "Coming to America",
+    "relevant_movies": [
+      "Norbit",
+      "Khoobsurat",
+      "The Royal We",
+      "Everything for a Reason",
+      "Dharma & Greg",
+      "Sex Drive",
+      "Dirty Love",
+      "The Perfect Date",
+      "The Dog in the Manger",
+      "Cunning Single Lady"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Seraphine",
+    "seed_movie": "Seraphine",
+    "relevant_movies": [
+      "Yves Saint Laurent",
+      "Yves Saint Laurent",
+      "Coco Before Chanel",
+      "Camille Claudel 1915",
+      "Klimt",
+      "Coco Before Chanel",
+      "Daliland",
+      "Cezanne et Moi",
+      "Basquiat",
+      "Savage Messiah"
+    ]
+  },
+  {
+    "query": "phim tương tự phim How to Eat Fried Worms",
+    "seed_movie": "How to Eat Fried Worms",
+    "relevant_movies": [
+      "Mixed-ish",
+      "The Middle",
+      "Charles in Charge",
+      "Diary of a Wimpy Kid: Dog Days",
+      "Diary of a Wimpy Kid: Rodrick Rules",
+      "Growing Pains",
+      "Silver Spoons",
+      "Family Camp",
+      "Manolito Gafotas",
+      "Bob the Butler"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Des",
+    "seed_movie": "Des",
+    "relevant_movies": [
+      "The Murders at White House Farm",
+      "Memories of a Murderer: The Nilsen Tapes",
+      "Happy Face",
+      "Steeltown Murders",
+      "Jackal of Nahueltoro",
+      "The One That Got Away",
+      "Yardie",
+      "Yardie",
+      "Veronica Guerin",
+      "The General"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Redemption",
+    "seed_movie": "Redemption",
+    "relevant_movies": [
+      "Vigil",
+      "The One That Got Away",
+      "Giri/Haji",
+      "Signora Volpe",
+      "Missing You",
+      "Lynley",
+      "Midsomer Murders",
+      "Single-Handed",
+      "Father Brown",
+      "DCI Banks"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Pulse",
+    "seed_movie": "Pulse",
+    "relevant_movies": [
+      "Nope",
+      "Headspace",
+      "The Platform",
+      "Cube²: Hypercube",
+      "Cube²: Hypercube",
+      "Cube",
+      "Cube",
+      "Vivarium",
+      "Portals",
+      "The Endless"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Horrible Bosses",
+    "seed_movie": "Horrible Bosses",
+    "relevant_movies": [
+      "Horrible Bosses 2",
+      "Remote Control",
+      "Blindspotting",
+      "Reno 911!",
+      "I Love You to Death",
+      "Ruthless People",
+      "Naked Gun 33 1/3: The Final Insult",
+      "The Freshman",
+      "Gambit",
+      "Psych"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Daughters of Darkness",
+    "seed_movie": "Daughters of Darkness",
+    "relevant_movies": [
+      "The Velvet Vampire",
+      "The Confessional",
+      "American Gothic",
+      "The Strangers: Chapter 1",
+      "Honeydew",
+      "Skinner",
+      "Apartment 212",
+      "At Midnight I'll Take Your Soul",
+      "At Midnight I'll Take Your Soul",
+      "The Shiver of the Vampires"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Frequency",
+    "seed_movie": "Frequency",
+    "relevant_movies": [
+      "Mindcage",
+      "Mother",
+      "Project Almanac",
+      "Ten 'til Noon",
+      "Dexter: New Blood",
+      "Sleight",
+      "Mindcage",
+      "88 Minutes",
+      "The Butterfly Effect 3: Revelations",
+      "Drop"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Molière",
+    "seed_movie": "Molière",
+    "relevant_movies": [
+      "The Women on the 6th Floor",
+      "The Women on the 6th Floor",
+      "Steak",
+      "On Tour",
+      "Wittgenstein",
+      "Mandabi",
+      "Welcome to the South",
+      "James Acaster: Cold Lasagne Hate Myself 1999",
+      "Mon meilleur ami",
+      "Mon meilleur ami"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Burmese Harp",
+    "seed_movie": "The Burmese Harp",
+    "relevant_movies": [
+      "Conflagration",
+      "Blue Giant",
+      "Liz and the Blue Bird",
+      "Conflagration",
+      "Grave of the Fireflies",
+      "Samurai Spy",
+      "Yamato",
+      "Grave of the Fireflies",
+      "My Honor Was Loyalty",
+      "Heaven and Earth"
+    ]
+  },
+  {
+    "query": "phim tương tự phim River of No Return",
+    "seed_movie": "River of No Return",
+    "relevant_movies": [
+      "Pure Country",
+      "AmeriGeddon",
+      "The Retrieval",
+      "Garden of Evil",
+      "Firecreek",
+      "Night Passage",
+      "Bend of the River",
+      "Horizon: An American Saga - Chapter 2",
+      "The Lucky Texan",
+      "Rachel and the Stranger"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Shanghai Noon",
+    "seed_movie": "Shanghai Noon",
+    "relevant_movies": [
+      "Shanghai Knights",
+      "American Born Chinese",
+      "Little Big Soldier",
+      "Kung Fu Yoga",
+      "Skiptrace",
+      "The Prince & Me: The Elephant Adventure",
+      "Big Trouble in Little China",
+      "Rush Hour",
+      "Everything Everywhere All at Once",
+      "Austin Powers in Goldmember"
+    ]
+  },
+  {
+    "query": "phim tương tự phim 'Allo 'Allo!",
+    "seed_movie": "'Allo 'Allo!",
+    "relevant_movies": [
+      "Uranus",
+      "One Hundred and One Nights",
+      "One Hundred and One Nights",
+      "Shakespeare in Love",
+      "The Libertine",
+      "The Man in the Hat",
+      "Mon meilleur ami",
+      "Mon meilleur ami",
+      "Resistance",
+      "All Quiet on the Western Front"
+    ]
+  },
+  {
+    "query": "phim tương tự phim In the Line of Fire",
+    "seed_movie": "In the Line of Fire",
+    "relevant_movies": [
+      "The Fast and the Furious: Tokyo Drift",
+      "To the Limit",
+      "The Fast and the Furious: Tokyo Drift",
+      "Reacher",
+      "Con Air",
+      "In Too Deep",
+      "Traitor",
+      "Collateral",
+      "Harsh Times",
+      "Absolute Power"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Great Flood",
+    "seed_movie": "The Great Flood",
+    "relevant_movies": [
+      "Fallout",
+      "Along With the Gods: The Last 49 Days",
+      "The War Between the Land and the Sea",
+      "River of No Return",
+      "Atlantis: End of a World, Birth of a Legend",
+      "The Bastard Son & The Devil Himself",
+      "The Eternaut",
+      "Rebel Moon - Part One: A Child of Fire",
+      "Dasara",
+      "Naa Saami Ranga"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Celtic Pride",
+    "seed_movie": "Celtic Pride",
+    "relevant_movies": [
+      "The Fish That Saved Pittsburgh",
+      "The Fish That Saved Pittsburgh",
+      "Ping Pong Playa",
+      "Lady Ballers",
+      "Happy Gilmore",
+      "Eddie",
+      "BASEketball",
+      "BASEketball",
+      "White Men Can't Jump",
+      "Semi-Pro"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Charlie and the Chocolate Factory",
+    "seed_movie": "Charlie and the Chocolate Factory",
+    "relevant_movies": [
+      "Willy Wonka & the Chocolate Factory",
+      "Fred: The Movie",
+      "Paddington",
+      "Pee-wee's Big Adventure",
+      "Pee-wee's Big Adventure",
+      "Menino Maluquinho: O Filme",
+      "Menino Maluquinho: O Filme",
+      "Thomas and the Magic Railroad",
+      "Finding 'Ohana",
+      "Willy Wonka & the Chocolate Factory"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Mysterious Benedict Society",
+    "seed_movie": "The Mysterious Benedict Society",
+    "relevant_movies": [
+      "Infestation",
+      "The Angry Birds Movie",
+      "Good Luck, Have Fun, Don't Die",
+      "Kingsman: The Secret Service",
+      "Shazam! Fury of the Gods",
+      "Sonic the Hedgehog",
+      "Jumanji: Welcome to the Jungle",
+      "Now You See Me 2",
+      "Jungle Cruise",
+      "George of the Jungle"
+    ]
+  },
+  {
+    "query": "phim tương tự phim From Beijing with Love",
+    "seed_movie": "From Beijing with Love",
+    "relevant_movies": [
+      "Fight Back to School III",
+      "Justice, My Foot!",
+      "Forbidden City Cop",
+      "Look Out, Officer!",
+      "Royal Tramp II",
+      "Okay Madam",
+      "Look Out, Officer!",
+      "The Spy Who Never Dies",
+      "Royal Tramp",
+      "A Chinese Odyssey: Part 2 - Cinderella"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Family Plan 2",
+    "seed_movie": "The Family Plan 2",
+    "relevant_movies": [
+      "The Family Plan",
+      "The Family Plan",
+      "Kirk Cameron's Saving Christmas",
+      "Kirk Cameron's Saving Christmas",
+      "Daddy's Home 2",
+      "The Spy Next Door",
+      "Descendants",
+      "Playdate",
+      "Why We're Killing Gunther",
+      "Little Nicholas"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Good Boy",
+    "seed_movie": "Good Boy",
+    "relevant_movies": [
+      "Austin & Ally",
+      "Boy Meets World",
+      "Caramelo",
+      "The Middle",
+      "Geography Club",
+      "The Motel",
+      "My Dog Skip",
+      "The King of Staten Island",
+      "Malcolm in the Middle",
+      "The Courtship of Eddie's Father"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Waves",
+    "seed_movie": "Waves",
+    "relevant_movies": [
+      "One Tree Hill",
+      "Vision Quest",
+      "All the Right Moves",
+      "Bloodworth",
+      "Good Will Hunting",
+      "Guinevere",
+      "Little Women",
+      "The Virgin Suicides",
+      "Night Catches Us",
+      "Harry + Max"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Hospital Playlist",
+    "seed_movie": "Hospital Playlist",
+    "relevant_movies": [
+      "Doctor Slump",
+      "Sex Is Zero",
+      "Dr. T & the Women",
+      "Shithouse",
+      "Office Romance",
+      "Doc Hollywood",
+      "Cheesecake",
+      "The Amazing Adventure",
+      "Happy Times",
+      "Soap"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Curse of La Llorona",
+    "seed_movie": "The Curse of La Llorona",
+    "relevant_movies": [
+      "Sinister 2",
+      "Night Swim",
+      "Cobweb",
+      "The Forest",
+      "Night Swim",
+      "Totem",
+      "Hellraiser",
+      "Imaginary",
+      "The Wretched",
+      "Imaginary"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Hindenburg",
+    "seed_movie": "The Hindenburg",
+    "relevant_movies": [
+      "Tell Me a Story",
+      "The Captain",
+      "Emerald City",
+      "Atlantis: End of a World, Birth of a Legend",
+      "Valkyrie",
+      "Hypochondriac",
+      "Dark Side of the Ring",
+      "The Founding of a Republic",
+      "Waking Sleeping Beauty",
+      "Battleship Potemkin"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Blink Twice",
+    "seed_movie": "Blink Twice",
+    "relevant_movies": [
+      "Fermat's Room",
+      "Truth or Dare",
+      "The Vanishing",
+      "Rotting in the Sun",
+      "Coherence",
+      "Coherence",
+      "Truth or Dare",
+      "Sleuth",
+      "The Stepfather",
+      "Invitation to a Murder"
+    ]
+  },
+  {
+    "query": "phim tương tự phim City of the Living Dead",
+    "seed_movie": "City of the Living Dead",
+    "relevant_movies": [
+      "Burial Ground: The Nights of Terror",
+      "Burial Ground: The Nights of Terror",
+      "FleshEater",
+      "Satan's Slave",
+      "The House on Tombstone Hill",
+      "FleshEater",
+      "Nekromantik",
+      "Evil Dead",
+      "Killing Spree",
+      "The Outing"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Being Julia",
+    "seed_movie": "Being Julia",
+    "relevant_movies": [
+      "Get Real",
+      "Girlfriends",
+      "Love Bites",
+      "The Incredibly True Adventure of Two Girls in Love",
+      "Sleeping Dogs Lie",
+      "Mr. Malcolm's List",
+      "Strictly Sexual",
+      "Heartbeats",
+      "Side Effects",
+      "The Life List"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Rams",
+    "seed_movie": "Rams",
+    "relevant_movies": [
+      "Metalhead",
+      "Babette's Feast",
+      "Babette's Feast",
+      "A Tale of Three Sisters",
+      "Louder Than Bombs",
+      "The Day Will Come",
+      "The Small Town",
+      "The Small Town",
+      "Au hasard Balthazar",
+      "Times and Winds"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Earth Girls Are Easy",
+    "seed_movie": "Earth Girls Are Easy",
+    "relevant_movies": [
+      "Moonshot",
+      "She's Gotta Have It",
+      "Pajama Party",
+      "Nude on the Moon",
+      "Morons from Outer Space",
+      "Dark Star",
+      "You Should Meet My Son!",
+      "Nowhere",
+      "The Lost Skeleton of Cadavra",
+      "It's What's Inside"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Gimme Shelter",
+    "seed_movie": "Gimme Shelter",
+    "relevant_movies": [
+      "Hala",
+      "Now & Later",
+      "Bloomington",
+      "Maid in Sweden",
+      "Garden Party",
+      "Prince of Broadway",
+      "How She Move",
+      "The Assistant",
+      "A Girl Like Her",
+      "The High Cost of Living"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Guardian",
+    "seed_movie": "The Guardian",
+    "relevant_movies": [
+      "The Wretched",
+      "Boogeyman",
+      "The Orphanage",
+      "The Other Lamb",
+      "Night Swim",
+      "Spiral",
+      "Honeymoon",
+      "In the Earth",
+      "Hypnotic",
+      "The Omen"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Horse Girl",
+    "seed_movie": "Horse Girl",
+    "relevant_movies": [
+      "No Exit",
+      "The Watchful Eye",
+      "Blame",
+      "Behind Her Eyes",
+      "Make Up",
+      "A Day",
+      "The Other Lamb",
+      "Game Over",
+      "Borgman",
+      "Hypnotic"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Il Mare",
+    "seed_movie": "Il Mare",
+    "relevant_movies": [
+      "Destined with You",
+      "A Biltmore Christmas",
+      "100 Nights of Hero",
+      "Silver and the Book of Dreams",
+      "Time Renegades",
+      "At A Distance, Spring Is Green",
+      "Evim Sensin",
+      "The Day a Pig Fell Into the Well",
+      "Woe to the Young",
+      "The Holiday Calendar"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Wolfwalkers",
+    "seed_movie": "Wolfwalkers",
+    "relevant_movies": [
+      "The Deer King",
+      "Descendants: The Rise of Red",
+      "Howl's Moving Castle",
+      "The Witcher: Sirens of the Deep",
+      "Mortal",
+      "The Witcher: Nightmare of the Wolf",
+      "The NeverEnding Story II: The Next Chapter",
+      "Tales of the Night",
+      "Tales of the Night",
+      "The Wonderland"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Legend of Bhagat Singh",
+    "seed_movie": "The Legend of Bhagat Singh",
+    "relevant_movies": [
+      "Amaran",
+      "Suhaag",
+      "Apaharan",
+      "RRR",
+      "RRR",
+      "Raju Chacha",
+      "Yuva",
+      "Bhavesh Joshi Superhero",
+      "Aravindha Sametha",
+      "Manikarnika: The Queen of Jhansi"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Devdas",
+    "seed_movie": "Devdas",
+    "relevant_movies": [
+      "Ram Teri Ganga Maili",
+      "Mohabbatein",
+      "Dil Ka Rishta",
+      "Kabhi Khushi Kabhie Gham...",
+      "Qismat",
+      "Priyamanavale",
+      "Sir",
+      "Prem Rog",
+      "Kabhi Khushi Kabhie Gham...",
+      "Sillunu Oru Kaadhal"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Sister Death",
+    "seed_movie": "Sister Death",
+    "relevant_movies": [
+      "Best Wishes to All",
+      "The Seventh Day",
+      "Skinamarink",
+      "Skinamarink",
+      "Alison's Birthday",
+      "Alison's Birthday",
+      "Werewolf in a Girls' Dormitory",
+      "The Haunting of Sorority Row",
+      "Baghead",
+      "Weapons"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Reckless Moment",
+    "seed_movie": "The Reckless Moment",
+    "relevant_movies": [
+      "Pact of Silence",
+      "Unseen",
+      "Decoy",
+      "Wild Things: Foursome",
+      "Outrage",
+      "Ransom!",
+      "Unspeakable Sins",
+      "The Naked Street",
+      "The Hitch-Hiker",
+      "Beware, My Lovely"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Dashcam",
+    "seed_movie": "Dashcam",
+    "relevant_movies": [
+      "V/H/S/99",
+      "Don't Turn Out the Lights",
+      "The Strangers: Chapter 1",
+      "Southbound",
+      "The Strangers: Chapter 1",
+      "Random Acts of Violence",
+      "Late Night with the Devil",
+      "Found Footage 3D",
+      "House on Eden",
+      "Fear"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The NeverEnding Story III",
+    "seed_movie": "The NeverEnding Story III",
+    "relevant_movies": [
+      "The NeverEnding Story II: The Next Chapter",
+      "Little Monsters",
+      "Jumanji",
+      "Castelo Rá-Tim-Bum",
+      "Godmothered",
+      "Barney's Great Adventure",
+      "Descendants: The Rise of Red",
+      "Shrek the Musical",
+      "Jack and the Beanstalk",
+      "The Great Yokai War"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Naked",
+    "seed_movie": "Naked",
+    "relevant_movies": [
+      "Brassic",
+      "Burn Burn Burn",
+      "Donald Cried",
+      "Family Relations",
+      "Tamo i ovde",
+      "Lost in London",
+      "Withnail and I",
+      "Withnail and I",
+      "Mrs Palfrey at the Claremont",
+      "Mr. Malcolm's List"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Yossi & Jagger",
+    "seed_movie": "Yossi & Jagger",
+    "relevant_movies": [
+      "Battle of the Brave",
+      "Every Time We Say Goodbye",
+      "Every Time We Say Goodbye",
+      "Frantz",
+      "Under the Bombs",
+      "A Tale of Love and Darkness",
+      "Turn Left at the End of the World",
+      "Lemon Tree",
+      "The Exception",
+      "Kippur"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Humanity",
+    "seed_movie": "Humanity",
+    "relevant_movies": [
+      "About Elly",
+      "About Elly",
+      "Werckmeister Harmonies",
+      "Burning",
+      "The Legend of Kaspar Hauser",
+      "Ten Days Wonder",
+      "Charisma",
+      "Charisma",
+      "My Mother's Wound",
+      "Red Lights"
+    ]
+  },
+  {
+    "query": "phim tương tự phim El Angel",
+    "seed_movie": "El Angel",
+    "relevant_movies": [
+      "The Imposter",
+      "The Heist of the Century",
+      "Believe Me: The Abduction of Lisa McVey",
+      "Happy Face",
+      "El marginal",
+      "Madame Satã",
+      "Swoon",
+      "Blue Caprice",
+      "O sabor das margaridas",
+      "Charlie Says"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Lost Boys",
+    "seed_movie": "The Lost Boys",
+    "relevant_movies": [
+      "Brain Damage",
+      "Society",
+      "Slaughterhouse",
+      "Psychos in Love",
+      "There's Nothing Out There",
+      "Psychos in Love",
+      "Zombeavers",
+      "Adi Kapyare Kootamani",
+      "Night of the Creeps",
+      "The Mutilator"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Lonesome Jim",
+    "seed_movie": "Lonesome Jim",
+    "relevant_movies": [
+      "Daddy Longlegs",
+      "The Comedy",
+      "Chance",
+      "Everything's Gonna Be Okay",
+      "Homeless",
+      "Permanent Vacation",
+      "Four Friends",
+      "Outnumbered",
+      "Speech & Debate",
+      "A Summer at Grandpa's"
+    ]
+  },
+  {
+    "query": "phim tương tự phim A Walk in the Woods",
+    "seed_movie": "A Walk in the Woods",
+    "relevant_movies": [
+      "Billy the Kid",
+      "Baby Reindeer",
+      "Donald Cried",
+      "The Detour",
+      "The Mysteries of Pittsburgh",
+      "The Monk and the Gun",
+      "Cold Weather",
+      "Into the Wild",
+      "The 100 Year-Old Man Who Climbed Out the Window and Disappeared",
+      "My One and Only"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Thief of Bagdad",
+    "seed_movie": "The Thief of Bagdad",
+    "relevant_movies": [
+      "Sinbad, the Sailor",
+      "The Secret of Moonacre",
+      "All Dogs Go to Heaven 2",
+      "The Hunchback Horse",
+      "Ewoks: The Battle for Endor",
+      "Alif Laila",
+      "Stardust",
+      "Sinbad and the Eye of the Tiger",
+      "Shrek the Third",
+      "Ali Baba and the Forty Thieves"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Empty Man",
+    "seed_movie": "The Empty Man",
+    "relevant_movies": [
+      "The Wretched",
+      "The Orphanage",
+      "Meander",
+      "Hypnotic",
+      "The Woman in the Yard",
+      "Dark Water",
+      "Boogeyman",
+      "Imaginary",
+      "In the Earth",
+      "The Feast"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Churchill",
+    "seed_movie": "Churchill",
+    "relevant_movies": [
+      "Darkest Hour",
+      "Victoria",
+      "The War Below",
+      "Mangal Pandey",
+      "Darkest Hour",
+      "To Kill a King",
+      "Bloody Sunday",
+      "Overlord",
+      "Henry V",
+      "Peterloo"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Climates",
+    "seed_movie": "Climates",
+    "relevant_movies": [
+      "Times and Winds",
+      "Nausea",
+      "Things to Come",
+      "Father and Son",
+      "Something Useful",
+      "Nil by Mouth",
+      "Come on My Son",
+      "Fat Girl",
+      "Fat Girl",
+      "The Passengers of the Night"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Secret Life of Pets",
+    "seed_movie": "The Secret Life of Pets",
+    "relevant_movies": [
+      "The Secret Life of Pets 2",
+      "Thunder and the House of Magic",
+      "Pickle and Peanut",
+      "Shaun the Sheep Movie",
+      "Woody Woodpecker",
+      "Wallace & Gromit: Vengeance Most Fowl",
+      "The Peanuts Movie",
+      "Clifford the Big Red Dog",
+      "Space Jam",
+      "Littlest Pet Shop"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Jackie Brown",
+    "seed_movie": "Jackie Brown",
+    "relevant_movies": [
+      "Chor Nikal Ke Bhaga",
+      "Lakeview Terrace",
+      "Lakeview Terrace",
+      "Daylight Robbery",
+      "Fracture",
+      "Fracture",
+      "Brown's Requiem",
+      "Zyzzyx Rd",
+      "Good Time",
+      "Fargo"
+    ]
+  },
+  {
+    "query": "phim tương tự phim iCarly",
+    "seed_movie": "iCarly",
+    "relevant_movies": [
+      "A Cinderella Story",
+      "A Cinderella Story",
+      "Love at the Shore",
+      "Au Pair",
+      "Post Grad",
+      "Post Grad",
+      "A Christmas Prince",
+      "The Flintstones in Viva Rock Vegas",
+      "Knocked Up",
+      "The Suite Life of Zack & Cody"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Just Another Love Story",
+    "seed_movie": "Just Another Love Story",
+    "relevant_movies": [
+      "Illegal Tender",
+      "The Bad Kids",
+      "Loving Adults",
+      "Bullet Ballet",
+      "Bullet Ballet",
+      "Blue Ruin",
+      "Funny Games",
+      "The Dark House",
+      "Killer's Kiss",
+      "The Girl Who Killed Her Parents"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Bloodsport",
+    "seed_movie": "Bloodsport",
+    "relevant_movies": [
+      "Dragon: The Bruce Lee Story",
+      "Legionnaire",
+      "Ip Man",
+      "Ip Man: The Final Fight",
+      "Dangal",
+      "Sword Master",
+      "Ip Man 4: The Finale",
+      "American Ninja 3: Blood Hunt",
+      "Scorpion",
+      "Dragon: The Bruce Lee Story"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Town",
+    "seed_movie": "The Town",
+    "relevant_movies": [
+      "Adulterers",
+      "Still Here",
+      "Les Misérables",
+      "We Own the Night",
+      "We Own the Night",
+      "City on a Hill",
+      "Gemini",
+      "Funny Games",
+      "The Wire",
+      "The Dinner"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Thing Called Love",
+    "seed_movie": "The Thing Called Love",
+    "relevant_movies": [
+      "Just My Type",
+      "The Song",
+      "Step Up Revolution",
+      "Side Effects",
+      "The Watermelon Woman",
+      "The Birthday Wish",
+      "Música",
+      "Sex Appeal",
+      "Stormy Weather",
+      "A Very Country Christmas"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Parallel Mothers",
+    "seed_movie": "Parallel Mothers",
+    "relevant_movies": [
+      "17 Girls",
+      "Tell Me Lies",
+      "Inventing Anna",
+      "Noel",
+      "Bloomington",
+      "All Is Well",
+      "Flowers",
+      "Chained for Life",
+      "Mother's Child",
+      "Chromophobia"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Date Night",
+    "seed_movie": "Date Night",
+    "relevant_movies": [
+      "The Weekend Away",
+      "Slow Learners",
+      "Love by Chance",
+      "One Small Hitch",
+      "13 Cameras",
+      "The Last Seduction",
+      "The Weekend Away",
+      "Dharma & Greg",
+      "Hello, Goodbye and Everything in Between",
+      "The Lovebirds"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Gotcha!",
+    "seed_movie": "Gotcha!",
+    "relevant_movies": [
+      "Brain Smasher... A Love Story",
+      "Game Over, Man!",
+      "Role Play",
+      "The Bannen Way",
+      "B&B Merry",
+      "American Ninja 5",
+      "Dark Web: Cicada 3301",
+      "Roadhouse 66",
+      "The Troop",
+      "A Fine Mess"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Sense and Sensibility",
+    "seed_movie": "Sense and Sensibility",
+    "relevant_movies": [
+      "Hello, It's Me",
+      "Sanditon",
+      "After We Collided",
+      "Last Chance Harvey",
+      "Bridgerton",
+      "Little Children",
+      "Little Children",
+      "Collateral Beauty",
+      "No End",
+      "Sinbad"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Tabbar",
+    "seed_movie": "Tabbar",
+    "relevant_movies": [
+      "Rest in Peace",
+      "The Passenger",
+      "The Accident",
+      "Tell Me a Story",
+      "Unspeakable Sins",
+      "Dogtooth",
+      "Dogtooth",
+      "Une chance de trop",
+      "Raakh",
+      "90's - A Middle Class Biopic"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Menendez Brothers",
+    "seed_movie": "The Menendez Brothers",
+    "relevant_movies": [
+      "Finders Keepers",
+      "Should I Marry a Murderer?",
+      "Who We Are: A Chronicle of Racism in America",
+      "William S. Burroughs: A Man Within",
+      "WeWork: or The Making and Breaking of a $47 Billion Unicorn",
+      "The Boys",
+      "The Boys",
+      "Whose Streets?",
+      "After Death",
+      "After Death"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Double Dragon",
+    "seed_movie": "Double Dragon",
+    "relevant_movies": [
+      "Finding 'Ohana",
+      "Arachnoquake",
+      "Gen V",
+      "Finding 'Ohana",
+      "Goodbye Pork Pie",
+      "Big Trouble in Little China",
+      "Shazam! Fury of the Gods",
+      "Zathura: A Space Adventure",
+      "Spy Kids 3: Game Over",
+      "Spy Kids 2: Island of Lost Dreams"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Proof of Life",
+    "seed_movie": "Proof of Life",
+    "relevant_movies": [
+      "American Primeval",
+      "Those Who Wish Me Dead",
+      "Bellflower",
+      "No Escape",
+      "No Escape",
+      "Primer",
+      "Saints and Soldiers",
+      "The Grey",
+      "Agent Red",
+      "Stargate: Atlantis"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Wanda",
+    "seed_movie": "Wanda",
+    "relevant_movies": [
+      "I'm Your Woman",
+      "City of Hope",
+      "Frozen River",
+      "Wisdom",
+      "What Alice Found",
+      "Jai Bhim",
+      "True Confessions",
+      "Heaven Knows What",
+      "The Border",
+      "Fresh Kills"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The 100 Year-Old Man Who Climbed Out the Window and Disappeared",
+    "seed_movie": "The 100 Year-Old Man Who Climbed Out the Window and Disappeared",
+    "relevant_movies": [
+      "Sasquatch Sunset",
+      "Vacation",
+      "Vacation",
+      "Strange Wilderness",
+      "Strange Wilderness",
+      "Will Our Heroes Be Able to Find Their Friend Who Has Mysteriously Disappeared in Africa?",
+      "National Lampoon's Vacation",
+      "Natural Selection",
+      "Almost Famous",
+      "Nebraska"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Natural Born Killers",
+    "seed_movie": "Natural Born Killers",
+    "relevant_movies": [
+      "A Brighter Summer Day",
+      "A Brighter Summer Day",
+      "Jason's Lyric",
+      "Abyss",
+      "Another Love",
+      "Hit by Lightning",
+      "Dharma & Greg",
+      "In the Family",
+      "The Postman Always Rings Twice",
+      "Hello, It's Me"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Look of Love",
+    "seed_movie": "The Look of Love",
+    "relevant_movies": [
+      "Bank of Dave",
+      "Bank of Dave",
+      "The Dirt",
+      "The Man Who Invented Christmas",
+      "One Chance",
+      "Mapplethorpe",
+      "The Polka King",
+      "Wittgenstein",
+      "American Splendor",
+      "My Life So Far"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Capone",
+    "seed_movie": "Capone",
+    "relevant_movies": [
+      "For Life",
+      "Aileen Wuornos: American Boogeywoman",
+      "Happy Face",
+      "Believe Me: The Abduction of Lisa McVey",
+      "One Hundred Steps",
+      "Jackal of Nahueltoro",
+      "Mapplethorpe",
+      "Meu Nome Não é Johnny",
+      "Capote",
+      "GoodFellas"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Birds",
+    "seed_movie": "The Birds",
+    "relevant_movies": [
+      "Open Water 2: Adrift",
+      "Blame",
+      "To Catch a Thief",
+      "Pet Sematary",
+      "Truth or Dare",
+      "Rings",
+      "Archive 81",
+      "Her Name Was Christa",
+      "Girl on the Third Floor",
+      "13 Reasons Why"
+    ]
+  },
+  {
+    "query": "phim tương tự phim I Was a Male War Bride",
+    "seed_movie": "I Was a Male War Bride",
+    "relevant_movies": [
+      "The Miracle of Morgan's Creek",
+      "Operation Petticoat",
+      "Dad's Army",
+      "The Bachelor and the Bobby-Soxer",
+      "Ball of Fire",
+      "Dirty Love",
+      "Going the Distance",
+      "Champagne Problems",
+      "The Philadelphia Story",
+      "Twentieth Century"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Little Girl Who Lives Down the Lane",
+    "seed_movie": "The Little Girl Who Lives Down the Lane",
+    "relevant_movies": [
+      "The Orphanage",
+      "The Wretched",
+      "Laurin",
+      "Incident in a Ghostland",
+      "The Feast",
+      "The Chair",
+      "Haunting of the Queen Mary",
+      "Deranged",
+      "My Bloody Valentine",
+      "Boogeyman"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Silence of the Lambs",
+    "seed_movie": "The Silence of the Lambs",
+    "relevant_movies": [
+      "Initiation",
+      "Pearl",
+      "Found",
+      "MaXXXine",
+      "The Ugly",
+      "Soft & Quiet",
+      "Malum",
+      "Still Here",
+      "The Woman",
+      "The Strangler"
+    ]
+  },
+  {
+    "query": "phim tương tự phim House on the Edge of the Park",
+    "seed_movie": "House on the Edge of the Park",
+    "relevant_movies": [
+      "Last Stop on the Night Train",
+      "Last Stop on the Night Train",
+      "Destroyer",
+      "The Wind",
+      "Destroyer",
+      "All I Need",
+      "The Wind",
+      "The Stepfather",
+      "Humongous",
+      "Visiting Hours"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Jane Eyre",
+    "seed_movie": "Jane Eyre",
+    "relevant_movies": [
+      "Julieta",
+      "Verdades Secretas",
+      "Love Like the Galaxy",
+      "The Smile Has Left Your Eyes",
+      "Possession",
+      "Robber",
+      "The Scarlet Letter",
+      "My Cousin Rachel",
+      "Suspects",
+      "The Watchful Eye"
+    ]
+  },
+  {
+    "query": "phim tương tự phim 99 Homes",
+    "seed_movie": "99 Homes",
+    "relevant_movies": [
+      "The Corner",
+      "7 Virgins",
+      "Battle in Heaven",
+      "Battle in Heaven",
+      "Strays",
+      "Simon & Simon",
+      "Lost & Found",
+      "Paranoid Park",
+      "Hard Eight",
+      "Hard Eight"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Hell Baby",
+    "seed_movie": "Hell Baby",
+    "relevant_movies": [
+      "30 Nights of Paranormal Activity with the Devil Inside the Girl with the Dragon Tattoo",
+      "Ghost Team One",
+      "Scare Me",
+      "Bad Biology",
+      "Deadtectives",
+      "Evil Dead Rise",
+      "Spookies",
+      "Children Shouldn't Play with Dead Things",
+      "Bad Biology",
+      "The Undertaker and His Pals"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Incredible Hulk",
+    "seed_movie": "The Incredible Hulk",
+    "relevant_movies": [
+      "Hulk",
+      "Amazons",
+      "Spider-Man 3",
+      "Godzilla: Final Wars",
+      "Godzilla vs. Gigan",
+      "X-Men",
+      "Six-String Samurai",
+      "Zack Snyder's Justice League",
+      "Godzilla vs. Megalon",
+      "Gamera vs. Viras"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Dear Comrade",
+    "seed_movie": "Dear Comrade",
+    "relevant_movies": [
+      "In Your Name",
+      "Baaghi: A Rebel for Love",
+      "In Your Name",
+      "Heropanti",
+      "Saudagar",
+      "Thevar Magan",
+      "Hero",
+      "Sethu",
+      "Three Steps Above Heaven",
+      "Aap Mujhe Achche Lagne Lage"
+    ]
+  },
+  {
+    "query": "phim tương tự phim It's All Gone Pete Tong",
+    "seed_movie": "It's All Gone Pete Tong",
+    "relevant_movies": [
+      "The Dirt",
+      "Kneecap",
+      "Chaplin",
+      "One Chance",
+      "The Duke",
+      "Rocketman",
+      "I Used to Be Famous",
+      "The Other F Word",
+      "The Boat That Rocked",
+      "The Boat That Rocked"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Random Hearts",
+    "seed_movie": "Random Hearts",
+    "relevant_movies": [
+      "You Go to My Head",
+      "Answers to Nothing",
+      "Love Like the Galaxy",
+      "The Secret Sex Life of a Single Mom",
+      "Fall",
+      "The Face of Love",
+      "The Face of Love",
+      "Julieta",
+      "The Scarlet Letter",
+      "Head-On"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Don't Be a Menace to South Central While Drinking Your Juice in the Hood",
+    "seed_movie": "Don't Be a Menace to South Central While Drinking Your Juice in the Hood",
+    "relevant_movies": [
+      "Trailer Park Boys: The Movie",
+      "White Chicks",
+      "The Ladykillers",
+      "Pink Flamingos",
+      "The Ladykillers",
+      "Police Academy 6: City Under Siege",
+      "Trailer Park Boys",
+      "Trial & Error",
+      "Little Buddho",
+      "Remote Control"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Clifford the Big Red Dog",
+    "seed_movie": "Clifford the Big Red Dog",
+    "relevant_movies": [
+      "Mary Poppins Returns",
+      "Bingo",
+      "Charlotte's Web",
+      "Bingo",
+      "Garfield: The Movie",
+      "Zombies 4: Dawn of the Vampires",
+      "Goosebumps",
+      "Pee-wee's Big Adventure",
+      "Pee-wee's Big Adventure",
+      "Poor Little Rich Girl"
+    ]
+  },
+  {
+    "query": "phim tương tự phim West Beirut",
+    "seed_movie": "West Beirut",
+    "relevant_movies": [
+      "Tel Aviv on Fire",
+      "Greek Salad",
+      "Lolita",
+      "The Bubble",
+      "The Bubble",
+      "Two Days in New York",
+      "Two Days in New York",
+      "Love & Anarchy",
+      "Love & Anarchy",
+      "Fever Pitch"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Skiptrace",
+    "seed_movie": "Skiptrace",
+    "relevant_movies": [
+      "Little Big Soldier",
+      "Shanghai Noon",
+      "Rush Hour",
+      "Shanghai Noon",
+      "Murder Mystery 2",
+      "Men in Black³",
+      "Too Many Ways to Be No. 1",
+      "Eight Legged Freaks",
+      "Grimm",
+      "Joy of Life"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Robots",
+    "seed_movie": "Robots",
+    "relevant_movies": [
+      "Jonah: A VeggieTales Movie",
+      "The Jimmy Timmy Power Hour",
+      "Thunder and the House of Magic",
+      "The Pirates Who Don't Do Anything: A VeggieTales Movie",
+      "Wyrd Sisters",
+      "A Monster in Paris",
+      "Cartoon All-Stars to the Rescue",
+      "Cloudy with a Chance of Meatballs",
+      "Dunno on the Moon",
+      "Porco Rosso"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Blindness",
+    "seed_movie": "Blindness",
+    "relevant_movies": [
+      "Alone",
+      "No Exit",
+      "Alone",
+      "See No Evil",
+      "Eye of the Beholder",
+      "The Nile Hilton Incident",
+      "Wayward",
+      "The Isle",
+      "Mother",
+      "The Show"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Whale Rider",
+    "seed_movie": "Whale Rider",
+    "relevant_movies": [
+      "A Shine of Rainbows",
+      "Our Little Sister",
+      "Our Little Sister",
+      "Baapya",
+      "The Patriarch",
+      "Little Women",
+      "Aniki Bóbó",
+      "Bridge to Terabithia",
+      "Bridge to Terabithia",
+      "Once Were Warriors"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Into the Wild",
+    "seed_movie": "Into the Wild",
+    "relevant_movies": [
+      "Billy the Kid",
+      "Elephant",
+      "The Straight Story",
+      "Smallville",
+      "Unknown White Male",
+      "Baby Reindeer",
+      "A Walk in the Woods",
+      "Extremedays",
+      "The Last Shaman",
+      "Flee"
+    ]
+  },
+  {
+    "query": "phim tương tự phim No Time to Die",
+    "seed_movie": "No Time to Die",
+    "relevant_movies": [
+      "Spectre",
+      "Spectre",
+      "Skyfall",
+      "Casino Royale",
+      "Casino Royale",
+      "GoldenEye",
+      "GoldenEye",
+      "Picasso Trigger",
+      "Picasso Trigger",
+      "Dr. No"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Alphabet Killer",
+    "seed_movie": "The Alphabet Killer",
+    "relevant_movies": [
+      "Night Stalker: The Hunt for a Serial Killer",
+      "Brother's Keeper",
+      "My Name Is 'A' by Anonymous",
+      "Cropsey",
+      "Aileen: Life and Death of a Serial Killer",
+      "Redacted",
+      "Girl in the Picture",
+      "Righteous Kill",
+      "Wonderland",
+      "All Good Things"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Kite Runner",
+    "seed_movie": "The Kite Runner",
+    "relevant_movies": [
+      "Times and Winds",
+      "The Stoning of Soraya M.",
+      "Honey Boy",
+      "Honey Boy",
+      "Capernaum",
+      "Capernaum",
+      "Silent Waters",
+      "Skins",
+      "Three Monkeys",
+      "Three Monkeys"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Brightburn",
+    "seed_movie": "Brightburn",
+    "relevant_movies": [
+      "Toad Road",
+      "In the Earth",
+      "Portals",
+      "Another Earth",
+      "The Reconstruction of William Zero",
+      "I Saw the TV Glow",
+      "Alien Abduction: Incident in Lake County",
+      "The Ark",
+      "Starfish",
+      "The Lodge"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Battle for Terra",
+    "seed_movie": "Battle for Terra",
+    "relevant_movies": [
+      "Godzilla vs. Hedorah",
+      "Wonderful Days",
+      "Justice League: Crisis on Infinite Earths - Part Three",
+      "Earth to Echo",
+      "Arachnid",
+      "Astonishing X-Men",
+      "WALL·E",
+      "Planet of the Apes",
+      "Wizards",
+      "The Day"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Father of the Bride",
+    "seed_movie": "Father of the Bride",
+    "relevant_movies": [
+      "Father of the Bride Part II",
+      "Father of the Bride Part II",
+      "Step by Step",
+      "iCarly",
+      "Au Pair",
+      "The Suite Life of Zack & Cody",
+      "Dharma & Greg",
+      "The Brady Bunch",
+      "Look Who's Talking Too",
+      "A Cinderella Story"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Sharp Objects",
+    "seed_movie": "Sharp Objects",
+    "relevant_movies": [
+      "Unforgettable",
+      "Unforgotten",
+      "A Beautiful Place to Die: A Martha's Vineyard Mystery",
+      "DCI Banks",
+      "Ugly",
+      "Redemption",
+      "Mother",
+      "I'm Not Scared",
+      "The Penthouse: War in Life",
+      "Anatomy of a Fall"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Brian Banks",
+    "seed_movie": "Brian Banks",
+    "relevant_movies": [
+      "Same Kind of Different as Me",
+      "Same Kind of Different as Me",
+      "Invincible",
+      "Swimming Upstream",
+      "Safety",
+      "Flash of Genius",
+      "Flash of Genius",
+      "The Express",
+      "Slamma Jamma",
+      "King Richard"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Babette's Feast",
+    "seed_movie": "Babette's Feast",
+    "relevant_movies": [
+      "Ida",
+      "Fanny and Alexander",
+      "Ida",
+      "Tree of Knowledge",
+      "Stolen Spring",
+      "Godland",
+      "Beyond the Hills",
+      "One to Another",
+      "A Tale of Three Sisters",
+      "Alpine Fire"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Current War",
+    "seed_movie": "The Current War",
+    "relevant_movies": [
+      "The Electrical Life of Louis Wain",
+      "Afterimage",
+      "Oppenheimer",
+      "The Courier",
+      "Fat Man and Little Boy",
+      "Shock and Awe",
+      "Nightwatching",
+      "Print the Legend",
+      "Worth",
+      "Worth"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Nightwatch",
+    "seed_movie": "Nightwatch",
+    "relevant_movies": [
+      "El hombre de al lado",
+      "Heatwave",
+      "Black Diamond",
+      "Accused",
+      "The List",
+      "God's Country",
+      "Enter the Dangerous Mind",
+      "Second Skin",
+      "On the Line",
+      "Dogtooth"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Lioness",
+    "seed_movie": "Lioness",
+    "relevant_movies": [
+      "The Night Agent",
+      "Paradise",
+      "Tempest",
+      "Strike Back",
+      "The Abyss",
+      "The Abyss",
+      "How to Blow Up a Pipeline",
+      "The Contractor",
+      "Butterfly",
+      "The Old Man"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Spawn",
+    "seed_movie": "Spawn",
+    "relevant_movies": [
+      "Teen Wolf: The Movie",
+      "A Knight's War",
+      "A Knight's War",
+      "The Hunting Party",
+      "Citizen Toxie: The Toxic Avenger IV",
+      "Code 8",
+      "The Day",
+      "That Demon Within",
+      "Lady Terminator",
+      "The Toxic Avenger Part II"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Payback",
+    "seed_movie": "Payback",
+    "relevant_movies": [
+      "A Dirty Carnival",
+      "Payback: Straight Up",
+      "A History of Violence",
+      "Dragged Across Concrete",
+      "Häjyt",
+      "The Prison",
+      "The Man of the Year",
+      "Hard Hit",
+      "A History of Violence",
+      "The Manipulated"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Stranger Than Paradise",
+    "seed_movie": "Stranger Than Paradise",
+    "relevant_movies": [
+      "The Comedy",
+      "Permanent Vacation",
+      "Four Friends",
+      "I Just Want My Pants Back",
+      "Jane by Design",
+      "It's a Disaster",
+      "Brittany Runs a Marathon",
+      "Tamo i ovde",
+      "Sose halunk meg",
+      "Wetlands"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Helix",
+    "seed_movie": "Helix",
+    "relevant_movies": [
+      "The Haunting of Hill House",
+      "It Comes at Night",
+      "From",
+      "The Beach House",
+      "Amnesiac",
+      "Until Dawn",
+      "Fear Street: Part One - 1994",
+      "Twin Peaks: Fire Walk with Me",
+      "Under the Skin",
+      "Polaroid"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Tightrope",
+    "seed_movie": "Tightrope",
+    "relevant_movies": [
+      "Following",
+      "Mad Detective",
+      "Anjaam Pathiraa",
+      "Malevolence",
+      "Mindcage",
+      "Ms .45",
+      "Klute",
+      "The Raven",
+      "Perfect Stranger",
+      "Switchback"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Le deuxième souffle",
+    "seed_movie": "Le deuxième souffle",
+    "relevant_movies": [
+      "Pickpocket",
+      "Bad Blood",
+      "Derrick",
+      "Breathless",
+      "Loev",
+      "Don't Be Bad",
+      "Broken Pieces",
+      "City of God",
+      "Breathless",
+      "Les Misérables"
+    ]
+  },
+  {
+    "query": "phim tương tự phim From Up on Poppy Hill",
+    "seed_movie": "From Up on Poppy Hill",
+    "relevant_movies": [
+      "Josee, the Tiger and the Fish",
+      "I Want to Eat Your Pancreas",
+      "New Game!",
+      "More Than a Married Couple, But Not Lovers.",
+      "My Teen Romantic Comedy SNAFU",
+      "Kaguya-sama: Love is War",
+      "My Roommate Is a Cat",
+      "Only Yesterday",
+      "Scum's Wish",
+      "Chobits"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Electrical Life of Louis Wain",
+    "seed_movie": "The Electrical Life of Louis Wain",
+    "relevant_movies": [
+      "Curiosa",
+      "Mr. Turner",
+      "Jeanne du Barry",
+      "An Adventure in Space and Time",
+      "Caravaggio",
+      "A Street Cat Named Bob",
+      "A Street Cat Named Bob",
+      "The Trials of Oscar Wilde",
+      "The Other Boleyn Girl",
+      "Wittgenstein"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Outnumbered",
+    "seed_movie": "Outnumbered",
+    "relevant_movies": [
+      "The Upside of Anger",
+      "Cemetery Junction",
+      "Rain Dogs",
+      "Instant Family",
+      "Driving Lessons",
+      "Driving Lessons",
+      "Fresh Meat",
+      "Another Year",
+      "Eulogy",
+      "Joyride"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Let Sleeping Corpses Lie",
+    "seed_movie": "Let Sleeping Corpses Lie",
+    "relevant_movies": [
+      "Antropophagus",
+      "Beyond the Darkness",
+      "The Flesh and Blood Show",
+      "The Texas Chain Saw Massacre",
+      "The Texas Chain Saw Massacre",
+      "The Touch of Satan",
+      "Monster Island",
+      "Dashcam",
+      "Dashcam",
+      "Scream Bloody Murder"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Circus",
+    "seed_movie": "The Circus",
+    "relevant_movies": [
+      "The Kid",
+      "City Lights",
+      "City Lights",
+      "Easy Street",
+      "Kid Auto Races at Venice",
+      "A Night in the Show",
+      "Dudley Do-Right",
+      "Dudley Do-Right",
+      "The Perfect Date",
+      "Kazaam"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Love in the Afternoon",
+    "seed_movie": "Love in the Afternoon",
+    "relevant_movies": [
+      "The Collector",
+      "My Night at Maud's",
+      "My Night at Maud's",
+      "Autumn Tale",
+      "French Twist",
+      "Venus Beauty Institute",
+      "A Summer's Tale",
+      "Diary of a Fleeting Affair",
+      "Zero",
+      "The Heartbreak Kid"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Trip",
+    "seed_movie": "The Trip",
+    "relevant_movies": [
+      "Out of the Blue",
+      "Friend of the Family",
+      "Sex Madness",
+      "Bloomington",
+      "3 Faces",
+      "Chained for Life",
+      "Prince of Broadway",
+      "When Evening Falls on Bucharest or Metabolism",
+      "A: Film by Upendra",
+      "R.M.N."
+    ]
+  },
+  {
+    "query": "phim tương tự phim Strange Brew",
+    "seed_movie": "Strange Brew",
+    "relevant_movies": [
+      "Police Academy 6: City Under Siege",
+      "Pink Flamingos",
+      "Malcolm",
+      "Teenage Bounty Hunters",
+      "Trial & Error",
+      "C'est comme ça que je t'aime",
+      "Tragedy Girls",
+      "Zapped!",
+      "The Sweet East",
+      "Mighty Med"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Class",
+    "seed_movie": "The Class",
+    "relevant_movies": [
+      "Going the Distance",
+      "Zerophilia",
+      "One Small Hitch",
+      "The Last Summer",
+      "The Perfect Date",
+      "Happy Endings",
+      "The Wedding Year",
+      "One Small Hitch",
+      "Since You've Been Gone",
+      "See Jane Date"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Heist of the Century",
+    "seed_movie": "The Heist of the Century",
+    "relevant_movies": [
+      "Blood In, Blood Out",
+      "Dog Day Afternoon",
+      "Find Me Guilty",
+      "Money Heist",
+      "Paid in Full",
+      "Gangster Squad",
+      "Fight Night: The Million Dollar Heist",
+      "Thunderbolt and Lightfoot",
+      "Donnie Brasco",
+      "Richard Jewell"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Broken English",
+    "seed_movie": "Broken English",
+    "relevant_movies": [
+      "A Summer's Tale",
+      "Melvin Goes to Dinner",
+      "Kissing Jessica Stein",
+      "Greek Salad",
+      "Metropolitan",
+      "Paris, 13th District",
+      "Itty Bitty Titty Committee",
+      "Go Fish",
+      "Go Fish",
+      "Paris, 13th District"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Umbrellas of Cherbourg",
+    "seed_movie": "The Umbrellas of Cherbourg",
+    "relevant_movies": [
+      "Young & Beautiful",
+      "Adieu Philippine",
+      "Chunhyang",
+      "Come Undone",
+      "Happiness",
+      "Happiness",
+      "Café de Flore",
+      "Water Lilies",
+      "Brodeuses",
+      "Goodbye First Love"
+    ]
+  },
+  {
+    "query": "phim tương tự phim 1917",
+    "seed_movie": "1917",
+    "relevant_movies": [
+      "Warfare",
+      "Saints and Soldiers",
+      "Fortress of War",
+      "Our World War",
+      "Beaufort",
+      "Field of Lost Shoes",
+      "Warfare",
+      "Sisu",
+      "Operation Mincemeat",
+      "The Red Ghost"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Rite",
+    "seed_movie": "The Rite",
+    "relevant_movies": [
+      "Initiation",
+      "The Vigil",
+      "Simon Killer",
+      "Truth or Dare",
+      "The Woman",
+      "Truth or Dare",
+      "Influencer",
+      "Splatter University",
+      "No One Gets Out Alive",
+      "In the Earth"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Family Pack",
+    "seed_movie": "Family Pack",
+    "relevant_movies": [
+      "The Pirates",
+      "About Endlessness",
+      "About Endlessness",
+      "The Color of Magic",
+      "Tales of Halloween",
+      "The Adventures of Baron Munchausen",
+      "Strawberry Mansion",
+      "The Adventures of Baron Munchausen",
+      "Dead End: Paranormal Park",
+      "The Adventures of Baron Munchausen"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Do Not Expect Too Much from the End of the World",
+    "seed_movie": "Do Not Expect Too Much from the End of the World",
+    "relevant_movies": [
+      "Passion",
+      "Passion",
+      "As Luck Would Have It",
+      "Douglas Is Cancelled",
+      "The Toy",
+      "Red Post on Escher Street",
+      "A Brighter Tomorrow",
+      "Call My Agent!",
+      "Bucharest Non Stop",
+      "My Piece of the Pie"
+    ]
+  },
+  {
+    "query": "phim tương tự phim While We're Young",
+    "seed_movie": "While We're Young",
+    "relevant_movies": [
+      "Hindsight",
+      "Everything's Gonna Be Okay",
+      "Tamo i ovde",
+      "Nikki Glaser: Someday You'll Die",
+      "We Broke Up",
+      "We Broke Up",
+      "Hail, Caesar!",
+      "Hail, Caesar!",
+      "Six Degrees of Separation",
+      "Six Feet Under"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Embrace of the Vampire",
+    "seed_movie": "Embrace of the Vampire",
+    "relevant_movies": [
+      "Hide and Go Shriek",
+      "Haunt",
+      "Shallow Grave",
+      "Dark Ride",
+      "Evil Remains",
+      "V/H/S/2",
+      "Sidste time",
+      "New Life",
+      "V/H/S/2",
+      "MadS"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Moonraker",
+    "seed_movie": "Moonraker",
+    "relevant_movies": [
+      "The Spy Who Loved Me",
+      "The Spy Who Loved Me",
+      "A View to a Kill",
+      "For Your Eyes Only",
+      "A View to a Kill",
+      "For Your Eyes Only",
+      "The Living Daylights",
+      "On Her Majesty's Secret Service",
+      "The Living Daylights",
+      "Live and Let Die"
+    ]
+  },
+  {
+    "query": "phim tương tự phim A Big Bold Beautiful Journey",
+    "seed_movie": "A Big Bold Beautiful Journey",
+    "relevant_movies": [
+      "100 Nights of Hero",
+      "The Future",
+      "Sore: A Wife from the Future",
+      "Undertow",
+      "The Summer I Turned Pretty",
+      "Destined with You",
+      "Evim Sensin",
+      "Woe to the Young",
+      "Elena Undone",
+      "Four Eyed Monsters"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Wake in Fright",
+    "seed_movie": "Wake in Fright",
+    "relevant_movies": [
+      "Single White Female 2: The Psycho",
+      "Half Moon Street",
+      "A Few Kilos of Dates for a Funeral",
+      "Raajneeti",
+      "The Dark House",
+      "Raajneeti",
+      "Civic Duty",
+      "The Sister",
+      "404: Error Not Found",
+      "Nitram"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Snowpiercer",
+    "seed_movie": "Snowpiercer",
+    "relevant_movies": [
+      "Halo 4: Forward Unto Dawn",
+      "Edge of Extinction",
+      "District 9",
+      "Nemesis 2: Nebula",
+      "Super 8",
+      "Super 8",
+      "Geostorm",
+      "The 100",
+      "Moon 44",
+      "Moon 44"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Siege of Jadotville",
+    "seed_movie": "The Siege of Jadotville",
+    "relevant_movies": [
+      "Operation Red Sea",
+      "The Viral Factor",
+      "Strike Back",
+      "Operation Red Sea",
+      "The Salvation",
+      "District 9",
+      "Eye in the Sky",
+      "Jack Ryan: Shadow Recruit",
+      "Jack Ryan: Shadow Recruit",
+      "Tinker Tailor Soldier Spy"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Santa Claus Is a Stinker",
+    "seed_movie": "Santa Claus Is a Stinker",
+    "relevant_movies": [
+      "Locked Out",
+      "I'm Sorry",
+      "A Little Something Extra",
+      "What Else Men Talk About",
+      "Var Bunlar",
+      "Him & Her",
+      "Head Over Heels",
+      "The Trixie & Katya Show",
+      "Mr. Accident",
+      "Kalakalappu"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Return to Sender",
+    "seed_movie": "Return to Sender",
+    "relevant_movies": [
+      "Teenage Cocktail",
+      "The Passenger",
+      "Unspeakable Sins",
+      "The Teacher",
+      "That Cold Day in the Park",
+      "That Cold Day in the Park",
+      "The Pomegranate",
+      "Une chance de trop",
+      "The Isle",
+      "Huda's Salon"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Baghead",
+    "seed_movie": "Baghead",
+    "relevant_movies": [
+      "Girlfriends",
+      "Lisa Frankenstein",
+      "Woman on the Beach",
+      "Flaming Creatures",
+      "The Incredibly True Adventure of Two Girls in Love",
+      "Love Bites",
+      "Brand Upon the Brain!",
+      "The Four of Us",
+      "One Cut of the Dead",
+      "Sitcom"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Blue Collar",
+    "seed_movie": "Blue Collar",
+    "relevant_movies": [
+      "Belly",
+      "Ali Zaoua: Prince of the Streets",
+      "Once Upon a Time in America",
+      "Bad Blood",
+      "Rounders",
+      "Rounders",
+      "Belly",
+      "Boyz n the Hood",
+      "Blindspotting",
+      "Lucky Bastard"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Land and Freedom",
+    "seed_movie": "Land and Freedom",
+    "relevant_movies": [
+      "Rosenstrasse",
+      "Long Live Death",
+      "Long Live Death",
+      "Son of Saul",
+      "La Commune (Paris, 1871)",
+      "La Commune (Paris, 1871)",
+      "Au Revoir les Enfants",
+      "It Happened Here",
+      "Flanders",
+      "My Führer"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Debt Collectors",
+    "seed_movie": "Debt Collectors",
+    "relevant_movies": [
+      "MCA Middle Class Abbayi",
+      "The Pickup",
+      "The Night Watchmen",
+      "Dark Web: Cicada 3301",
+      "The Naked Gun",
+      "Straight to Hell",
+      "Cherry, Harry & Raquel!",
+      "The Doberman Gang",
+      "Infestation",
+      "Japan"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Backwoods",
+    "seed_movie": "The Backwoods",
+    "relevant_movies": [
+      "The Living and the Dead",
+      "Home Movie",
+      "Macabre",
+      "Macabre",
+      "We Are What We Are",
+      "The Walking Dead: The Ones Who Live",
+      "Cadi",
+      "The Woman",
+      "Deranged",
+      "Eden Lake"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Santa Clause",
+    "seed_movie": "The Santa Clause",
+    "relevant_movies": [
+      "Snowmance",
+      "The Santa Clause 2",
+      "Lucky Christmas",
+      "The Dog Who Stopped the War",
+      "The Dog Who Stopped the War",
+      "A Song for Christmas",
+      "The Santa Clause 3: The Escape Clause",
+      "Full House",
+      "Kirk Cameron's Saving Christmas",
+      "Kirk Cameron's Saving Christmas"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Look at Me",
+    "seed_movie": "Look at Me",
+    "relevant_movies": [
+      "Everybody's Famous!",
+      "Ténor",
+      "Let it Rain",
+      "Let it Rain",
+      "The Bélier Family",
+      "You Are Beautiful",
+      "Linda Linda Linda",
+      "Linda Linda Linda",
+      "Same Old Song",
+      "Aline"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Safety",
+    "seed_movie": "Safety",
+    "relevant_movies": [
+      "The Pistol: The Birth of a Legend",
+      "Colin in Black & White",
+      "McFarland, USA",
+      "McFarland, USA",
+      "The Express",
+      "Brian Banks",
+      "Radio",
+      "The Hill",
+      "Facing the Giants",
+      "The Iron Claw"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Racer and the Jailbird",
+    "seed_movie": "Racer and the Jailbird",
+    "relevant_movies": [
+      "A Brighter Summer Day",
+      "A Brighter Summer Day",
+      "Hardcore",
+      "Another Love",
+      "Eastern Boys",
+      "Loft",
+      "Café de Flore",
+      "Black Souls",
+      "Cold War",
+      "Raising Victor Vargas"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Last Stand",
+    "seed_movie": "The Last Stand",
+    "relevant_movies": [
+      "The Last Castle",
+      "The Last Castle",
+      "The Harder They Fall",
+      "The Harder They Fall",
+      "Disco Godfather",
+      "The Prison",
+      "Den of Thieves",
+      "Again My Life",
+      "The Manchurian Candidate",
+      "Felon"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Alfie",
+    "seed_movie": "Alfie",
+    "relevant_movies": [
+      "The Acid House",
+      "The Comedy",
+      "Sweetie",
+      "Sose halunk meg",
+      "Shower",
+      "Wetlands",
+      "A Coffee in Berlin",
+      "Yes, God, Yes",
+      "Next Stop, Greenwich Village",
+      "Bleak Moments"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Bedroom Window",
+    "seed_movie": "The Bedroom Window",
+    "relevant_movies": [
+      "Gemini",
+      "Chaos",
+      "November Story",
+      "Les témoins",
+      "Malice",
+      "Big Driver",
+      "Perfect Stranger",
+      "Goodbye Lover",
+      "Taking Lives",
+      "Murder à la Mod"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Come and See",
+    "seed_movie": "Come and See",
+    "relevant_movies": [
+      "Innocent Voices",
+      "Six Minutes to Midnight",
+      "Six Minutes to Midnight",
+      "Trial on the Road",
+      "The Beguiled",
+      "The Red and the White",
+      "They Fought for Their Country",
+      "Verboten!",
+      "The Destiny of a Man",
+      "The Destiny of a Man"
+    ]
+  },
+  {
+    "query": "phim tương tự phim All the Beauty and the Bloodshed",
+    "seed_movie": "All the Beauty and the Bloodshed",
+    "relevant_movies": [
+      "Jonestown: The Life and Death of Peoples Temple",
+      "How to Survive a Plague",
+      "The Sunshine Makers",
+      "Squaring the Circle: The Story of Hipgnosis",
+      "Cold Case Hammarskjöld",
+      "The Look of Silence",
+      "Taxi to the Dark Side",
+      "Poisoned: The Dirty Truth About Your Food",
+      "After Death",
+      "After Death"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Silence",
+    "seed_movie": "The Silence",
+    "relevant_movies": [
+      "Fanny and Alexander",
+      "Maid in Sweden",
+      "Port of Call",
+      "Crossing",
+      "Everyone Loves Alice",
+      "Opponent",
+      "The Forgiveness of Blood",
+      "The Bride",
+      "Depuis qu'Otar est parti...",
+      "Insiang"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Margot at the Wedding",
+    "seed_movie": "Margot at the Wedding",
+    "relevant_movies": [
+      "We Broke Up",
+      "We Broke Up",
+      "Pauline & Paulette",
+      "Pauline & Paulette",
+      "Outnumbered",
+      "The Amazing Catfish",
+      "Me You Them",
+      "Donald Cried",
+      "The Strange Little Cat",
+      "A House on Fire"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Jalsa",
+    "seed_movie": "Jalsa",
+    "relevant_movies": [
+      "The Hater",
+      "Monster",
+      "Dogtooth",
+      "Dogtooth",
+      "The Isle",
+      "Teenage Cocktail",
+      "Nocturama",
+      "Lord of the Flies",
+      "Unspeakable Sins",
+      "The Wave"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Blue Gardenia",
+    "seed_movie": "The Blue Gardenia",
+    "relevant_movies": [
+      "Gemini",
+      "Wild Things: Foursome",
+      "Killer's Kiss",
+      "The Nile Hilton Incident",
+      "Chronicles of Evil",
+      "Freeze Frame",
+      "Guilty Bystander",
+      "The Woman in the Window",
+      "Black Widow",
+      "No Exit"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Head in the Clouds",
+    "seed_movie": "Head in the Clouds",
+    "relevant_movies": [
+      "Flanders",
+      "The Cranes Are Flying",
+      "Café de Flore",
+      "Birdsong",
+      "Summerland",
+      "A Farewell to Arms",
+      "Gloomy Sunday",
+      "Malena",
+      "Bad Guy",
+      "Suzy"
+    ]
+  },
+  {
+    "query": "phim tương tự phim A Bucket of Blood",
+    "seed_movie": "A Bucket of Blood",
+    "relevant_movies": [
+      "Tragedy Girls",
+      "The Undertaker and His Pals",
+      "Creature from the Haunted Sea",
+      "The Corpse Grinders",
+      "30 Nights of Paranormal Activity with the Devil Inside the Girl with the Dragon Tattoo",
+      "The Little Shop of Horrors",
+      "Massacre on Aisle 12",
+      "Slaughterhouse",
+      "Brain Damage",
+      "Street Trash"
+    ]
+  },
+  {
+    "query": "phim tương tự phim As the Gods Will",
+    "seed_movie": "As the Gods Will",
+    "relevant_movies": [
+      "Gantz",
+      "Resident Evil VII: Biohazard",
+      "Komodo",
+      "The Food of the Gods",
+      "Ash",
+      "Pitch Black",
+      "Galaxy of Terror",
+      "The Friendship Game",
+      "Deep Rising",
+      "Night of the Scarecrow"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Absence of Malice",
+    "seed_movie": "Absence of Malice",
+    "relevant_movies": [
+      "The Human Stain",
+      "The Human Stain",
+      "Found",
+      "Cal",
+      "A Single Man",
+      "Complications",
+      "The Firm",
+      "Eureka",
+      "That Cold Day in the Park",
+      "That Cold Day in the Park"
+    ]
+  },
+  {
+    "query": "phim tương tự phim How to Make a Killing",
+    "seed_movie": "How to Make a Killing",
+    "relevant_movies": [
+      "Darlings!",
+      "Sitcom",
+      "The House of Flowers",
+      "Bernie",
+      "Guilt",
+      "Monster",
+      "Escape from Tomorrow",
+      "The House of Flowers: The Movie",
+      "Twin Sitters",
+      "Salvation Boulevard"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Vanishing Point",
+    "seed_movie": "Vanishing Point",
+    "relevant_movies": [
+      "The Fast and the Furious: Tokyo Drift",
+      "The Gauntlet",
+      "Blood, Guts, Bullets and Octane",
+      "Bad Boys: Ride or Die",
+      "The Fast and the Furious: Tokyo Drift",
+      "Batwoman",
+      "Collide",
+      "A Hard Day",
+      "Grimm",
+      "Rent-a-Cop"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Great White Hype",
+    "seed_movie": "The Great White Hype",
+    "relevant_movies": [
+      "The Benchwarmers",
+      "The Kid from Brooklyn",
+      "The Hammer",
+      "The Benchwarmers",
+      "BASEketball",
+      "BASEketball",
+      "Ready to Rumble",
+      "Ready to Rumble",
+      "Caddyshack",
+      "Talladega Nights: The Ballad of Ricky Bobby"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Evil Dead II",
+    "seed_movie": "Evil Dead II",
+    "relevant_movies": [
+      "The Evil Dead",
+      "Psychos in Love",
+      "The Greasy Strangler",
+      "Slaughterhouse Rock",
+      "976-EVIL",
+      "Deadstream",
+      "Pledge Night",
+      "Army of Darkness",
+      "30 Nights of Paranormal Activity with the Devil Inside the Girl with the Dragon Tattoo",
+      "Crimewave"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Outrage",
+    "seed_movie": "Outrage",
+    "relevant_movies": [
+      "Violent Cop",
+      "Female Yakuza Tale: Inquisition and Torture",
+      "Viduthalai: Part 1",
+      "Believer",
+      "Girls to Buy",
+      "How to Blow Up a Pipeline",
+      "Pushpa: The Rise - Part 1",
+      "Dead or Alive: Final",
+      "Tokyo Rampage",
+      "Pushpa: The Rule - Part 2"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Kill List",
+    "seed_movie": "Kill List",
+    "relevant_movies": [
+      "Blackwater Lane",
+      "A Nightmare on Elm Street",
+      "Sinister",
+      "The Snowman",
+      "The Fanatic",
+      "The Slasher ... Is the Sex Maniac!",
+      "The Outfit",
+      "Freeze Frame",
+      "Time Without Pity",
+      "The Deadly Bees"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Noelle",
+    "seed_movie": "Noelle",
+    "relevant_movies": [
+      "Santa Baby 2: Christmas Maybe",
+      "A Mom for Christmas",
+      "The Claus Family",
+      "Shrek the Musical",
+      "The Santa Clause 2",
+      "Snowmance",
+      "Zoey's Extraordinary Christmas",
+      "Fred Claus",
+      "Candy Cane Lane",
+      "Dear Santa"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Passenger",
+    "seed_movie": "The Passenger",
+    "relevant_movies": [
+      "If I Had Legs I'd Kick You",
+      "Straw",
+      "The Secrets We Keep",
+      "Unspeakable Sins",
+      "Hijack",
+      "Above Suspicion",
+      "My Son, My Son, What Have Ye Done",
+      "Die My Love",
+      "Suture",
+      "Suture"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Serial Experiments Lain",
+    "seed_movie": "Serial Experiments Lain",
+    "relevant_movies": [
+      "Midori",
+      "Danganronpa 3: The End of Hope's Peak Academy - Hope Arc",
+      "School Days",
+      "Midori",
+      "Birdboy: The Forgotten Children",
+      "A Silent Voice: The Movie",
+      "Blue Period",
+      "Noriko's Dinner Table",
+      "Noriko's Dinner Table",
+      "A Snake of June"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Very Bad Things",
+    "seed_movie": "Very Bad Things",
+    "relevant_movies": [
+      "Look",
+      "Fatal Instinct",
+      "Penn & Teller Get Killed",
+      "The Kill Room",
+      "Cecil B. Demented",
+      "Jawbreaker",
+      "Head Above Water",
+      "A Hard Day",
+      "Ca$h",
+      "Summoning Sylvia"
+    ]
+  },
+  {
+    "query": "phim tương tự phim When a Man Loves a Woman",
+    "seed_movie": "When a Man Loves a Woman",
+    "relevant_movies": [
+      "All My Life",
+      "Lianna",
+      "Lianna",
+      "Sex",
+      "A Copenhagen Love Story",
+      "No Bears",
+      "No Bears",
+      "I Can't Think Straight",
+      "Antares",
+      "Jalebi"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Mon meilleur ami",
+    "seed_movie": "Mon meilleur ami",
+    "relevant_movies": [
+      "The Suitor",
+      "A Very Secret Service",
+      "Locked Out",
+      "Les clefs de bagnole",
+      "Steak",
+      "Babysitting",
+      "The Valet",
+      "The Valet",
+      "Otel Eleon",
+      "The Women on the 6th Floor"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Oxygen",
+    "seed_movie": "Oxygen",
+    "relevant_movies": [
+      "Raised by Wolves",
+      "Blank",
+      "Primer",
+      "Birth/Rebirth",
+      "Reset",
+      "Occurrence at Mills Creek",
+      "Pet Sematary",
+      "No Exit",
+      "The Copenhagen Test",
+      "Sightless"
+    ]
+  },
+  {
+    "query": "phim tương tự phim This Film Is Not Yet Rated",
+    "seed_movie": "This Film Is Not Yet Rated",
+    "relevant_movies": [
+      "The China Hustle",
+      "America: Freedom to Fascism",
+      "We Live in Public",
+      "Waiting for Superman",
+      "Fahrenheit 11/9",
+      "Jerry Springer: Fights, Camera, Action",
+      "Voir",
+      "The Girl Next Door",
+      "Who the #$&% Is Jackson Pollock?",
+      "The Movies That Made Us"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Penelope",
+    "seed_movie": "Penelope",
+    "relevant_movies": [
+      "Teen Witch",
+      "A Good Day to Be a Dog",
+      "I Am Not an Easy Man",
+      "Savoring Paris",
+      "Love by Chance",
+      "Over Her Dead Body",
+      "The Love Witch",
+      "Irish Wish",
+      "The Butcher's Wife",
+      "The Perfect Man"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Training Day",
+    "seed_movie": "Training Day",
+    "relevant_movies": [
+      "Headshot",
+      "The Shield",
+      "Les Misérables",
+      "We Own the Night",
+      "We Own the Night",
+      "Fracture",
+      "Chicago Justice",
+      "Crime 101",
+      "The Little Things",
+      "Crash"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Pale Rider",
+    "seed_movie": "Pale Rider",
+    "relevant_movies": [
+      "Little House: The Last Farewell",
+      "A Soldier's Revenge",
+      "Unforgiven",
+      "Horizon: An American Saga - Chapter 2",
+      "A Fistful of Dollars",
+      "Surrounded",
+      "Once Upon a Time in the West",
+      "The Retrieval",
+      "A Fistful of Dollars",
+      "Heartland"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Parenthood",
+    "seed_movie": "Parenthood",
+    "relevant_movies": [
+      "Daddy Longlegs",
+      "Chance",
+      "The Comedy",
+      "Outnumbered",
+      "Sweetie",
+      "Speech & Debate",
+      "Toni Erdmann",
+      "Homeless",
+      "The Crazy Family",
+      "The Strange Little Cat"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Program",
+    "seed_movie": "The Program",
+    "relevant_movies": [
+      "Off Campus",
+      "Defying Gravity",
+      "Mad About Mambo",
+      "Student of the Year 2",
+      "Shelter",
+      "Love All Play",
+      "Everybody's All-American",
+      "In from the Side",
+      "In from the Side",
+      "Facing the Giants"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Retirement Plan",
+    "seed_movie": "The Retirement Plan",
+    "relevant_movies": [
+      "Novocaine",
+      "The Knower",
+      "Lost Bullet 2: Back for More",
+      "Bas Belasi",
+      "Hotline Miami",
+      "Lost Bullet",
+      "Cingöz Recai",
+      "Gunpowder Milkshake",
+      "Girls to Buy",
+      "Double Down"
+    ]
+  },
+  {
+    "query": "phim tương tự phim The Foot Fist Way",
+    "seed_movie": "The Foot Fist Way",
+    "relevant_movies": [
+      "Three O'Clock High",
+      "All of Us",
+      "Gimme a Break!",
+      "Bad Luck",
+      "Some Mothers Do 'Ave 'Em",
+      "Locked Out",
+      "Vulgaria",
+      "Le missionnaire",
+      "7 vidas",
+      "Whatever Happened to Harold Smith?"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Hard to Kill",
+    "seed_movie": "Hard to Kill",
+    "relevant_movies": [
+      "General Commander",
+      "The Hunting Party",
+      "Blast of Silence",
+      "The Raid: Redemption",
+      "Man on the Roof",
+      "The Jackal",
+      "Ms .45",
+      "In the Land of Saints and Sinners",
+      "One Good Cop",
+      "Original Gangstas"
+    ]
+  },
+  {
+    "query": "phim tương tự phim 27 Dresses",
+    "seed_movie": "27 Dresses",
+    "relevant_movies": [
+      "See Jane Date",
+      "Love by Chance",
+      "Pride and Prejudice",
+      "Paging Mr. Darcy",
+      "One Small Hitch",
+      "Happy Endings",
+      "Dirty Love",
+      "Bad Girls from Valley High",
+      "Dharma & Greg",
+      "My Favorite Wedding"
+    ]
+  },
+  {
+    "query": "phim tương tự phim Bol Bachchan",
+    "seed_movie": "Bol Bachchan",
+    "relevant_movies": [
+      "The Fable",
+      "Himmatwala",
+      "Kammara Sambhavam",
+      "The Holy Man",
+      "Sarileru Neekevvaru",
+      "Current Theega",
+      "Bedurulanka 2012",
+      "Thamizh Padam",
+      "Bharat",
+      "Kills On Wheels"
+    ]
+  }
+]

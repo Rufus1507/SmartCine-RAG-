@@ -1,7 +1,7 @@
 # Folder exclusions
 movies_crawl_data/
 test_code/
-
+movie_master/
 # File exclusions
 *.md
 !readme.md

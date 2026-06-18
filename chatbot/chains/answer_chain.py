@@ -40,18 +40,23 @@ def run_answer_chain(llm: BaseChatModel, user_message: str, movies_df: pd.DataFr
     else:
         movies_info_list = []
         for _, row in movies_df.iterrows():
-            movie_str = (
-                f"- Tên phim: {row[COL_TITLE]}\n"
-                f"  Thể loại: {row[COL_GENRE]}\n"
-                f"  Đạo diễn: {row[COL_DIRECTOR]}\n"
-                f"  Diễn viên: {row[COL_STARS]}\n"
-                f"  Năm: {row[COL_YEAR]}\n"
-                f"  Điểm: {row[COL_RATING]}\n"
-            )
-            if COL_OVERVIEW in row and pd.notna(row[COL_OVERVIEW]):
-                movie_str += f"  Tóm tắt: {row[COL_OVERVIEW]}\n"
-            if COL_LINK in row and pd.notna(row[COL_LINK]):
-                movie_str += f"  Link IMDb: {row[COL_LINK]}\n"
+            if "final_context" in row and pd.notna(row["final_context"]):
+                movie_str = f"- {row['final_context']}\n"
+                if COL_LINK in row and pd.notna(row[COL_LINK]):
+                    movie_str += f"  Link IMDb: {row[COL_LINK]}\n"
+            else:
+                movie_str = (
+                    f"- Tên phim: {row[COL_TITLE]}\n"
+                    f"  Thể loại: {row[COL_GENRE]}\n"
+                    f"  Đạo diễn: {row[COL_DIRECTOR]}\n"
+                    f"  Diễn viên: {row[COL_STARS]}\n"
+                    f"  Năm: {row[COL_YEAR]}\n"
+                    f"  Điểm: {row[COL_RATING]}\n"
+                )
+                if COL_OVERVIEW in row and pd.notna(row[COL_OVERVIEW]):
+                    movie_str += f"  Tóm tắt: {row[COL_OVERVIEW]}\n"
+                if COL_LINK in row and pd.notna(row[COL_LINK]):
+                    movie_str += f"  Link IMDb: {row[COL_LINK]}\n"
             movies_info_list.append(movie_str)
             
         movies_info = "\n".join(movies_info_list)

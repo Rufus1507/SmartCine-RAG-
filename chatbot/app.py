@@ -9,7 +9,7 @@ import pandas as pd
 
 # Nạp cấu hình đường dẫn và hằng số cột
 from chatbot.config import (
-    IMDB_DATA_PATH, ADVANCED_DATA_PATH, KEYWORD_DICT_PATH, ALIASES_PATH,
+    KEYWORD_DICT_PATH, ALIASES_PATH,
     COL_TITLE, COL_GENRE, COL_DIRECTOR, COL_STARS, COL_YEAR, COL_RATING, COL_OVERVIEW, COL_LINK,
     LLM_BASE_URL, LLM_API_KEY, LLM_MODEL
 )
@@ -27,6 +27,7 @@ from chatbot.chains.rag_chain import run_rag_pipeline
 def render_movie_cards(df: pd.DataFrame):
     """
     Vẽ giao diện hiển thị danh sách các bộ phim tìm kiếm được dạng Card cột.
+    Tích hợp hiển thị điểm tương đồng và phân rã giải thích độ tương đồng.
     """
     if df.empty:
         return
@@ -34,6 +35,11 @@ def render_movie_cards(df: pd.DataFrame):
     for i, (_, row) in enumerate(df.iterrows()):
         with cols[i]:
             st.markdown(f"**{row[COL_TITLE]}**")
+            
+            # Hiển thị điểm tương đồng nếu có
+            if "similarity_score" in row:
+                st.markdown(f"🎯 **Độ tương đồng: {row['similarity_score']}**")
+                
             st.caption(f"⭐ {row[COL_RATING]}  •  {int(row[COL_YEAR]) if pd.notna(row[COL_YEAR]) else 'N/A'}")
             st.caption(f"🎬 Đạo diễn: {row[COL_DIRECTOR]}")
             st.caption(f"🎭 Thể loại: {row[COL_GENRE]}")
@@ -46,6 +52,20 @@ def render_movie_cards(df: pd.DataFrame):
                 if len(desc) > 120:
                     desc = desc[:120] + "..."
                 st.caption(f"📝 Tóm tắt: {desc}")
+                
+            # Hiển thị giải thích độ tương đồng (Similarity Breakdown & Reason)
+            if "similarity_reason" in row:
+                st.caption(f"💡 {row['similarity_reason']}")
+                # Expander giải thích điểm số chi tiết
+                with st.expander("📊 Phân rã độ khớp", expanded=False):
+                    st.caption(f"📖 Nội dung: {row.get('content_similarity', 0.0)*100:.0f}%")
+                    st.caption(f"🎭 Thể loại: {row.get('genre_similarity', 0.0)*100:.0f}%")
+                    st.caption(f"👥 Diễn viên: {row.get('actor_similarity', 0.0)*100:.0f}%")
+                    st.caption(f"🎬 Đạo diễn: {row.get('director_similarity', 0.0)*100:.0f}%")
+                    st.caption(f"🌍 Quốc gia: {row.get('country_similarity', 0.0)*100:.0f}%")
+                    st.caption(f"📅 Thập kỷ: {row.get('decade_similarity', 0.0)*100:.0f}%")
+                    st.caption(f"🏆 Giải thưởng: {row.get('award_similarity', 0.0)*100:.0f}%")
+                    
             if COL_LINK in row and pd.notna(row[COL_LINK]):
                 st.markdown(f"[🔗 Xem trên IMDb]({row[COL_LINK]})")
 

@@ -1,15 +1,11 @@
 import pandas as pd
 import numpy as np
 
-# Mapping tên cột mặc định trong CSV của CineBot
-COL_TITLE    = "Title"               # tên phim
-COL_GENRE    = "genres"              # thể loại
-COL_DIRECTOR = "directors"           # đạo diễn
-COL_STARS    = "stars"               # danh sách diễn viên
-COL_YEAR     = "Year"                # năm phát hành
-COL_RATING   = "Rating"              # điểm IMDB
-COL_OVERVIEW = "description"         # mô tả phim
-COL_VOTES    = "num_votes"           # số lượt vote đã làm sạch
+from chatbot.config import (
+    COL_TITLE, COL_GENRE, COL_DIRECTOR, COL_STARS, COL_YEAR, COL_RATING, COL_OVERVIEW,
+    COL_OSCAR, COL_AWARDS, COL_NOMINATION, COL_DURATION, COL_METASCORE
+)
+COL_VOTES = "num_votes"
 
 def normalize_genre(genre_str: str) -> str:
     if not genre_str:
@@ -156,6 +152,41 @@ def search_movies_tool(df: pd.DataFrame, filters: dict, top_k: int = 5) -> pd.Da
             except Exception:
                 pass
 
+        # Lọc giải thưởng Oscar
+        if filters.get("has_oscar") and COL_OSCAR in result.columns:
+            try:
+                result = result[result[COL_OSCAR] == 1]
+            except Exception:
+                pass
+
+        # Lọc giải thưởng nói chung
+        if filters.get("has_awards") and COL_AWARDS in result.columns:
+            try:
+                result = result[result[COL_AWARDS] == 1]
+            except Exception:
+                pass
+
+        # Lọc thời lượng tối thiểu (phút)
+        if filters.get("duration_min") and COL_DURATION in result.columns:
+            try:
+                result = result[result[COL_DURATION] >= float(filters["duration_min"])]
+            except Exception:
+                pass
+
+        # Lọc thời lượng tối đa (phút)
+        if filters.get("duration_max") and COL_DURATION in result.columns:
+            try:
+                result = result[result[COL_DURATION] <= float(filters["duration_max"])]
+            except Exception:
+                pass
+
+        # Lọc Metascore tối thiểu
+        if filters.get("meta_score_min") and COL_METASCORE in result.columns:
+            try:
+                result = result[result[COL_METASCORE] >= float(filters["meta_score_min"])]
+            except Exception:
+                pass
+
         # Sắp xếp kết quả
         sort_by = filters.get("sort_by")
         sort_order = filters.get("sort_order", "desc")
@@ -169,6 +200,11 @@ def search_movies_tool(df: pd.DataFrame, filters: dict, top_k: int = 5) -> pd.Da
         elif sort_by == "year" and COL_YEAR in result.columns:
             try:
                 result = result.sort_values(COL_YEAR, ascending=ascending)
+            except Exception:
+                pass
+        elif sort_by == "metascore" and COL_METASCORE in result.columns:
+            try:
+                result = result.sort_values(COL_METASCORE, ascending=ascending)
             except Exception:
                 pass
         else:
