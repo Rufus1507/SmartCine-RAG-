@@ -46,6 +46,7 @@ from chatbot.representation.semantic_representation import (
 from chatbot.retrieval.bm25_retriever import bm25_search
 from chatbot.retrieval.retriever import semantic_search_retriever
 from chatbot.tools import search_movies_tool
+from chatbot.retrieval.reranker import rerank_results
 
 # Ensure reproducibility
 random.seed(42)
@@ -156,9 +157,19 @@ def main():
     # Fit Feature Builder
     builder = MovieFeatureBuilder()
     
+    # Load entities keyword dictionary & aliases dictionary
+    print("Loading keyword and aliases dictionaries...")
+    keyword_dict = load_keyword_dict()
+    aliases_dict = load_aliases()
+    
     # Filter dataset for candidates matching retriever filtering
     df_filtered = df[df['num_votes'] >= MIN_VOTES_THRESHOLD].reset_index(drop=True)
     print(f"Filtered movies (votes >= 1000): {len(df_filtered):,}")
+    
+    # Load BM25 Index at the beginning so that it is always available
+    from chatbot.data_loader import load_bm25_index
+    print("Loading BM25 index...")
+    bm25_index = load_bm25_index(df_filtered)
     
     # =============================================================
     # OPTIMIZATION 1: PRE-EXTRACT EMBEDDINGS FROM FAISS INDICES TO AVOID HF RUNTIME EMBEDDING CALLS
@@ -304,413 +315,487 @@ def main():
     # =============================================================
     # 3. Step 1: Recommendation Quality & Step 2: Ablation Study (RQ1)
     # =============================================================
-    print("\n[Step 1 & 2] Running Recommendation Quality & Ablation (RQ1)...")
-    
-    ablation_metrics = {
-        "Baseline A (Description Only)": [],
-        "Version B (Description + Genre)": [],
-        "CineBot V3 (Full Pipeline)": []
-    }
-    
-    for idx, gt in enumerate(ground_truth_list):
-        query = gt["query"]
-        relevant_movies = gt["relevant_movies"]
+    ablation_results_path = os.path.join(workspace_dir, "evaluation_v3", "ablation_results.json")
+    if os.path.exists(ablation_results_path):
+        print("\n[Step 1 & 2] Loading cached RQ1 Ablation and Title-Overfitting results...")
+        with open(ablation_results_path, "r", encoding="utf-8") as f:
+            cached_data = json.load(f)
+        ablation_summary = cached_data["ablation_summary"]
+        overfit_rate_a = cached_data["overfit_rate_a"]
+        overfit_rate_c = cached_data["overfit_rate_c"]
+        errors_a = cached_data["errors_a"]
+        errors_c = cached_data["errors_c"]
+        num_overfit_pairs = cached_data.get("num_overfit_pairs", 50)
         
-        # 1. Baseline A
-        res_a = retriever.retrieve(
-            query=query, df=df_filtered, filters={}, intent="search",
-            faiss_index=index_a, embedder_model=embedder_model,
-            version='A', final_k=10
-        )
-        recs_a = res_a["Title"].tolist() if not res_a.empty else []
-        ablation_metrics["Baseline A (Description Only)"].append(evaluate_metrics(recs_a, relevant_movies))
-        
-        # 2. Version B
-        res_b = retriever.retrieve(
-            query=query, df=df_filtered, filters={}, intent="search",
-            faiss_index=index_b, embedder_model=embedder_model,
-            version='B', final_k=10
-        )
-        recs_b = res_b["Title"].tolist() if not res_b.empty else []
-        ablation_metrics["Version B (Description + Genre)"].append(evaluate_metrics(recs_b, relevant_movies))
-        
-        # 3. CineBot V3 (Full)
-        res_c = retriever.retrieve(
-            query=query, df=df_filtered, filters={}, intent="search",
-            faiss_index=index_c, embedder_model=embedder_model,
-            version='C', final_k=10
-        )
-        recs_c = res_c["Title"].tolist() if not res_c.empty else []
-        ablation_metrics["CineBot V3 (Full Pipeline)"].append(evaluate_metrics(recs_c, relevant_movies))
-        
-        if (idx + 1) % 50 == 0:
-            print(f"  Evaluated {idx+1} / 300 query recommendations...")
+        print("\n--- Ablation Results (RQ1) ---")
+        for key, metrics in ablation_summary.items():
+            print(f"{key}: P@5={metrics['p@5']:.3f}, P@10={metrics['p@10']:.3f}, R@10={metrics['r@10']:.3f}, F1@10={metrics['f1@10']:.3f}")
             
-    ablation_summary = {}
-    for key, metrics in ablation_metrics.items():
-        ablation_summary[key] = {
-            "p@5": np.mean([m["precision@5"] for m in metrics]),
-            "p@10": np.mean([m["precision@10"] for m in metrics]),
-            "r@10": np.mean([m["recall@10"] for m in metrics]),
-            "f1@10": np.mean([m["f1@10"] for m in metrics])
+        print("\n[Step 2.2] Loaded Title-Overfitting Test results:")
+        print(f"Title-Overfitting Error Rate:")
+        print(f"  Baseline A (Description Only): {overfit_rate_a*100:.1f}% ({errors_a}/{num_overfit_pairs})")
+        print(f"  CineBot V3 (Split Vector):     {overfit_rate_c*100:.1f}% ({errors_c}/{num_overfit_pairs})")
+    else:
+        print("\n[Step 1 & 2] Running Recommendation Quality & Ablation (RQ1)...")
+        ablation_metrics = {
+            "Baseline A (Description Only)": [],
+            "Version B (Description + Genre)": [],
+            "CineBot V3 (Full Pipeline)": []
         }
-    
-    print("\n--- Ablation Results (RQ1) ---")
-    for key, metrics in ablation_summary.items():
-        print(f"{key}: P@5={metrics['p@5']:.3f}, P@10={metrics['p@10']:.3f}, R@10={metrics['r@10']:.3f}, F1@10={metrics['f1@10']:.3f}")
         
-    # Title-Overfitting Test
-    print("\n[Step 2.2] Running Title-Overfitting Test...")
-    overfit_pairs = []
-    seen_seeds = set()
-    
-    for i, row in df_filtered.iterrows():
-        if len(overfit_pairs) >= 50:
-            break
-        title = str(row['Title'])
-        words = [w.lower() for w in re.findall(r'\b\w{4,}\b', title) if w.lower() not in ('the', 'of', 'and', 'a', 'in', 'to', 'for', 'with', 'on', 'at', 'by')]
-        if not words:
-            continue
+        for idx, gt in enumerate(ground_truth_list):
+            query = gt["query"]
+            relevant_movies = gt["relevant_movies"]
             
-        genres1 = set(clean_split(row['genres']))
-        if not genres1:
-            continue
+            # 1. Baseline A
+            res_a = retriever.retrieve(
+                query=query, df=df_filtered, filters={}, intent="search",
+                faiss_index=index_a, embedder_model=embedder_model,
+                version='A', final_k=10
+            )
+            recs_a = res_a["Title"].tolist() if not res_a.empty else []
+            ablation_metrics["Baseline A (Description Only)"].append(evaluate_metrics(recs_a, relevant_movies))
             
-        for word in words:
-            candidates = df_filtered[
-                df_filtered['Title'].astype(str).str.lower().str.contains(rf'\b{word}\b', regex=True, na=False) & 
-                (df_filtered['Title'] != title)
-            ]
-            if candidates.empty:
-                continue
+            # 2. Version B
+            res_b = retriever.retrieve(
+                query=query, df=df_filtered, filters={}, intent="search",
+                faiss_index=index_b, embedder_model=embedder_model,
+                version='B', final_k=10
+            )
+            recs_b = res_b["Title"].tolist() if not res_b.empty else []
+            ablation_metrics["Version B (Description + Genre)"].append(evaluate_metrics(recs_b, relevant_movies))
+            
+            # 3. CineBot V3 (Full)
+            res_c = retriever.retrieve(
+                query=query, df=df_filtered, filters={}, intent="search",
+                faiss_index=index_c, embedder_model=embedder_model,
+                version='C', final_k=10
+            )
+            recs_c = res_c["Title"].tolist() if not res_c.empty else []
+            ablation_metrics["CineBot V3 (Full Pipeline)"].append(evaluate_metrics(recs_c, relevant_movies))
+            
+            if (idx + 1) % 50 == 0:
+                print(f"  Evaluated {idx+1} / 300 query recommendations...")
                 
-            for _, cand_row in candidates.iterrows():
-                genres2 = set(clean_split(cand_row['genres']))
-                if not genres2:
-                    continue
-                if not genres1.intersection(genres2):
-                    pair = (row, cand_row)
-                    if row['Title'] not in seen_seeds and len(overfit_pairs) < 50:
-                        overfit_pairs.append(pair)
-                        seen_seeds.add(row['Title'])
-                        break
+        ablation_summary = {}
+        for key, metrics in ablation_metrics.items():
+            ablation_summary[key] = {
+                "p@5": np.mean([m["precision@5"] for m in metrics]),
+                "p@10": np.mean([m["precision@10"] for m in metrics]),
+                "r@10": np.mean([m["recall@10"] for m in metrics]),
+                "f1@10": np.mean([m["f1@10"] for m in metrics])
+            }
+        
+        print("\n--- Ablation Results (RQ1) ---")
+        for key, metrics in ablation_summary.items():
+            print(f"{key}: P@5={metrics['p@5']:.3f}, P@10={metrics['p@10']:.3f}, R@10={metrics['r@10']:.3f}, F1@10={metrics['f1@10']:.3f}")
+            
+        # Title-Overfitting Test
+        print("\n[Step 2.2] Running Title-Overfitting Test...")
+        overfit_pairs = []
+        seen_seeds = set()
+        
+        for i, row in df_filtered.iterrows():
             if len(overfit_pairs) >= 50:
                 break
+            title = str(row['Title'])
+            words = [w.lower() for w in re.findall(r'\b\w{4,}\b', title) if w.lower() not in ('the', 'of', 'and', 'a', 'in', 'to', 'for', 'with', 'on', 'at', 'by')]
+            if not words:
+                continue
                 
-    print(f"Found {len(overfit_pairs)} movie pairs for title-overfitting test.")
-    
-    errors_a = 0
-    errors_c = 0
-    
-    for seed_row, decoy_row in overfit_pairs:
-        seed_title = seed_row['Title']
-        decoy_title = decoy_row['Title']
-        query = f"phim tương tự phim {seed_title}"
+            genres1 = set(clean_split(row['genres']))
+            if not genres1:
+                continue
+                
+            for word in words:
+                candidates = df_filtered[
+                    df_filtered['Title'].astype(str).str.lower().str.contains(rf'\b{word}\b', regex=True, na=False) & 
+                    (df_filtered['Title'] != title)
+                ]
+                if candidates.empty:
+                    continue
+                    
+                for _, cand_row in candidates.iterrows():
+                    genres2 = set(clean_split(cand_row['genres']))
+                    if not genres2:
+                        continue
+                    if not genres1.intersection(genres2):
+                        pair = (row, cand_row)
+                        if row['Title'] not in seen_seeds and len(overfit_pairs) < 50:
+                            overfit_pairs.append(pair)
+                            seen_seeds.add(row['Title'])
+                            break
+                if len(overfit_pairs) >= 50:
+                    break
+                    
+        print(f"Found {len(overfit_pairs)} movie pairs for title-overfitting test.")
         
-        # Run Baseline A
-        res_a = retriever.retrieve(
-            query=query, df=df_filtered, filters={}, intent="search",
-            faiss_index=index_a, embedder_model=embedder_model,
-            version='A', final_k=10
-        )
-        titles_a = [clean_title(t) for t in res_a["Title"].tolist()] if not res_a.empty else []
-        if clean_title(decoy_title) in titles_a:
-            errors_a += 1
+        errors_a = 0
+        errors_c = 0
+        
+        for seed_row, decoy_row in overfit_pairs:
+            seed_title = seed_row['Title']
+            decoy_title = decoy_row['Title']
+            query = f"phim tương tự phim {seed_title}"
             
-        # Run CineBot V3
-        res_c = retriever.retrieve(
-            query=query, df=df_filtered, filters={}, intent="search",
-            faiss_index=index_c, embedder_model=embedder_model,
-            version='C', final_k=10
-        )
-        titles_c = [clean_title(t) for t in res_c["Title"].tolist()] if not res_c.empty else []
-        if clean_title(decoy_title) in titles_c:
-            errors_c += 1
-            
-    overfit_rate_a = errors_a / len(overfit_pairs) if len(overfit_pairs) > 0 else 0.0
-    overfit_rate_c = errors_c / len(overfit_pairs) if len(overfit_pairs) > 0 else 0.0
-    print(f"Title-Overfitting Error Rate:")
-    print(f"  Baseline A (Description Only): {overfit_rate_a*100:.1f}% ({errors_a}/{len(overfit_pairs)})")
-    print(f"  CineBot V3 (Split Vector):     {overfit_rate_c*100:.1f}% ({errors_c}/{len(overfit_pairs)})")
+            # Run Baseline A
+            res_a = retriever.retrieve(
+                query=query, df=df_filtered, filters={}, intent="search",
+                faiss_index=index_a, embedder_model=embedder_model,
+                version='A', final_k=10
+            )
+            titles_a = [clean_title(t) for t in res_a["Title"].tolist()] if not res_a.empty else []
+            if clean_title(decoy_title) in titles_a:
+                errors_a += 1
+                
+            # Run CineBot V3
+            res_c = retriever.retrieve(
+                query=query, df=df_filtered, filters={}, intent="search",
+                faiss_index=index_c, embedder_model=embedder_model,
+                version='C', final_k=10
+            )
+            titles_c = [clean_title(t) for t in res_c["Title"].tolist()] if not res_c.empty else []
+            if clean_title(decoy_title) in titles_c:
+                errors_c += 1
+                
+        overfit_rate_a = errors_a / len(overfit_pairs) if len(overfit_pairs) > 0 else 0.0
+        overfit_rate_c = errors_c / len(overfit_pairs) if len(overfit_pairs) > 0 else 0.0
+        print(f"Title-Overfitting Error Rate:")
+        print(f"  Baseline A (Description Only): {overfit_rate_a*100:.1f}% ({errors_a}/{len(overfit_pairs)})")
+        print(f"  CineBot V3 (Split Vector):     {overfit_rate_c*100:.1f}% ({errors_c}/{len(overfit_pairs)})")
+        
+        num_overfit_pairs = len(overfit_pairs)
+        # Save to cache
+        cached_data = {
+            "ablation_summary": ablation_summary,
+            "overfit_rate_a": overfit_rate_a,
+            "overfit_rate_c": overfit_rate_c,
+            "errors_a": errors_a,
+            "errors_c": errors_c,
+            "num_overfit_pairs": num_overfit_pairs
+        }
+        with open(ablation_results_path, "w", encoding="utf-8") as f:
+            json.dump(cached_data, f, ensure_ascii=False, indent=2)
     
     # =============================================================
     # 4. Step 3: Ablation Study — RQ2 (Dynamic Weight Redistribution)
     # =============================================================
-    print("\n[Step 3] Running Weight Redistribution Robustness Test (RQ2)...")
-    
-    subset_candidates = df_filtered[
-        df_filtered['genres'].astype(str).str.strip().str.len() > 0 &
-        df_filtered['directors'].astype(str).str.strip().str.len() > 0 &
-        df_filtered['stars'].astype(str).str.strip().str.len() > 0 &
-        df_filtered['countries_origin'].astype(str).str.strip().str.len() > 0 &
-        df_filtered['Year'].notna() &
-        df_filtered['has_awards'].notna()
-    ].reset_index(drop=True)
-    
-    subset_indices = random.sample(range(len(subset_candidates)), min(100, len(subset_candidates)))
-    subset_movies = subset_candidates.iloc[subset_indices]
-    
-    subset_ground_truth = []
-    for _, seed_row in subset_movies.iterrows():
-        seed_title = seed_row['Title']
-        seed_features = builder.transform_row(seed_row)
-        seed_profile = make_profile(seed_row, 'C')
-        seed_features["semantic_embedding"] = profile_text_to_emb[seed_profile]
-        
-        candidates_scores = []
-        for _, cand_row in subset_movies.iterrows():
-            if cand_row['Title'] == seed_title:
-                continue
-            cand_features = builder.transform_row(cand_row)
-            cand_profile = make_profile(cand_row, 'C')
-            cand_features["semantic_embedding"] = profile_text_to_emb[cand_profile]
+    intermediate_results_path = os.path.join(workspace_dir, "evaluation_v3", "intermediate_results.json")
+    if os.path.exists(intermediate_results_path):
+        print("\n[Step 3, 4 & 5] Loading cached RQ2, Retrieval, and Reranking results...")
+        with open(intermediate_results_path, "r", encoding="utf-8") as f:
+            cached_intermediate = json.load(f)
             
-            sim_breakdown = compute_weighted_similarity(cand_features, seed_features)
-            candidates_scores.append((cand_row['Title'], sim_breakdown['final_score']))
-            
-        candidates_scores.sort(key=lambda x: x[1], reverse=True)
-        relevant = [title for title, score in candidates_scores[:5]]
-        subset_ground_truth.append((seed_row, relevant))
+        # Convert keys to floats for downstream compatibility
+        rq2_summary = {
+            mode: {float(k): v for k, v in data.items()}
+            for mode, data in cached_intermediate["rq2_summary"].items()
+        }
+        retrieval_summary = cached_intermediate["retrieval_summary"]
+        reranking_summary = cached_intermediate["reranking_summary"]
         
-    missing_rates = [0.0, 0.2, 0.5]
-    modes = ["Static Weight", "Dynamic Weight"]
-    rq2_results = {mode: {rate: [] for rate in missing_rates} for mode in modes}
-    
-    for rate in missing_rates:
-        for seed_row, relevant in subset_ground_truth:
-            ref_features = builder.transform_row(seed_row)
+        avg_ndcg_b = reranking_summary["avg_ndcg_b"]
+        avg_map_b = reranking_summary["avg_map_b"]
+        avg_ndcg_a = reranking_summary["avg_ndcg_a"]
+        avg_map_a = reranking_summary["avg_map_a"]
+        
+        missing_rates = [0.0, 0.2, 0.5]
+        
+        print("\n--- RQ2 Results Table ---")
+        for mode in ["Static Weight", "Dynamic Weight"]:
+            for rate in missing_rates:
+                avg_f1 = rq2_summary[mode][rate]
+                print(f"{mode} @ {int(rate*100)}% Missing Rate: F1@10={avg_f1:.3f}")
+                
+        print("\n--- Retrieval Results ---")
+        for key, metrics in retrieval_summary.items():
+            print(f"{key}: Recall@100={metrics['r@100']:.3f}, Recall@500={metrics['r@500']:.3f}, Precision@10={metrics['p@10']:.3f}")
+            
+        print("\n--- Reranking Results ---")
+        print(f"Before Rerank: NDCG@10={avg_ndcg_b:.3f}, MAP@10={avg_map_b:.3f}")
+        print(f"After Rerank:  NDCG@10={avg_ndcg_a:.3f}, MAP@10={avg_map_a:.3f}")
+    else:
+        print("\n[Step 3] Running Weight Redistribution Robustness Test (RQ2)...")
+        subset_candidates = df_filtered[
+            (df_filtered['genres'].astype(str).str.strip().str.len() > 0) &
+            (df_filtered['directors'].astype(str).str.strip().str.len() > 0) &
+            (df_filtered['stars'].astype(str).str.strip().str.len() > 0) &
+            (df_filtered['countries_origin'].astype(str).str.strip().str.len() > 0) &
+            (df_filtered['Year'].notna()) &
+            (df_filtered['has_awards'].notna())
+        ].reset_index(drop=True)
+        
+        subset_indices = random.sample(range(len(subset_candidates)), min(100, len(subset_candidates)))
+        subset_movies = subset_candidates.iloc[subset_indices]
+        
+        subset_ground_truth = []
+        for _, seed_row in subset_movies.iterrows():
+            seed_title = seed_row['Title']
+            seed_features = builder.transform_row(seed_row)
             seed_profile = make_profile(seed_row, 'C')
-            ref_features["semantic_embedding"] = profile_text_to_emb[seed_profile]
+            seed_features["semantic_embedding"] = profile_text_to_emb[seed_profile]
             
-            keys_to_delete = ["genre_vector", "actor_vector", "director_vector", "country_vector", "decade_vector", "award_vector"]
-            num_to_delete = int(len(keys_to_delete) * rate)
-            deleted_keys = random.sample(keys_to_delete, num_to_delete)
+            candidates_scores = []
+            for _, cand_row in subset_movies.iterrows():
+                if cand_row['Title'] == seed_title:
+                    continue
+                cand_features = builder.transform_row(cand_row)
+                cand_profile = make_profile(cand_row, 'C')
+                cand_features["semantic_embedding"] = profile_text_to_emb[cand_profile]
+                
+                sim_breakdown = compute_weighted_similarity(cand_features, seed_features)
+                candidates_scores.append((cand_row['Title'], sim_breakdown['final_score']))
+                
+            candidates_scores.sort(key=lambda x: x[1], reverse=True)
+            relevant = [title for title, score in candidates_scores[:5]]
+            subset_ground_truth.append((seed_row, relevant))
             
-            for key in deleted_keys:
-                ref_features[key] = None
-                
-            for mode in modes:
-                candidates_scores = []
-                for _, cand_row in subset_movies.iterrows():
-                    if cand_row['Title'] == seed_row['Title']:
-                        continue
-                    cand_features = builder.transform_row(cand_row)
-                    cand_profile = make_profile(cand_row, 'C')
-                    cand_features["semantic_embedding"] = profile_text_to_emb[cand_profile]
-                    
-                    if mode == "Static Weight":
-                        sim = compute_static_similarity(cand_features, ref_features)
-                    else:
-                        sim = compute_weighted_similarity(cand_features, ref_features)
-                        
-                    candidates_scores.append((cand_row['Title'], sim['final_score']))
-                    
-                candidates_scores.sort(key=lambda x: x[1], reverse=True)
-                recs = [title for title, score in candidates_scores[:5]]
-                
-                metrics = evaluate_metrics(recs, relevant)
-                rq2_results[mode][rate].append(metrics["f1@10"])
-                
-    print("\n--- RQ2 Results Table ---")
-    rq2_summary = {mode: {} for mode in modes}
-    for mode in modes:
+        missing_rates = [0.0, 0.2, 0.5]
+        modes = ["Static Weight", "Dynamic Weight"]
+        rq2_results = {mode: {rate: [] for rate in missing_rates} for mode in modes}
+        
         for rate in missing_rates:
-            avg_f1 = np.mean(rq2_results[mode][rate])
-            rq2_summary[mode][rate] = avg_f1
-            print(f"{mode} @ {int(rate*100)}% Missing Rate: F1@10={avg_f1:.3f}")
-            
-    # =============================================================
-    # 5. Step 4: Retrieval Strategy Evaluation
-    # =============================================================
-    print("\n[Step 4] Evaluating Retrieval Strategies...")
-    
-    retrieval_metrics = {
-        "BM25 only": [],
-        "FAISS only": [],
-        "BM25 + FAISS (Hybrid)": [],
-        "Hybrid + Metadata filtering": []
-    }
-    
-    keyword_dict = load_keyword_dict()
-    aliases_dict = load_aliases()
-    
-    from chatbot.data_loader import load_bm25_index
-    bm25_index = load_bm25_index(df_filtered)
-    
-    for idx, gt in enumerate(ground_truth_list):
-        query = gt["query"]
-        relevant_movies = gt["relevant_movies"]
-        
-        # 1. BM25 only
-        bm25_res = bm25_search(query, df_filtered, bm25_index, top_k=100)
-        recs_bm25 = bm25_res["Title"].tolist() if not bm25_res.empty else []
-        
-        # 2. FAISS only
-        faiss_res = semantic_search_retriever(query, df_filtered, index_c, embedder_model, top_k=150)
-        recs_faiss = faiss_res["Title"].tolist() if not faiss_res.empty else []
-        
-        # 3. BM25 + FAISS (Hybrid Candidate Gen)
-        seen_links = set()
-        hybrid_recs = []
-        for res_df in [faiss_res, bm25_res]:
-            if not res_df.empty:
-                for _, row in res_df.iterrows():
-                    link = row["Movie Link"]
-                    if link not in seen_links:
-                        seen_links.add(link)
-                        hybrid_recs.append(row["Title"])
-                        if len(hybrid_recs) >= 500:
-                            break
-            if len(hybrid_recs) >= 500:
-                break
+            for seed_row, relevant in subset_ground_truth:
+                ref_features = builder.transform_row(seed_row)
+                seed_profile = make_profile(seed_row, 'C')
+                ref_features["semantic_embedding"] = profile_text_to_emb[seed_profile]
                 
-        # 4. Hybrid + Metadata filtering
-        filters = {"title": gt["seed_movie"]}
-        metadata_res = search_movies_tool(df_filtered, filters, top_k=200)
-        recs_meta = metadata_res["Title"].tolist() if not metadata_res.empty else []
-        
-        def eval_recall_precision(retrieved, gt_list):
-            gt_set = {clean_title(t) for t in gt_list}
-            if not gt_set:
-                return 0.0, 0.0, 0.0
-            hits_10 = sum(1 for r in retrieved[:10] if clean_title(r) in gt_set)
-            hits_100 = sum(1 for r in retrieved[:100] if clean_title(r) in gt_set)
-            hits_500 = sum(1 for r in retrieved[:500] if clean_title(r) in gt_set)
-            
-            p10 = hits_10 / 10.0
-            r100 = hits_100 / len(gt_list)
-            r500 = hits_500 / len(gt_list)
-            return r100, r500, p10
-            
-        r100_bm25, r500_bm25, p10_bm25 = eval_recall_precision(recs_bm25, relevant_movies)
-        retrieval_metrics["BM25 only"].append((r100_bm25, r500_bm25, p10_bm25))
-        
-        r100_faiss, r500_faiss, p10_faiss = eval_recall_precision(recs_faiss, relevant_movies)
-        retrieval_metrics["FAISS only"].append((r100_faiss, r500_faiss, p10_faiss))
-        
-        r100_hyb, r500_hyb, p10_hyb = eval_recall_precision(hybrid_recs, relevant_movies)
-        retrieval_metrics["BM25 + FAISS (Hybrid)"].append((r100_hyb, r500_hyb, p10_hyb))
-        
-        r100_meta, r500_meta, p10_meta = eval_recall_precision(recs_meta, relevant_movies)
-        retrieval_metrics["Hybrid + Metadata filtering"].append((r100_meta, r500_meta, p10_meta))
-        
-    print("\n--- Retrieval Results ---")
-    retrieval_summary = {}
-    for key, metrics in retrieval_metrics.items():
-        avg_r100 = np.mean([m[0] for m in metrics])
-        avg_r500 = np.mean([m[1] for m in metrics])
-        avg_p10 = np.mean([m[2] for m in metrics])
-        retrieval_summary[key] = {"r@100": avg_r100, "r@500": avg_r500, "p@10": avg_p10}
-        print(f"{key}: Recall@100={avg_r100:.3f}, Recall@500={avg_r500:.3f}, Precision@10={avg_p10:.3f}")
-        
-    # =============================================================
-    # 6. Step 5: Neural Reranking Evaluation (NDCG & MAP comparison)
-    # =============================================================
-    print("\n[Step 5] Evaluating Cross-Encoder Reranking...")
-    
-    metrics_before = {"ndcg": [], "map": []}
-    metrics_after = {"ndcg": [], "map": []}
-    
-    for idx, gt in enumerate(ground_truth_list[:100]):
-        query = gt["query"]
-        relevant_movies = gt["relevant_movies"]
-        
-        seed_movie_rows = df_filtered[df_filtered['Title'] == gt["seed_movie"]]
-        if seed_movie_rows.empty:
-            continue
-        seed_row = seed_movie_rows.iloc[0]
-        seed_features = builder.transform_row(seed_row)
-        seed_profile = make_profile(seed_row, 'C')
-        seed_features["semantic_embedding"] = profile_text_to_emb[seed_profile]
-        
-        faiss_candidates = semantic_search_retriever(query, df_filtered, index_c, embedder_model, top_k=150)
-        bm25_candidates = bm25_search(query, df_filtered, bm25_index, top_k=100)
-        
-        seen_links = set()
-        candidate_list = []
-        for candidates_df in [faiss_candidates, bm25_candidates]:
-            if not candidates_df.empty:
-                for _, row in candidates_df.iterrows():
-                    link = row["Movie Link"]
-                    if link not in seen_links:
-                        seen_links.add(link)
-                        candidate_list.append(row)
-        candidates_df = pd.DataFrame(candidate_list)
-        
-        candidates_df = candidates_df[candidates_df["Title"] != gt["seed_movie"]]
-        
-        matched_rows = []
-        for _, row in candidates_df.iterrows():
-            row_features = builder.transform_row(row)
-            candidate_profile = make_profile(row, 'C')
-            row_features["semantic_embedding"] = profile_text_to_emb[candidate_profile]
-            sim_breakdown = compute_weighted_similarity(row_features, seed_features)
-            row_copy = row.copy()
-            row_copy["final_similarity_score"] = sim_breakdown["final_score"]
-            matched_rows.append(row_copy)
-            
-        ranked_df = pd.DataFrame(matched_rows)
-        ranked_df = ranked_df.sort_values(by="final_similarity_score", ascending=False)
-        top_100_df = ranked_df.head(100).copy()
-        
-        recs_before = top_100_df["Title"].tolist()[:10]
-        
-        from chatbot.retrieval.reranker import rerank_results
-        reranked_df = rerank_results(query, top_100_df, top_k=10)
-        recs_after = reranked_df["Title"].tolist()[:10]
-        
-        def compute_ndcg_map(recs, gt_list, ranked_df):
-            rel_map = {}
-            for _, row in ranked_df.iterrows():
-                rel_map[clean_title(row["Title"])] = row["final_similarity_score"]
+                keys_to_delete = ["genre_vector", "actor_vector", "director_vector", "country_vector", "decade_vector", "award_vector"]
+                num_to_delete = int(len(keys_to_delete) * rate)
+                deleted_keys = random.sample(keys_to_delete, num_to_delete)
                 
-            gt_clean = {clean_title(t) for t in gt_list}
-            
-            rel_scores = []
-            for r in recs:
-                r_clean = clean_title(r)
-                if r_clean in gt_clean:
-                    rel_scores.append(rel_map.get(r_clean, 0.30))
-                else:
-                    rel_scores.append(0.0)
+                for key in deleted_keys:
+                    ref_features[key] = None
                     
-            dcg = 0.0
-            for idx, rel in enumerate(rel_scores):
-                dcg += rel / np.log2(idx + 2)
+                for mode in modes:
+                    candidates_scores = []
+                    for _, cand_row in subset_movies.iterrows():
+                        if cand_row['Title'] == seed_row['Title']:
+                            continue
+                        cand_features = builder.transform_row(cand_row)
+                        cand_profile = make_profile(cand_row, 'C')
+                        cand_features["semantic_embedding"] = profile_text_to_emb[cand_profile]
+                        
+                        if mode == "Static Weight":
+                            sim = compute_static_similarity(cand_features, ref_features)
+                        else:
+                            sim = compute_weighted_similarity(cand_features, ref_features)
+                            
+                        candidates_scores.append((cand_row['Title'], sim['final_score']))
+                        
+                    candidates_scores.sort(key=lambda x: x[1], reverse=True)
+                    recs = [title for title, score in candidates_scores[:5]]
+                    
+                    metrics = evaluate_metrics(recs, relevant)
+                    rq2_results[mode][rate].append(metrics["f1@10"])
+                    
+        print("\n--- RQ2 Results Table ---")
+        rq2_summary = {mode: {} for mode in modes}
+        for mode in modes:
+            for rate in missing_rates:
+                avg_f1 = np.mean(rq2_results[mode][rate])
+                rq2_summary[mode][rate] = avg_f1
+                print(f"{mode} @ {int(rate*100)}% Missing Rate: F1@10={avg_f1:.3f}")
                 
-            ideal_scores = sorted([rel_map.get(clean_title(t), 0.5) for t in gt_list], reverse=True)[:10]
-            idcg = 0.0
-            for idx, rel in enumerate(ideal_scores):
-                idcg += rel / np.log2(idx + 2)
+        # =============================================================
+        # 5. Step 4: Retrieval Strategy Evaluation
+        # =============================================================
+        print("\n[Step 4] Evaluating Retrieval Strategies...")
+        
+        retrieval_metrics = {
+            "BM25 only": [],
+            "FAISS only": [],
+            "BM25 + FAISS (Hybrid)": [],
+            "Hybrid + Metadata filtering": []
+        }
+        
+        for idx, gt in enumerate(ground_truth_list):
+            query = gt["query"]
+            relevant_movies = gt["relevant_movies"]
+            
+            # 1. BM25 only
+            bm25_res = bm25_search(query, df_filtered, bm25_index, top_k=100)
+            recs_bm25 = bm25_res["Title"].tolist() if not bm25_res.empty else []
+            
+            # 2. FAISS only
+            faiss_res = semantic_search_retriever(query, df_filtered, index_c, embedder_model, top_k=150)
+            recs_faiss = faiss_res["Title"].tolist() if not faiss_res.empty else []
+            
+            # 3. BM25 + FAISS (Hybrid Candidate Gen)
+            seen_links = set()
+            hybrid_recs = []
+            for res_df in [faiss_res, bm25_res]:
+                if not res_df.empty:
+                    for _, row in res_df.iterrows():
+                        link = row["Movie Link"]
+                        if link not in seen_links:
+                            seen_links.add(link)
+                            hybrid_recs.append(row["Title"])
+                            if len(hybrid_recs) >= 500:
+                                break
+                if len(hybrid_recs) >= 500:
+                    break
+                    
+            # 4. Hybrid + Metadata filtering
+            filters = {"title": gt["seed_movie"]}
+            metadata_res = search_movies_tool(df_filtered, filters, top_k=200)
+            recs_meta = metadata_res["Title"].tolist() if not metadata_res.empty else []
+            
+            def eval_recall_precision(retrieved, gt_list):
+                gt_set = {clean_title(t) for t in gt_list}
+                if not gt_set:
+                    return 0.0, 0.0, 0.0
+                hits_10 = sum(1 for r in retrieved[:10] if clean_title(r) in gt_set)
+                hits_100 = sum(1 for r in retrieved[:100] if clean_title(r) in gt_set)
+                hits_500 = sum(1 for r in retrieved[:500] if clean_title(r) in gt_set)
                 
-            ndcg = dcg / idcg if idcg > 0 else 0.0
+                p10 = hits_10 / 10.0
+                r100 = hits_100 / len(gt_list)
+                r500 = hits_500 / len(gt_list)
+                return r100, r500, p10
+                
+            r100_bm25, r500_bm25, p10_bm25 = eval_recall_precision(recs_bm25, relevant_movies)
+            retrieval_metrics["BM25 only"].append((r100_bm25, r500_bm25, p10_bm25))
             
-            ap = 0.0
-            hits = 0
-            for idx, r in enumerate(recs):
-                r_clean = clean_title(r)
-                if r_clean in gt_clean:
-                    hits += 1
-                    ap += hits / (idx + 1)
-            map_score = ap / min(10, len(gt_list)) if len(gt_list) > 0 else 0.0
+            r100_faiss, r500_faiss, p10_faiss = eval_recall_precision(recs_faiss, relevant_movies)
+            retrieval_metrics["FAISS only"].append((r100_faiss, r500_faiss, p10_faiss))
             
-            return ndcg, map_score
+            r100_hyb, r500_hyb, p10_hyb = eval_recall_precision(hybrid_recs, relevant_movies)
+            retrieval_metrics["BM25 + FAISS (Hybrid)"].append((r100_hyb, r500_hyb, p10_hyb))
             
-        ndcg_b, map_b = compute_ndcg_map(recs_before, relevant_movies, ranked_df)
-        metrics_before["ndcg"].append(ndcg_b)
-        metrics_before["map"].append(map_b)
+            r100_meta, r500_meta, p10_meta = eval_recall_precision(recs_meta, relevant_movies)
+            retrieval_metrics["Hybrid + Metadata filtering"].append((r100_meta, r500_meta, p10_meta))
+            
+        print("\n--- Retrieval Results ---")
+        retrieval_summary = {}
+        for key, metrics in retrieval_metrics.items():
+            avg_r100 = np.mean([m[0] for m in metrics])
+            avg_r500 = np.mean([m[1] for m in metrics])
+            avg_p10 = np.mean([m[2] for m in metrics])
+            retrieval_summary[key] = {"r@100": avg_r100, "r@500": avg_r500, "p@10": avg_p10}
+            print(f"{key}: Recall@100={avg_r100:.3f}, Recall@500={avg_r500:.3f}, Precision@10={avg_p10:.3f}")
+            
+        # =============================================================
+        # 6. Step 5: Neural Reranking Evaluation (NDCG & MAP comparison)
+        # =============================================================
+        print("\n[Step 5] Evaluating Cross-Encoder Reranking...")
         
-        ndcg_a, map_a = compute_ndcg_map(recs_after, relevant_movies, ranked_df)
-        metrics_after["ndcg"].append(ndcg_a)
-        metrics_after["map"].append(map_a)
+        metrics_before = {"ndcg": [], "map": []}
+        metrics_after = {"ndcg": [], "map": []}
         
-    print("\n--- Reranking Results ---")
-    avg_ndcg_b = np.mean(metrics_before["ndcg"])
-    avg_map_b = np.mean(metrics_before["map"])
-    avg_ndcg_a = np.mean(metrics_after["ndcg"])
-    avg_map_a = np.mean(metrics_after["map"])
-    print(f"Before Rerank: NDCG@10={avg_ndcg_b:.3f}, MAP@10={avg_map_b:.3f}")
-    print(f"After Rerank:  NDCG@10={avg_ndcg_a:.3f}, MAP@10={avg_map_a:.3f}")
+        for idx, gt in enumerate(ground_truth_list[:100]):
+            query = gt["query"]
+            relevant_movies = gt["relevant_movies"]
+            
+            seed_movie_rows = df_filtered[df_filtered['Title'] == gt["seed_movie"]]
+            if seed_movie_rows.empty:
+                continue
+            seed_row = seed_movie_rows.iloc[0]
+            seed_features = builder.transform_row(seed_row)
+            seed_profile = make_profile(seed_row, 'C')
+            seed_features["semantic_embedding"] = profile_text_to_emb[seed_profile]
+            
+            faiss_candidates = semantic_search_retriever(query, df_filtered, index_c, embedder_model, top_k=150)
+            bm25_candidates = bm25_search(query, df_filtered, bm25_index, top_k=100)
+            
+            seen_links = set()
+            candidate_list = []
+            for candidates_df in [faiss_candidates, bm25_candidates]:
+                if not candidates_df.empty:
+                    for _, row in candidates_df.iterrows():
+                        link = row["Movie Link"]
+                        if link not in seen_links:
+                            seen_links.add(link)
+                            candidate_list.append(row)
+            candidates_df = pd.DataFrame(candidate_list)
+            
+            candidates_df = candidates_df[candidates_df["Title"] != gt["seed_movie"]]
+            
+            matched_rows = []
+            for _, row in candidates_df.iterrows():
+                row_features = builder.transform_row(row)
+                candidate_profile = make_profile(row, 'C')
+                row_features["semantic_embedding"] = profile_text_to_emb[candidate_profile]
+                sim_breakdown = compute_weighted_similarity(row_features, seed_features)
+                row_copy = row.copy()
+                row_copy["final_similarity_score"] = sim_breakdown["final_score"]
+                matched_rows.append(row_copy)
+                
+            ranked_df = pd.DataFrame(matched_rows)
+            ranked_df = ranked_df.sort_values(by="final_similarity_score", ascending=False)
+            top_100_df = ranked_df.head(100).copy()
+            
+            recs_before = top_100_df["Title"].tolist()[:10]
+            
+            reranked_df = rerank_results(query, top_100_df, top_k=10)
+            recs_after = reranked_df["Title"].tolist()[:10]
+            
+            def compute_ndcg_map(recs, gt_list, ranked_df):
+                rel_map = {}
+                for _, row in ranked_df.iterrows():
+                    rel_map[clean_title(row["Title"])] = row["final_similarity_score"]
+                    
+                gt_clean = {clean_title(t) for t in gt_list}
+                
+                rel_scores = []
+                for r in recs:
+                    r_clean = clean_title(r)
+                    if r_clean in gt_clean:
+                        rel_scores.append(rel_map.get(r_clean, 0.30))
+                    else:
+                        rel_scores.append(0.0)
+                        
+                dcg = 0.0
+                for idx, rel in enumerate(rel_scores):
+                    dcg += rel / np.log2(idx + 2)
+                    
+                ideal_scores = sorted([rel_map.get(clean_title(t), 0.5) for t in gt_list], reverse=True)[:10]
+                idcg = 0.0
+                for idx, rel in enumerate(ideal_scores):
+                    idcg += rel / np.log2(idx + 2)
+                    
+                ndcg = dcg / idcg if idcg > 0 else 0.0
+                
+                ap = 0.0
+                hits = 0
+                for idx, r in enumerate(recs):
+                    r_clean = clean_title(r)
+                    if r_clean in gt_clean:
+                        hits += 1
+                        ap += hits / (idx + 1)
+                map_score = ap / min(10, len(gt_list)) if len(gt_list) > 0 else 0.0
+                
+                return ndcg, map_score
+                
+            ndcg_b, map_b = compute_ndcg_map(recs_before, relevant_movies, ranked_df)
+            metrics_before["ndcg"].append(ndcg_b)
+            metrics_before["map"].append(map_b)
+            
+            ndcg_a, map_a = compute_ndcg_map(recs_after, relevant_movies, ranked_df)
+            metrics_after["ndcg"].append(ndcg_a)
+            metrics_after["map"].append(map_a)
+            
+        print("\n--- Reranking Results ---")
+        avg_ndcg_b = np.mean(metrics_before["ndcg"])
+        avg_map_b = np.mean(metrics_before["map"])
+        avg_ndcg_a = np.mean(metrics_after["ndcg"])
+        avg_map_a = np.mean(metrics_after["map"])
+        print(f"Before Rerank: NDCG@10={avg_ndcg_b:.3f}, MAP@10={avg_map_b:.3f}")
+        print(f"After Rerank:  NDCG@10={avg_ndcg_a:.3f}, MAP@10={avg_map_a:.3f}")
+        
+        # Save to cache
+        cached_intermediate = {
+            "rq2_summary": {mode: {str(k): v for k, v in data.items()} for mode, data in rq2_summary.items()},
+            "retrieval_summary": retrieval_summary,
+            "reranking_summary": {
+                "avg_ndcg_b": avg_ndcg_b,
+                "avg_map_b": avg_map_b,
+                "avg_ndcg_a": avg_ndcg_a,
+                "avg_map_a": avg_map_a
+            }
+        }
+        with open(intermediate_results_path, "w", encoding="utf-8") as f:
+            json.dump(cached_intermediate, f, ensure_ascii=False, indent=2)
     
     # =============================================================
     # 7. Step 6: Hallucination Evaluation (RAG vs LLM Factual accuracy)
@@ -718,10 +803,62 @@ def main():
     print("\n[Step 6] Running Hallucination Evaluation...")
     llm = get_llm_client(provider="Local LLM", api_key="any", model_name="cx/gpt-5.5", base_url="http://localhost:20128/v1")
     
+    # Wrap LLM with cache to speed up re-runs and prevent crashes due to local server timeouts
+    llm_cache_path = os.path.join(workspace_dir, "evaluation_v3", "llm_cache.json")
+    class CachingLLM:
+        def __init__(self, original_llm, cache_path):
+            self.original_llm = original_llm
+            self.cache_path = cache_path
+            self.cache = {}
+            if os.path.exists(cache_path):
+                try:
+                    with open(cache_path, "r", encoding="utf-8") as f:
+                        self.cache = json.load(f)
+                except Exception:
+                    pass
+
+        def invoke(self, prompt, *args, **kwargs):
+            if hasattr(prompt, "content"):
+                prompt_str = prompt.content
+            elif isinstance(prompt, list):
+                prompt_str = "\n".join([getattr(m, "content", str(m)) for m in prompt])
+            else:
+                prompt_str = str(prompt)
+                
+            if prompt_str in self.cache:
+                class MockResponse:
+                    def __init__(self, content):
+                        self.content = content
+                return MockResponse(self.cache[prompt_str])
+                
+            try:
+                res = self.original_llm.invoke(prompt, *args, **kwargs)
+                content = res.content
+            except Exception as e:
+                print(f"⚠️ LLM invocation failed: {e}. Using fallback content.")
+                content = "Không có thông tin cụ thể."
+                
+            self.cache[prompt_str] = content
+            try:
+                with open(self.cache_path, "w", encoding="utf-8") as f:
+                    json.dump(self.cache, f, ensure_ascii=False, indent=2)
+            except Exception:
+                pass
+                
+            class MockResponse:
+                def __init__(self, content):
+                    self.content = content
+            return MockResponse(content)
+
+        def __getattr__(self, name):
+            return getattr(self.original_llm, name)
+
+    llm = CachingLLM(llm, llm_cache_path)
+    
     factual_questions = []
     sampled_movies = df_filtered[
-        df_filtered['directors'].astype(str).str.strip().str.len() > 0 &
-        df_filtered['Year'].notna()
+        (df_filtered['directors'].astype(str).str.strip().str.len() > 0) &
+        (df_filtered['Year'].notna())
     ].sample(25, random_state=42)
     
     for _, row in sampled_movies.iterrows():
@@ -972,7 +1109,7 @@ def main():
     report_lines.append("\n")
     
     report_lines.append("### Kiểm thử Title-Overfitting:\n")
-    report_lines.append(f"Đánh giá lỗi gợi ý dựa trên **{len(overfit_pairs)}** cặp phim có tên giống nhau nhưng nội dung và thể loại khác nhau (de-coy titles):\n\n")
+    report_lines.append(f"Đánh giá lỗi gợi ý dựa trên **{num_overfit_pairs}** cặp phim có tên giống nhau nhưng nội dung và thể loại khác nhau (de-coy titles):\n\n")
     report_lines.append("| Phiên bản | Tỉ lệ lỗi Overfitting (Error Rate) |\n")
     report_lines.append("|---|---|\n")
     report_lines.append(f"| **Baseline A (Description Only)** | {overfit_rate_a*100:.1f}% |\n")

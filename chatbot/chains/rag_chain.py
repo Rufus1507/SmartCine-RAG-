@@ -1,3 +1,4 @@
+import unicodedata
 import pandas as pd
 from langchain_core.language_models import BaseChatModel
 from chatbot.entity_extractor import detect_entities, is_refine_query
@@ -6,6 +7,9 @@ from chatbot.chains.answer_chain import run_answer_chain
 from chatbot.retrieval.hybrid_search import hybrid_search
 from chatbot.tools import find_similar_movies
 from rapidfuzz import fuzz
+
+def _strip_diacritics(text: str) -> str:
+    return ''.join(c for c in unicodedata.normalize('NFD', text) if unicodedata.category(c) != 'Mn')
 
 def run_rag_pipeline(
     llm: BaseChatModel, 
@@ -69,13 +73,49 @@ def run_rag_pipeline(
         from chatbot.data_loader import load_country_aliases
         country_aliases = load_country_aliases()
         country_query = str(filters["country"]).strip().lower()
-        filters["country"] = country_aliases.get(country_query, filters["country"])
+        resolved = country_aliases.get(country_query)
+        if not resolved:
+            country_query_stripped = _strip_diacritics(country_query)
+            for k, v in country_aliases.items():
+                if _strip_diacritics(k) == country_query_stripped:
+                    resolved = v
+                    break
+        if resolved:
+            filters["country"] = resolved
 
     # 5. Truy xuất phim (Retrieval Layer)
     filtered_df = pd.DataFrame()
     route_name = "none"
     
-    if intent in ("search", "recommend", "info"):
+    if intent == "aggregation":
+        # Xử lý câu hỏi tổng hợp: "ai hợp tác nhiều nhất với X"
+        person_name = filters.get("director") or filters.get("star")
+        if person_name:
+            try:
+                from chatbot.graph.build_movie_graph import load_or_build_graph
+                from chatbot.graph.graph_query import find_top_collaborator
+                G = load_or_build_graph(df)
+                top_collabs = find_top_collaborator(G, person_name, top_k=5)
+                if top_collabs:
+                    collab_rows = []
+                    for c in top_collabs:
+                        collab_rows.append({
+                            "Title": f"{c['name']} ({c['type']})",
+                            "Rating": c["weight"],
+                            "Year": None,
+                            "genres": "",
+                            "directors": person_name,
+                            "countries_origin": "",
+                            "stars": c["name"],
+                            "Movie Link": "",
+                            "final_context": f"Tên: {c['name']} | Vai trò: {c['type']} | Số lần hợp tác: {c['weight']}"
+                        })
+                    filtered_df = pd.DataFrame(collab_rows)
+                    route_name = "aggregation_graph"
+            except Exception as e:
+                print(f"Aggregation error: {e}")
+        route_name = route_name or "aggregation_no_person"
+    elif intent in ("search", "recommend", "info"):
         has_metadata_filters = any(filters.get(k) for k in [
             "genre", "director", "star", "title", "year_min", "year_max", "rating_min", "country"
         ])

@@ -1,3 +1,4 @@
+import unicodedata
 import pandas as pd
 import numpy as np
 
@@ -80,6 +81,16 @@ def search_movies_tool(df: pd.DataFrame, filters: dict, top_k: int = 5) -> pd.Da
             except Exception:
                 pass
 
+        # Bắt buộc có country (áp dụng cho mọi truy vấn)
+        if "countries_origin" in result.columns:
+            try:
+                result = result[
+                    result["countries_origin"].astype(str).str.strip().ne('') &
+                    result["countries_origin"].notna()
+                ]
+            except Exception:
+                pass
+
         # Lọc thể loại (Genre)
         if filters.get("genre") and COL_GENRE in result.columns:
             try:
@@ -114,7 +125,16 @@ def search_movies_tool(df: pd.DataFrame, filters: dict, top_k: int = 5) -> pd.Da
                 from chatbot.data_loader import load_country_aliases
                 country_aliases = load_country_aliases()
                 country_query = str(filters["country"]).strip().lower()
-                standard_country = country_aliases.get(country_query, filters["country"])
+                standard_country = country_aliases.get(country_query)
+                if not standard_country:
+                    query_stripped = ''.join(c for c in unicodedata.normalize('NFD', country_query) if unicodedata.category(c) != 'Mn')
+                    for k, v in country_aliases.items():
+                        k_stripped = ''.join(c for c in unicodedata.normalize('NFD', k) if unicodedata.category(c) != 'Mn')
+                        if k_stripped == query_stripped:
+                            standard_country = v
+                            break
+                if not standard_country:
+                    standard_country = filters["country"]
                 
                 result = result[result["countries_origin"].astype(str).str.contains(
                     standard_country, case=False, na=False

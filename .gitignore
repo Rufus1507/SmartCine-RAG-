@@ -1,13 +1,44 @@
-# Folder exclusions
-movies_crawl_data/
-test_code/
-movie_master/
-# File exclusions
-*.md
-!readme.md
-!README.md
-
-# Python and cache files
-chatbot/description_embeddings.index
+# Python cache
+__pycache__/
 **/__pycache__/
 *.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+
+# IDE / Editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Large generated data/models
+*.index
+*.pkl
+chatbot/description_embeddings.index
+chatbot/movie_graph.pkl
+
+# Data directories (ignore raw/heavy data, crawls, temporary scratch space)
+data/
+movies_crawl_data/
+movie_master/
+scratch/
+
+# Local cache and temporary evaluation results
+evaluation_v3/llm_cache.json
+evaluation_v3/intermediate_results*.json
+evaluation_v3/latency_results*.json
+evaluation_v3/ablation_results*.json
+evaluation_v3/multihop_eval_results.json
+evaluation_v3/before_vs_after_report.md
+test_code/eda_results.json

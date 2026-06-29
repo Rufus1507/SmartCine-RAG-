@@ -1,0 +1,185 @@
+{
+  "summary": {
+    "total_queries": 19,
+    "total_personnel_candidates": 24277,
+    "total_shared_attribute_candidates": 0,
+    "total_candidates": 24277,
+    "avg_personnel_candidates": 1277.7368421052631,
+    "avg_shared_attribute_candidates": 0.0,
+    "avg_total_candidates": 1277.7368421052631,
+    "avg_personnel_ratio": 1.0
+  },
+  "queries": [
+    {
+      "query": "Tìm phim giống như Inception có cùng diễn viên hoặc đạo diễn liên quan",
+      "seed_movie": "Inception",
+      "resolved_movie_title": "Inception",
+      "num_personnel": 1286,
+      "num_shared_attribute": 0,
+      "total_candidates": 1286,
+      "personnel_ratio": 1.0
+    },
+    {
+      "query": "Gợi ý phim tương tự The Dark Knight qua liên kết nhân sự và thể loại",
+      "seed_movie": "The Dark Knight",
+      "resolved_movie_title": "The Dark Knight",
+      "num_personnel": 1418,
+      "num_shared_attribute": 0,
+      "total_candidates": 1418,
+      "personnel_ratio": 1.0
+    },
+    {
+      "query": "Phim nào liên quan đến Interstellar qua các mối quan hệ đạo diễn, diễn viên từng hợp tác?",
+      "seed_movie": "Interstellar",
+      "resolved_movie_title": "Interstellar",
+      "num_personnel": 1223,
+      "num_shared_attribute": 0,
+      "total_candidates": 1223,
+      "personnel_ratio": 1.0
+    },
+    {
+      "query": "Tìm phim giống như Pulp Fiction có cùng diễn viên hoặc đạo diễn liên quan",
+      "seed_movie": "Pulp Fiction",
+      "resolved_movie_title": "Pulp Fiction",
+      "num_personnel": 1209,
+      "num_shared_attribute": 0,
+      "total_candidates": 1209,
+      "personnel_ratio": 1.0
+    },
+    {
+      "query": "Gợi ý phim tương tự The Matrix qua liên kết nhân sự và thể loại",
+      "seed_movie": "The Matrix",
+      "resolved_movie_title": "The Matrix",
+      "num_personnel": 804,
+      "num_shared_attribute": 0,
+      "total_candidates": 804,
+      "personnel_ratio": 1.0
+    },
+    {
+      "query": "Phim nào liên quan đến The Godfather qua các mối quan hệ đạo diễn, diễn viên từng hợp tác?",
+      "seed_movie": "The Godfather",
+      "resolved_movie_title": "The Godfather",
+      "num_personnel": 1727,
+      "num_shared_attribute": 0,
+      "total_candidates": 1727,
+      "personnel_ratio": 1.0
+    },
+    {
+      "query": "Tìm phim giống như Fight Club có cùng diễn viên hoặc đạo diễn liên quan",
+      "seed_movie": "Fight Club",
+      "resolved_movie_title": "Fight Club",
+      "num_personnel": 997,
+      "num_shared_attribute": 0,
+      "total_candidates": 997,
+      "personnel_ratio": 1.0
+    },
+    {
+      "query": "Gợi ý phim tương tự Forrest Gump qua liên kết nhân sự và thể loại",
+      "seed_movie": "Forrest Gump",
+      "resolved_movie_title": "Forrest Gump",
+      "num_personnel": 857,
+      "num_shared_attribute": 0,
+      "total_candidates": 857,
+      "personnel_ratio": 1.0
+    },
+    {
+      "query": "Phim nào liên quan đến Gladiator qua các mối quan hệ đạo diễn, diễn viên từng hợp tác?",
+      "seed_movie": "Gladiator",
+      "resolved_movie_title": "Gladiator",
+      "num_personnel": 1936,
+      "num_shared_attribute": 0,
+      "total_candidates": 1936,
+      "personnel_ratio": 1.0
+    },
+    {
+      "query": "Tìm phim giống như Avatar có cùng diễn viên hoặc đạo diễn liên quan",
+      "seed_movie": "Avatar",
+      "resolved_movie_title": "Avatar",
+      "num_personnel": 1113,
+      "num_shared_attribute": 0,
+      "total_candidates": 1113,
+      "personnel_ratio": 1.0
+    },
+    {
+      "query": "Gợi ý phim tương tự Titanic qua liên kết nhân sự và thể loại",
+      "seed_movie": "Titanic",
+      "resolved_movie_title": "Titanic",
+      "num_personnel": 1232,
+      "num_shared_attribute": 0,
+      "total_candidates": 1232,
+      "personnel_ratio": 1.0
+    },
+    {
+      "query": "Phim nào liên quan đến Inglourious Basterds qua các mối quan hệ đạo diễn, diễn viên từng hợp tác?",
+      "seed_movie": "Inglourious Basterds",
+      "resolved_movie_title": "Inglourious Basterds",
+      "num_personnel": 1158,
+      "num_shared_attribute": 0,
+      "total_candidates": 1158,
+      "personnel_ratio": 1.0
+    },
+    {
+      "query": "Tìm phim giống như Django Unchained có cùng diễn viên hoặc đạo diễn liên quan",
+      "seed_movie": "Django Unchained",
+      "resolved_movie_title": "Django Unchained",
+      "num_personnel": 1248,
+      "num_shared_attribute": 0,
+      "total_candidates": 1248,
+      "personnel_ratio": 1.0
+    },
+    {
+      "query": "Gợi ý phim tương tự The Departed qua liên kết nhân sự và thể loại",
+      "seed_movie": "The Departed",
+      "resolved_movie_title": "The Departed",
+      "num_personnel": 1541,
+      "num_shared_attribute": 0,
+      "total_candidates": 1541,
+      "personnel_ratio": 1.0
+    },
+    {
+      "query": "Phim nào liên quan đến The Prestige qua các mối quan hệ đạo diễn, diễn viên từng hợp tác?",
+      "seed_movie": "The Prestige",
+      "resolved_movie_title": "The Prestige",
+      "num_personnel": 1341,
+      "num_shared_attribute": 0,
+      "total_candidates": 1341,
+      "personnel_ratio": 1.0
+    },
+    {
+      "query": "Tìm phim giống như Memento có cùng diễn viên hoặc đạo diễn liên quan",
+      "seed_movie": "Memento",
+      "resolved_movie_title": "Memento",
+      "num_personnel": 1012,
+      "num_shared_attribute": 0,
+      "total_candidates": 1012,
+      "personnel_ratio": 1.0
+    },
+    {
+      "query": "Gợi ý phim tương tự Saving Private Ryan qua liên kết nhân sự và thể loại",
+      "seed_movie": "Saving Private Ryan",
+      "resolved_movie_title": "Saving Private Ryan",
+      "num_personnel": 1531,
+      "num_shared_attribute": 0,
+      "total_candidates": 1531,
+      "personnel_ratio": 1.0
+    },
+    {
+      "query": "Phim nào liên quan đến The Silence of the Lambs qua các mối quan hệ đạo diễn, diễn viên từng hợp tác?",
+      "seed_movie": "The Silence of the Lambs",
+      "resolved_movie_title": "The Silence of the Lambs",
+      "num_personnel": 1434,
+      "num_shared_attribute": 0,
+      "total_candidates": 1434,
+      "personnel_ratio": 1.0
+    },
+    {
+      "query": "Tìm phim giống như GoodFellas có cùng diễn viên hoặc đạo diễn liên quan",
+      "seed_movie": "GoodFellas",
+      "resolved_movie_title": "GoodFellas",
+      "num_personnel": 1210,
+      "num_shared_attribute": 0,
+      "total_candidates": 1210,
+      "personnel_ratio": 1.0
+    }
+  ]
+}

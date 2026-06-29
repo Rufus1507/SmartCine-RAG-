@@ -8,11 +8,12 @@ Hướng dẫn xác định "intent":
 - "search": Khi người dùng muốn tìm kiếm, lọc phim theo tiêu chí cụ thể (thể loại, đạo diễn, diễn viên, năm, điểm số, hoặc mô tả/yêu cầu tìm phim như "phim lượt xem cao nhất", "phim có lượt vote nhiều", "phim hài hước", "tìm phim...").
 - "recommend": Khi người dùng yêu cầu gợi ý phim chung chung hoặc theo sở thích không có tiêu chí lọc cụ thể ("gợi ý phim hay", "phim gì nên xem tối nay", "tôi đang buồn nên xem phim gì").
 - "info": Khi người dùng hỏi thông tin chi tiết của một bộ phim cụ thể ("nội dung phim Inception", "ai đóng phim Titanic").
+- "aggregation": Khi người dùng hỏi câu hỏi tổng hợp/tần suất hợp tác ("ai hợp tác nhiều nhất với X", "diễn viên nào đóng nhiều phim của X nhất", "X hợp tác với ai nhiều nhất"). Câu hỏi dạng này cần phân tích trên toàn bộ filmography, không cần phim cụ thể.
 - "chitchat": Chỉ khi người dùng nói chuyện phiếm, chào hỏi hoặc nói các câu không liên quan gì đến phim ảnh.
 
 Schema JSON:
 {{
-  "intent": "search" | "recommend" | "info" | "chitchat",
+  "intent": "search" | "recommend" | "info" | "aggregation" | "chitchat",
   "filters": {{
     "title":      <string hoặc null>,
     "genre":      <string hoặc null>,

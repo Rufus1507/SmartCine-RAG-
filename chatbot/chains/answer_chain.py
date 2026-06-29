@@ -42,6 +42,10 @@ def run_answer_chain(llm: BaseChatModel, user_message: str, movies_df: pd.DataFr
         for _, row in movies_df.iterrows():
             if "final_context" in row and pd.notna(row["final_context"]):
                 movie_str = f"- {row['final_context']}\n"
+                if "countries_origin" in row and pd.notna(row["countries_origin"]) and str(row["countries_origin"]).strip():
+                    movie_str += f"  Quốc gia: {row['countries_origin']}\n"
+                if "graph_path_explanation" in row and pd.notna(row["graph_path_explanation"]) and str(row["graph_path_explanation"]).strip():
+                    movie_str += f"  Liên kết: {row['graph_path_explanation']}\n"
                 if COL_LINK in row and pd.notna(row[COL_LINK]):
                     movie_str += f"  Link IMDb: {row[COL_LINK]}\n"
             else:
@@ -53,8 +57,12 @@ def run_answer_chain(llm: BaseChatModel, user_message: str, movies_df: pd.DataFr
                     f"  Năm: {row[COL_YEAR]}\n"
                     f"  Điểm: {row[COL_RATING]}\n"
                 )
+                if "countries_origin" in row and pd.notna(row["countries_origin"]) and str(row["countries_origin"]).strip():
+                    movie_str += f"  Quốc gia: {row['countries_origin']}\n"
                 if COL_OVERVIEW in row and pd.notna(row[COL_OVERVIEW]):
                     movie_str += f"  Tóm tắt: {row[COL_OVERVIEW]}\n"
+                if "graph_path_explanation" in row and pd.notna(row["graph_path_explanation"]) and str(row["graph_path_explanation"]).strip():
+                    movie_str += f"  Liên kết: {row['graph_path_explanation']}\n"
                 if COL_LINK in row and pd.notna(row[COL_LINK]):
                     movie_str += f"  Link IMDb: {row[COL_LINK]}\n"
             movies_info_list.append(movie_str)
@@ -80,6 +88,8 @@ def run_answer_chain(llm: BaseChatModel, user_message: str, movies_df: pd.DataFr
             movie_list = []
             for _, row in movies_df.head(5).iterrows():
                 movie_item = f"- **{row[COL_TITLE]}** ({int(row[COL_YEAR]) if pd.notna(row[COL_YEAR]) else 'N/A'}) - ⭐ {row[COL_RATING]}"
+                if "countries_origin" in row and pd.notna(row["countries_origin"]) and str(row["countries_origin"]).strip():
+                    movie_item += f"\n  *Quốc gia:* {row['countries_origin']}"
                 if COL_OVERVIEW in row and pd.notna(row[COL_OVERVIEW]):
                     movie_item += f"\n  *Tóm tắt:* {row[COL_OVERVIEW][:120]}..."
                 if COL_LINK in row and pd.notna(row[COL_LINK]):

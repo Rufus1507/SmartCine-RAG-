@@ -1,0 +1,306 @@
+[
+  {
+    "query": "Tìm phim giống như Inception có cùng diễn viên hoặc đạo diễn liên quan",
+    "seed_movie": "Inception",
+    "relevant_movies": [
+      "The Shawshank Redemption",
+      "The Dark Knight",
+      "Schindler's List",
+      "Once Upon a Time in Iraq",
+      "The Lord of the Rings: The Fellowship of the Ring",
+      "David Attenborough: A Life on Our Planet",
+      "Yesterday",
+      "Forrest Gump",
+      "Pulp Fiction",
+      "Kill Bill: The Whole Bloody Affair"
+    ]
+  },
+  {
+    "query": "Gợi ý phim tương tự The Dark Knight qua liên kết nhân sự và thể loại",
+    "seed_movie": "The Dark Knight",
+    "relevant_movies": [
+      "The Shawshank Redemption",
+      "Schindler's List",
+      "Once Upon a Time in Iraq",
+      "The Lord of the Rings: The Fellowship of the Ring",
+      "Yesterday",
+      "Inception",
+      "Fight Club",
+      "Forrest Gump",
+      "Interstellar",
+      "Peaky Blinders"
+    ]
+  },
+  {
+    "query": "Phim nào liên quan đến Interstellar qua các mối quan hệ đạo diễn, diễn viên từng hợp tác?",
+    "seed_movie": "Interstellar",
+    "relevant_movies": [
+      "The Shawshank Redemption",
+      "The Dark Knight",
+      "Schindler's List",
+      "Once Upon a Time in Iraq",
+      "The Lord of the Rings: The Fellowship of the Ring",
+      "Inception",
+      "Forrest Gump",
+      "When They See Us",
+      "GoodFellas",
+      "Peaky Blinders"
+    ]
+  },
+  {
+    "query": "Tìm phim giống như Pulp Fiction có cùng diễn viên hoặc đạo diễn liên quan",
+    "seed_movie": "Pulp Fiction",
+    "relevant_movies": [
+      "The Godfather",
+      "The Godfather Part II",
+      "David Attenborough: A Life on Our Planet",
+      "Fight Club",
+      "Kill Bill: The Whole Bloody Affair",
+      "Justice League Unlimited",
+      "Seven",
+      "Concert for George",
+      "Django Unchained",
+      "The Lion King"
+    ]
+  },
+  {
+    "query": "Gợi ý phim tương tự The Matrix qua liên kết nhân sự và thể loại",
+    "seed_movie": "The Matrix",
+    "relevant_movies": [
+      "The Godfather",
+      "The Dark Knight",
+      "The Lord of the Rings: The Return of the King",
+      "Schindler's List",
+      "The Godfather Part II",
+      "The Lord of the Rings: The Fellowship of the Ring",
+      "The Yellow Tie",
+      "The Walking Dead: The Game - Season 2",
+      "Inception",
+      "Forrest Gump"
+    ]
+  },
+  {
+    "query": "Phim nào liên quan đến The Godfather qua các mối quan hệ đạo diễn, diễn viên từng hợp tác?",
+    "seed_movie": "The Godfather",
+    "relevant_movies": [
+      "The Godfather: A Novel for Television",
+      "The Godfather Part II",
+      "Pulp Fiction",
+      "The Matrix",
+      "GoodFellas",
+      "Lonesome Dove",
+      "Michael Jackson: Video Greatest Hits - HIStory",
+      "Star Wars: Episode IV - A New Hope",
+      "Gladiator",
+      "The Departed"
+    ]
+  },
+  {
+    "query": "Tìm phim giống như Fight Club có cùng diễn viên hoặc đạo diễn liên quan",
+    "seed_movie": "Fight Club",
+    "relevant_movies": [
+      "The Dark Knight",
+      "Forrest Gump",
+      "Pulp Fiction",
+      "The Lord of the Rings: The Two Towers",
+      "Succession",
+      "Kill Bill: The Whole Bloody Affair",
+      "Seven",
+      "One Flew Over the Cuckoo's Nest",
+      "Scavengers Reign",
+      "Django Unchained"
+    ]
+  },
+  {
+    "query": "Gợi ý phim tương tự Forrest Gump qua liên kết nhân sự và thể loại",
+    "seed_movie": "Forrest Gump",
+    "relevant_movies": [
+      "Schindler's List",
+      "Fight Club",
+      "Interstellar",
+      "The Matrix",
+      "Seven",
+      "The Silence of the Lambs",
+      "The Green Mile",
+      "Saving Private Ryan",
+      "From the Earth to the Moon",
+      "The Departed"
+    ]
+  },
+  {
+    "query": "Phim nào liên quan đến Gladiator qua các mối quan hệ đạo diễn, diễn viên từng hợp tác?",
+    "seed_movie": "Gladiator",
+    "relevant_movies": [
+      "The Message",
+      "Dominion",
+      "Inception",
+      "The Lord of the Rings: The Two Towers",
+      "I, Claudius",
+      "Star Wars: Episode V - The Empire Strikes Back",
+      "Michael Jackson: Video Greatest Hits - HIStory",
+      "The Silence of the Lambs",
+      "1883",
+      "Earthlings"
+    ]
+  },
+  {
+    "query": "Tìm phim giống như Avatar có cùng diễn viên hoặc đạo diễn liên quan",
+    "seed_movie": "Avatar",
+    "relevant_movies": [
+      "The Sopranos",
+      "Schindler's List",
+      "Saving Private Ryan",
+      "Terminator 2: Judgment Day",
+      "Gladiator",
+      "Alien",
+      "What We Do in the Shadows",
+      "Flight of the Conchords",
+      "Uncharted: Live Action Fan Film",
+      "Avengers: Infinity War"
+    ]
+  },
+  {
+    "query": "Gợi ý phim tương tự Titanic qua liên kết nhân sự và thể loại",
+    "seed_movie": "Titanic",
+    "relevant_movies": [
+      "The Sopranos",
+      "The Dark Knight",
+      "The Lord of the Rings: The Return of the King",
+      "Schindler's List",
+      "The Lord of the Rings: The Fellowship of the Ring",
+      "The Beatles: Get Back",
+      "The Message",
+      "Yesterday",
+      "The Beatles: Get Back - The Rooftop Concert",
+      "Inception"
+    ]
+  },
+  {
+    "query": "Phim nào liên quan đến Inglourious Basterds qua các mối quan hệ đạo diễn, diễn viên từng hợp tác?",
+    "seed_movie": "Inglourious Basterds",
+    "relevant_movies": [
+      "Yesterday",
+      "Fight Club",
+      "Forrest Gump",
+      "Pulp Fiction",
+      "Kill Bill: The Whole Bloody Affair",
+      "Seven",
+      "Django Unchained",
+      "Gladiator",
+      "Back to the Future",
+      "Léon: The Professional"
+    ]
+  },
+  {
+    "query": "Tìm phim giống như Django Unchained có cùng diễn viên hoặc đạo diễn liên quan",
+    "seed_movie": "Django Unchained",
+    "relevant_movies": [
+      "The Godfather",
+      "The Dark Knight",
+      "Rammstein: Live in Berlin",
+      "Schindler's List",
+      "The Godfather Part II",
+      "David Attenborough: A Life on Our Planet",
+      "Yesterday",
+      "Inception",
+      "Fight Club",
+      "Forrest Gump"
+    ]
+  },
+  {
+    "query": "Gợi ý phim tương tự The Departed qua liên kết nhân sự và thể loại",
+    "seed_movie": "The Departed",
+    "relevant_movies": [
+      "The Godfather",
+      "The Dark Knight",
+      "The Lord of the Rings: The Return of the King",
+      "Schindler's List",
+      "The Godfather Part II",
+      "Apocalypse: The Second World War",
+      "The Lord of the Rings: The Fellowship of the Ring",
+      "The West Wing",
+      "The Beatles: Get Back",
+      "Yesterday"
+    ]
+  },
+  {
+    "query": "Phim nào liên quan đến The Prestige qua các mối quan hệ đạo diễn, diễn viên từng hợp tác?",
+    "seed_movie": "The Prestige",
+    "relevant_movies": [
+      "The Shawshank Redemption",
+      "The Dark Knight",
+      "The Lord of the Rings: The Return of the King",
+      "Schindler's List",
+      "Once Upon a Time in Iraq",
+      "The Lord of the Rings: The Fellowship of the Ring",
+      "The Beatles: Get Back",
+      "The Beatles: Get Back - The Rooftop Concert",
+      "Inception",
+      "The Lord of the Rings: The Two Towers"
+    ]
+  },
+  {
+    "query": "Tìm phim giống như Memento có cùng diễn viên hoặc đạo diễn liên quan",
+    "seed_movie": "Memento",
+    "relevant_movies": [
+      "The Shawshank Redemption",
+      "The Dark Knight",
+      "Schindler's List",
+      "Once Upon a Time in Iraq",
+      "The Lord of the Rings: The Fellowship of the Ring",
+      "Inception",
+      "Interstellar",
+      "The Matrix",
+      "Peaky Blinders",
+      "Seven"
+    ]
+  },
+  {
+    "query": "Gợi ý phim tương tự Saving Private Ryan qua liên kết nhân sự và thể loại",
+    "seed_movie": "Saving Private Ryan",
+    "relevant_movies": [
+      "The Shawshank Redemption",
+      "The Dark Knight",
+      "Schindler's List",
+      "Inception",
+      "Forrest Gump",
+      "The Lord of the Rings: The Two Towers",
+      "I, Claudius",
+      "The Storyteller",
+      "Interstellar",
+      "The Matrix"
+    ]
+  },
+  {
+    "query": "Phim nào liên quan đến The Silence of the Lambs qua các mối quan hệ đạo diễn, diễn viên từng hợp tác?",
+    "seed_movie": "The Silence of the Lambs",
+    "relevant_movies": [
+      "Forrest Gump",
+      "Interstellar",
+      "GoodFellas",
+      "Stop Making Sense",
+      "Michael Jackson: Video Greatest Hits - HIStory",
+      "City of God",
+      "Gladiator",
+      "The Departed",
+      "Back to the Future",
+      "Alien"
+    ]
+  },
+  {
+    "query": "Tìm phim giống như GoodFellas có cùng diễn viên hoặc đạo diễn liên quan",
+    "seed_movie": "GoodFellas",
+    "relevant_movies": [
+      "The Sopranos",
+      "Schindler's List",
+      "The Godfather Part II",
+      "Apocalypse: The Second World War",
+      "The West Wing",
+      "Inception",
+      "Forrest Gump",
+      "The Lord of the Rings: The Two Towers",
+      "The Good, the Bad and the Ugly",
+      "Michael Jackson: Video Greatest Hits - HIStory"
+    ]
+  }
+]

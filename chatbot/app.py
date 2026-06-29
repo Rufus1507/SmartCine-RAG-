@@ -43,6 +43,8 @@ def render_movie_cards(df: pd.DataFrame):
             st.caption(f"⭐ {row[COL_RATING]}  •  {int(row[COL_YEAR]) if pd.notna(row[COL_YEAR]) else 'N/A'}")
             st.caption(f"🎬 Đạo diễn: {row[COL_DIRECTOR]}")
             st.caption(f"🎭 Thể loại: {row[COL_GENRE]}")
+            if "countries_origin" in row and pd.notna(row["countries_origin"]) and str(row["countries_origin"]).strip():
+                st.caption(f"🌍 Quốc gia: {row['countries_origin']}")
             if COL_STARS in row and row[COL_STARS]:
                 # Hiển thị tối đa 3 diễn viên đầu để card gọn gàng
                 stars_list = [s.strip() for s in row[COL_STARS].split(",")]

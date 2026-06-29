@@ -2,13 +2,14 @@ import numpy as np
 from chatbot.feature_engineering import DECADES
 
 DEFAULT_WEIGHTS = {
-    "content": 0.40,
+    "content": 0.35,
     "genre": 0.25,
     "actor": 0.15,
     "director": 0.10,
     "country": 0.05,
     "decade": 0.03,
-    "award": 0.02
+    "award": 0.02,
+    "graph": 0.05
 }
 
 def compute_genre_similarity(g1, g2) -> float:
@@ -159,6 +160,15 @@ def compute_weighted_similarity(movie_features: dict, ref_features: dict, weight
         active_weights["award"] = weights["award"]
     else:
         scores["award_score"] = 1.0
+        
+    # 8. Graph Connection (Collaboration Path)
+    ref_graph = ref_features.get("graph_score")
+    movie_graph = movie_features.get("graph_score")
+    if ref_graph is not None and movie_graph is not None:
+        scores["graph_score"] = float(movie_graph)
+        active_weights["graph"] = weights["graph"]
+    else:
+        scores["graph_score"] = 1.0
         
     # Calculate weighted final score based on active weights
     total_active_weight = sum(active_weights.values())
