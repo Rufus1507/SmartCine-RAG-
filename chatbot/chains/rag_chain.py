@@ -146,4 +146,7 @@ def run_rag_pipeline(
     # 6. Sinh câu trả lời (Tầng 2 LLM)
     answer_result = run_answer_chain(llm, user_input, filtered_df, intent, stream=stream)
     
+    # Đóng gói route_name vào detected để trả về mà không làm gãy signature
+    detected["route_name"] = route_name
+    
     return answer_result, filtered_df, intent, filters, detected

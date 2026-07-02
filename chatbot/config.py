@@ -6,7 +6,8 @@ import os
 CHATBOT_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(CHATBOT_DIR)
 
-MOVIE_DATA_PATH = os.path.join(BASE_DIR, "movie_master", "movie_master.csv")
+MOVIE_DATA_PATH = os.path.join(BASE_DIR, "data", "cinebot_movies.parquet")
+FEEDBACK_LOG_PATH = os.path.join(BASE_DIR, "data", "feedback", "feedback_log.jsonl")
 KEYWORD_DICT_PATH = os.path.join(CHATBOT_DIR, "keyword_dict.json")
 ALIASES_PATH = os.path.join(CHATBOT_DIR, "aliases.json")
 INDEX_PATH = os.path.join(CHATBOT_DIR, "description_embeddings.index")

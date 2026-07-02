@@ -28,18 +28,19 @@ env/
 chatbot/description_embeddings.index
 chatbot/movie_graph.pkl
 
-# Allow tracking of specific needed indices
-!chatbot/representation_a.index
-!chatbot/representation_b.index
-!chatbot/representation_c.index
-!chatbot/movie_profile_embeddings.index
-
 # Data directories (ignore raw/heavy data, crawls, temporary scratch space)
 data/*
-!data/find_duplicate.py
 movies_crawl_data/
 movie_master/
 scratch/
+
+# Local environment files
+.env
+.env.*
+
+# Temporary task / scratch files
+task.md
+**/task.md
 
 # Local cache and temporary evaluation results
 evaluation_v3/llm_cache.json

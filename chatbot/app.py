@@ -1,6 +1,8 @@
 import os
 import sys
 
+import uuid
+
 # Thêm thư mục gốc vào sys.path để có thể import dạng 'from chatbot.xyz'
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -70,6 +72,83 @@ def render_movie_cards(df: pd.DataFrame):
                     
             if COL_LINK in row and pd.notna(row[COL_LINK]):
                 st.markdown(f"[🔗 Xem trên IMDb]({row[COL_LINK]})")
+
+def render_feedback_ui(idx: int, msg: dict):
+    """
+    Vẽ giao diện 👍/👎 và lý do đóng góp cho từng tin nhắn của trợ lý.
+    Sử dụng turn_index để tránh xung đột key và hỗ trợ re-render.
+    """
+    turn_index = idx // 2
+    
+    # Khởi tạo trạng thái cho lượt chat này
+    rating_key = f"feedback_rating_{turn_index}"
+    submitted_key = f"feedback_submitted_{turn_index}"
+    
+    if rating_key not in st.session_state:
+        st.session_state[rating_key] = None
+    if submitted_key not in st.session_state:
+        st.session_state[submitted_key] = False
+        
+    if st.session_state[submitted_key]:
+        st.caption("✅ Đã ghi nhận ý kiến đóng góp của bạn. Cảm ơn bạn!")
+        return
+        
+    rating = st.session_state[rating_key]
+    
+    if rating is None:
+        col1, col2, _ = st.columns([1, 1, 8])
+        with col1:
+            if st.button("👍", key=f"thumbs_up_{turn_index}"):
+                st.session_state[rating_key] = "up"
+                st.rerun()
+        with col2:
+            if st.button("👎", key=f"thumbs_down_{turn_index}"):
+                st.session_state[rating_key] = "down"
+                st.rerun()
+    else:
+        rating_emoji = "👍" if rating == "up" else "👎"
+        
+        col_desc, col_reset, _ = st.columns([2, 1.5, 6.5])
+        col_desc.write(f"Đánh giá của bạn: **{rating_emoji}**")
+        with col_reset:
+            if st.button("Chọn lại", key=f"reset_rating_{turn_index}"):
+                st.session_state[rating_key] = None
+                st.rerun()
+                
+        comment = st.text_input(
+            "Lý do ngắn hoặc đóng góp ý kiến (tùy chọn):",
+            key=f"comment_input_{turn_index}"
+        )
+        
+        if st.button("Gửi phản hồi", key=f"submit_btn_{turn_index}"):
+            # Trích xuất thông tin lượt chat
+            user_query = st.session_state.messages[idx - 1]["content"] if idx > 0 else ""
+            
+            # Lấy danh sách phim trả về
+            movies_df = msg.get("movies")
+            movie_titles = list(movies_df[COL_TITLE].values) if (movies_df is not None and not movies_df.empty) else []
+            
+            # Tóm tắt câu trả lời của bot
+            answer_text = msg.get("content", "")
+            bot_preview = answer_text[:200]
+            
+            # Log phản hồi
+            from chatbot.feedback_logger import log_feedback
+            log_feedback(
+                session_id=st.session_state.get("session_id", "unknown"),
+                turn_index=turn_index,
+                user_query=user_query,
+                intent=msg.get("intent", "none"),
+                filters=msg.get("filters", {}),
+                route=msg.get("route_name", "none"),
+                bot_answer_preview=bot_preview,
+                movie_titles_returned=movie_titles,
+                rating=rating,
+                comment=comment
+            )
+            
+            st.session_state[submitted_key] = True
+            st.rerun()
 
 # ============================================================
 # CẤU HÌNH TRANG STREAMLIT
@@ -150,6 +229,21 @@ with st.sidebar:
     else:
         st.caption("Chưa có truy vấn nào được thực hiện.")
 
+    st.divider()
+    st.markdown("**📥 Phản hồi người dùng:**")
+    from chatbot.feedback_logger import get_feedback_csv_bytes
+    csv_bytes = get_feedback_csv_bytes()
+    if csv_bytes is not None:
+        st.download_button(
+            label="Tải về dữ liệu CSV",
+            data=csv_bytes,
+            file_name="cinebot_feedback.csv",
+            mime="text/csv",
+            use_container_width=True
+        )
+    else:
+        st.caption("Chưa có phản hồi nào được ghi nhận.")
+
 # --- Load data & keyword dict ---
 try:
     df = load_data()
@@ -185,6 +279,9 @@ else:
     st.sidebar.warning("⚠️ Chưa có file chỉ mục. Chạy generate_embeddings.py trước!")
 
 # --- Lịch sử chat ---
+if "session_id" not in st.session_state:
+    st.session_state.session_id = str(uuid.uuid4())
+
 if "messages" not in st.session_state:
     st.session_state.messages = []
     st.session_state.messages.append({
@@ -197,11 +294,15 @@ if "last_filters" not in st.session_state:
     st.session_state.last_filters = {}
 
 # --- Hiển thị lịch sử hội thoại cũ ---
-for msg in st.session_state.messages:
+for idx, msg in enumerate(st.session_state.messages):
     with st.chat_message(msg["role"]):
         st.write(msg["content"])
         if msg.get("movies") is not None and not msg["movies"].empty:
             render_movie_cards(msg["movies"])
+            
+        # Giao diện feedback dưới tin nhắn trợ lý thực tế (idx > 0)
+        if msg["role"] == "assistant" and idx > 0:
+            render_feedback_ui(idx, msg)
 
 # --- Xử lý sự kiện click ví dụ ---
 pending = st.session_state.pop("pending_input", None)
@@ -272,5 +373,11 @@ if user_input:
     st.session_state.messages.append({
         "role": "assistant",
         "content": full_response,
-        "movies": filtered_df if not filtered_df.empty else None
+        "movies": filtered_df if not filtered_df.empty else None,
+        "intent": intent,
+        "filters": filters,
+        "route_name": detected.get("route_name", "none") if isinstance(detected, dict) else "none"
     })
+    
+    # Rerun để hiển thị ngay nút feedback dưới tin nhắn trợ lý mới trong vòng lặp history
+    st.rerun()

@@ -22,7 +22,7 @@ flowchart TD
     U["Nguoi dung"] --> UI["Streamlit app.py"]
     UI --> LLMClient["llm_client.get_llm_client"]
     UI --> Loader["data_loader"]
-    Loader --> CSV["movie_master/movie_master.csv"]
+    Loader --> Parquet["data/cinebot_movies.parquet"]
     Loader --> Keyword["keyword_dict.json, aliases.json, country_aliases.json"]
     Loader --> FAISS["description_embeddings.index"]
     Loader --> Embedder["SentenceTransformer"]
@@ -106,7 +106,7 @@ Trach nhiem:
 
 Thong tin chinh:
 
-- `MOVIE_DATA_PATH`: tro den `movie_master/movie_master.csv`
+- `MOVIE_DATA_PATH`: tro den `data/cinebot_movies.parquet`
 - `KEYWORD_DICT_PATH`, `ALIASES_PATH`
 - `INDEX_PATH`: `description_embeddings.index`
 - `PROFILE_INDEX_PATH`: `movie_profile_embeddings.index`
@@ -178,7 +178,7 @@ sequenceDiagram
 
 Tai thoi diem boot:
 
-- `load_data()` nap `movie_master.csv`, chuan hoa cot, tao `num_votes`.
+- `load_data()` nap `cinebot_movies.parquet`, chuan hoa cot, tao `num_votes`.
 - `load_keyword_dict()` nap dictionary phuc vu entity extraction.
 - `load_aliases()` nap ten viet tat/alias.
 - `load_faiss_index()` nap `description_embeddings.index`.
@@ -657,7 +657,7 @@ Feature cho moi phim:
 
 ```mermaid
 flowchart LR
-    CSV["movie_master.csv"] --> Clean["data_loader.load_data"]
+    Parquet["cinebot_movies.parquet"] --> Clean["data_loader.load_data"]
     Clean --> DF["DataFrame chuan hoa"]
     DF --> Meta["Metadata filter"]
     DF --> FAISSBuild["generate_embeddings.py"]
@@ -728,11 +728,11 @@ Graph chi gom phim co `num_votes >= 1000`. Dieu nay tot cho chat luong nhung co 
 
 ### 14.4 BM25 va FAISS co the khong dong bo index voi DataFrame
 
-FAISS index phu thuoc thu tu row khi tao embedding. Neu `movie_master.csv` thay doi thu tu/so dong ma khong tao lai `.index`, ket qua semantic search se map sai row.
+FAISS index phu thuoc thu tu row khi tao embedding. Neu `cinebot_movies.parquet` thay doi thu tu/so dong ma khong tao lai `.index`, ket qua semantic search se map sai row.
 
 Can co quy trinh:
 
-- Moi lan doi CSV, tao lai FAISS indexes.
+- Moi lan doi file Parquet, tao lai FAISS indexes.
 - Luu metadata ve hash/row count cua CSV khi build index.
 
 ### 14.5 Encoding hien thi trong mot so file cu
@@ -778,7 +778,7 @@ Mot so file Markdown/comment trong source hien thi bi mojibake khi doc bang term
 
 Khi cap nhat du lieu phim:
 
-1. Dat/cap nhat `movie_master/movie_master.csv`.
+1. Dat/cap nhat `data/cinebot_movies.parquet`.
 2. Chay lai feature vocabulary neu actor/director/country thay doi nhieu.
 3. Chay `generate_embeddings.py`.
 4. Chay `generate_movie_profile_embeddings.py` neu dung profile index.
