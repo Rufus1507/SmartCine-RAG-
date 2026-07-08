@@ -21,7 +21,8 @@ def run_rag_pipeline(
     embedder_model, 
     chat_history: list,
     last_filters: dict,
-    stream: bool = False
+    stream: bool = False,
+    debug: bool = False
 ) -> tuple:
     """
     Điều phối luồng xử lý RAG (Orchestrator Chain):
@@ -32,15 +33,48 @@ def run_rag_pipeline(
     5. Thực hiện truy xuất: Tìm phim tương đồng (Similar) hoặc Hybrid Search (FAISS + Pandas).
     6. Chạy answer_chain sinh câu trả lời tự nhiên (đồng bộ hoặc stream).
     
-    Trả về: (answer_result, filtered_df, intent, filters, detected)
+    Trả về: (answer_result, filtered_df, intent, filters, detected) hoặc thêm trace nếu debug=True
     """
+    import numpy as np
+
+    # Khởi tạo trace nếu debug=True
+    trace = None
+    if debug:
+        trace = {
+            "entity_detection": {},
+            "intent": {},
+            "stage0_graph": {
+                "called": False,
+                "candidates": []
+            },
+            "stage1_bm25": {
+                "top_k_requested": 100,
+                "candidates": []
+            },
+            "stage2_faiss": {
+                "candidates": []
+            },
+            "stage3_rerank": {
+                "candidates": []
+            },
+            "stage4_weighted_similarity": {
+                "per_candidate_scores": []
+            },
+            "final_filters": {},
+            "final_route": "none"
+        }
+
     # 1. Phát hiện thực thể
     detected = detect_entities(user_input, keyword_dict, aliases_dict)
+    if debug and trace is not None:
+        trace["entity_detection"] = detected.copy()
     
     # 2. Phân tích intent (Tầng 1 LLM)
     parsed = run_intent_chain(llm, user_input, detected, chat_history)
     intent = parsed.get("intent", "chitchat")
     filters = parsed.get("filters", {})
+    if debug and trace is not None:
+        trace["intent"] = parsed.copy()
     
     # 3. Quản lý ngữ cảnh và hợp nhất bộ lọc (Conversation Memory)
     # Khắc phục lỗi: Chỉ hợp nhất bộ lọc cho search/recommend nối tiếp, không áp dụng cho info
@@ -96,6 +130,21 @@ def run_rag_pipeline(
                 from chatbot.graph.graph_query import find_top_collaborator
                 G = load_or_build_graph(df)
                 top_collabs = find_top_collaborator(G, person_name, top_k=5)
+                
+                # Trace cho Graph RAG của aggregation
+                if debug and trace is not None:
+                    trace["stage0_graph"]["called"] = True
+                    serializable_graph = []
+                    for c in top_collabs:
+                        clean_c = {}
+                        for k, v in c.items():
+                            if isinstance(v, (np.integer, np.floating)):
+                                clean_c[k] = v.item()
+                            else:
+                                clean_c[k] = v
+                        serializable_graph.append(clean_c)
+                    trace["stage0_graph"]["candidates"] = serializable_graph
+                
                 if top_collabs:
                     collab_rows = []
                     for c in top_collabs:
@@ -138,7 +187,8 @@ def run_rag_pipeline(
                 filters=filters,
                 intent=intent,
                 faiss_index=faiss_index,
-                embedder_model=embedder_model
+                embedder_model=embedder_model,
+                trace=trace
             )
     else:
         filtered_df = pd.DataFrame()
@@ -149,4 +199,9 @@ def run_rag_pipeline(
     # Đóng gói route_name vào detected để trả về mà không làm gãy signature
     detected["route_name"] = route_name
     
+    if debug and trace is not None:
+        trace["final_filters"] = filters.copy() if filters else {}
+        trace["final_route"] = route_name
+        return answer_result, filtered_df, intent, filters, detected, trace
+        
     return answer_result, filtered_df, intent, filters, detected

@@ -159,6 +159,30 @@ st.set_page_config(
     layout="wide"
 )
 
+# --- Khởi tạo các biến st.session_state ở đầu trang để tránh lỗi AttributeError khi render Sidebar ---
+if "session_id" not in st.session_state:
+    st.session_state.session_id = str(uuid.uuid4())
+
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+    st.session_state.messages.append({
+        "role": "assistant",
+        "content": "Xin chào! Tôi là CineBot 🎬 Bạn muốn tìm phim gì hôm nay? Hãy hỏi tôi về thể loại, đạo diễn, diễn viên hoặc mô tả phim nhé!",
+        "movies": None
+    })
+
+if "last_filters" not in st.session_state:
+    st.session_state.last_filters = {}
+
+if "feedback_submitted" not in st.session_state:
+    st.session_state.feedback_submitted = False
+if "feedback_rating" not in st.session_state:
+    st.session_state.feedback_rating = 5
+if "feedback_comment" not in st.session_state:
+    st.session_state.feedback_comment = ""
+if "feedback_invalidated" not in st.session_state:
+    st.session_state.feedback_invalidated = False
+
 st.title("🎬 CineBot — Chatbot Tìm Phim Thông Minh")
 st.caption("Hỏi bất kỳ điều gì về phim: thể loại, đạo diễn, diễn viên, năm, điểm IMDB...")
 
@@ -244,6 +268,111 @@ with st.sidebar:
     else:
         st.caption("Chưa có phản hồi nào được ghi nhận.")
 
+    st.divider()
+    st.markdown("**🔄 Thao tác phiên:**")
+    if st.button("🔄 Clear session", use_container_width=True):
+        st.session_state["session_id"] = str(uuid.uuid4())
+        st.session_state["messages"] = [{
+            "role": "assistant",
+            "content": "Xin chào! Tôi là CineBot 🎬 Bạn muốn tìm phim gì hôm nay? Hãy hỏi tôi về thể loại, đạo diễn, diễn viên hoặc mô tả phim nhé!",
+            "movies": None
+        }]
+        st.session_state["feedback_submitted"] = False
+        st.session_state["feedback_rating"] = 5
+        st.session_state["feedback_comment"] = ""
+        st.session_state["feedback_invalidated"] = False
+        st.session_state["last_filters"] = {}
+        st.rerun()
+
+    # Session Feedback UI
+    user_turns = sum(1 for m in st.session_state.messages if m["role"] == "user")
+    if user_turns > 0:
+        st.divider()
+        st.subheader("📝 Đánh giá phiên hội thoại")
+        
+        # Display warning if feedback is invalidated
+        if st.session_state.get("feedback_invalidated", False):
+            st.warning("⚠️ Transcript đã thay đổi. Vui lòng cập nhật và gửi lại đánh giá của bạn!")
+            
+        rating = st.slider("Điểm chất lượng hội thoại (1-5):", min_value=1, max_value=5, value=st.session_state.feedback_rating)
+        comment = st.text_area("Nhận xét / Đóng góp ý kiến:", value=st.session_state.feedback_comment)
+        
+        if st.button("Gửi Đánh giá Phiên", use_container_width=True):
+            # Lưu feedback ở tất cả các thư mục tiềm năng để đảm bảo checker luôn tìm thấy
+            feedback_dirs = [
+                os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "feedback_logs"),
+                os.path.join(os.path.dirname(os.path.abspath(__file__)), "feedback_logs"),
+                os.path.join(os.getcwd(), "feedback_logs")
+            ]
+            
+            # Format record
+            import json, csv
+            from datetime import datetime
+            timestamp = datetime.now().isoformat()
+            
+            # Tạo bản sao transcript an toàn không có dataframe
+            clean_messages = []
+            for m in st.session_state.messages:
+                clean_m = {
+                    "role": m["role"],
+                    "content": m["content"]
+                }
+                if "intent" in m:
+                    clean_m["intent"] = m["intent"]
+                if "filters" in m:
+                    clean_m["filters"] = m["filters"]
+                if "route_name" in m:
+                    clean_m["route_name"] = m["route_name"]
+                if m.get("movies") is not None:
+                    clean_m["movies_returned"] = list(m["movies"]["Title"].values) if "Title" in m["movies"].columns else []
+                clean_messages.append(clean_m)
+
+            record = {
+                "session_id": st.session_state.session_id,
+                "timestamp": timestamp,
+                "num_turns": user_turns,
+                "rating": rating,
+                "comment": comment,
+                "transcript": clean_messages
+            }
+            
+            for fdir in feedback_dirs:
+                try:
+                    os.makedirs(fdir, exist_ok=True)
+                    jsonl_p = os.path.join(fdir, "session_feedback.jsonl")
+                    csv_p = os.path.join(fdir, "session_feedback.csv")
+                    
+                    # 1. Ghi vào JSONL
+                    with open(jsonl_p, "a", encoding="utf-8") as f:
+                        f.write(json.dumps(record, ensure_ascii=False) + "\n")
+                        
+                    # 2. Ghi vào CSV (flattened)
+                    file_exists = os.path.exists(csv_p)
+                    with open(csv_p, "a", newline="", encoding="utf-8") as f:
+                        writer = csv.writer(f)
+                        if not file_exists:
+                            writer.writerow(["session_id", "timestamp", "num_turns", "rating", "comment", "transcript"])
+                        writer.writerow([
+                            record["session_id"],
+                            record["timestamp"],
+                            record["num_turns"],
+                            record["rating"],
+                            record["comment"],
+                            json.dumps(record["transcript"], ensure_ascii=False)
+                        ])
+                except Exception as e:
+                    pass
+                
+            st.session_state["feedback_submitted"] = True
+            st.session_state["feedback_rating"] = rating
+            st.session_state["feedback_comment"] = comment
+            st.session_state["feedback_invalidated"] = False
+            st.success("✅ Gửi phản hồi thành công!")
+            st.rerun()
+            
+        if st.session_state["feedback_submitted"]:
+            st.info(f"Đã ghi nhận: {st.session_state.feedback_rating} ⭐ | {st.session_state.feedback_comment}")
+
 # --- Load data & keyword dict ---
 try:
     df = load_data()
@@ -279,19 +408,6 @@ else:
     st.sidebar.warning("⚠️ Chưa có file chỉ mục. Chạy generate_embeddings.py trước!")
 
 # --- Lịch sử chat ---
-if "session_id" not in st.session_state:
-    st.session_state.session_id = str(uuid.uuid4())
-
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-    st.session_state.messages.append({
-        "role": "assistant",
-        "content": "Xin chào! Tôi là CineBot 🎬 Bạn muốn tìm phim gì hôm nay? Hãy hỏi tôi về thể loại, đạo diễn, diễn viên hoặc mô tả phim nhé!",
-        "movies": None
-    })
-
-if "last_filters" not in st.session_state:
-    st.session_state.last_filters = {}
 
 # --- Hiển thị lịch sử hội thoại cũ ---
 for idx, msg in enumerate(st.session_state.messages):
@@ -309,6 +425,11 @@ pending = st.session_state.pop("pending_input", None)
 user_input = st.chat_input("Nhập câu hỏi của bạn...") or pending
 
 if user_input:
+    # If feedback was submitted, invalidate it on new message
+    if st.session_state.get("feedback_submitted", False):
+        st.session_state["feedback_invalidated"] = True
+        st.session_state["feedback_submitted"] = False
+
     # Hiển thị tin nhắn người dùng
     st.session_state.messages.append({"role": "user", "content": user_input, "movies": None})
     with st.chat_message("user"):

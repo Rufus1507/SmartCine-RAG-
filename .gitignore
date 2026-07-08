@@ -50,3 +50,7 @@ evaluation_v3/ablation_results*.json
 evaluation_v3/multihop_eval_results.json
 evaluation_v3/before_vs_after_report.md
 test_code/eda_results.json
+eval/results_raw.json
+chatbot/feedback_logs/
+feedback_logs/
+

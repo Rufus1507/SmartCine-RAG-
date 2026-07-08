@@ -146,11 +146,33 @@ class MultistageRetriever:
         embedder_model,
         version: str = 'C',
         final_k: int = 10,
-        graph_candidates: pd.DataFrame = None
+        graph_candidates: pd.DataFrame = None,
+        trace: dict = None
     ) -> pd.DataFrame:
         """
         Unified Multi-stage Retrieval pipeline.
         """
+        # Initialize trace fields if trace is present
+        if trace is not None:
+            trace["stage1_bm25"] = {
+                "top_k_requested": 100,
+                "candidates": []
+            }
+            trace["stage2_faiss"] = {
+                "candidates": []
+            }
+            trace["stage3_rerank"] = {
+                "candidates": []
+            }
+            trace["stage4_weighted_similarity"] = {
+                "per_candidate_scores": []
+            }
+            # New observability trace fields
+            trace["actual_route"] = "multistage_hybrid"
+            trace["skipped_stages"] = []
+            trace["executed_stages"] = []
+            trace["candidate_counts"] = {}
+
         # Sao chép và hiệu chỉnh bộ lọc cho các bước truy xuất
         filters_for_retrieval = filters.copy()
         
@@ -178,6 +200,20 @@ class MultistageRetriever:
                     result = result.sort_values('_genre_len', ascending=False)
                     result = result.drop_duplicates(subset='imdb_id', keep='first')
                     result = result.drop(columns=['_genre_len'])
+            
+            # Record shortcut trace before early return
+            if trace is not None:
+                trace["actual_route"] = "exact_filter_shortcut"
+                trace["skipped_stages"] = ["candidate_generation", "bm25", "faiss", "weighted_similarity", "cross_encoder"]
+                trace["executed_stages"] = ["metadata_filter"]
+                trace["candidate_counts"] = {
+                    "candidate_generation": 0,
+                    "bm25": 0,
+                    "faiss": 0,
+                    "weighted_similarity": 0,
+                    "cross_encoder": 0,
+                    "metadata_filter": len(result) if not result.empty else 0
+                }
             return result.head(final_k)
             
         # --- Stage 1: Candidate Generation ---
@@ -186,13 +222,30 @@ class MultistageRetriever:
         if faiss_index is not None and embedder_model is not None and query:
             faiss_candidates = semantic_search_retriever(query, df, faiss_index, embedder_model, top_k=150)
             
+        if trace is not None and not faiss_candidates.empty:
+            faiss_trace = []
+            for _, row in faiss_candidates.iterrows():
+                cand = {
+                    "title": row.get("Title"),
+                    "imdb_id": row.get("imdb_id")
+                }
+                # Check for any similarity score column
+                for col in ["similarity_score", "score", "faiss_score", "distance"]:
+                    if col in row:
+                        val = row[col]
+                        cand[col] = val.item() if isinstance(val, (np.integer, np.floating)) else val
+                faiss_trace.append(cand)
+            trace["stage2_faiss"]["candidates"] = faiss_trace
+            
         # Get up to 100 keyword search candidates
         bm25_candidates = pd.DataFrame()
         if query:
             if self.bm25_index is None:
                 from chatbot.data_loader import load_bm25_index
                 self.bm25_index = load_bm25_index(df)
-            bm25_candidates = bm25_search(query, df, self.bm25_index, top_k=100)
+            bm25_candidates = bm25_search(query, df, self.bm25_index, top_k=100, trace=trace)
+            
+        # Tracing for bm25 is now handled directly inside bm25_search to capture detailed token-level preprocessing.
             
         # Get up to 500 metadata filtering candidates directly
         metadata_candidates = pd.DataFrame()
@@ -226,7 +279,20 @@ class MultistageRetriever:
                 
         if not candidate_list:
             # Fallback to general filtered list if no query and no matches
-            return search_movies_tool(df, filters_for_retrieval, top_k=final_k)
+            fallback_res = search_movies_tool(df, filters_for_retrieval, top_k=final_k)
+            if trace is not None:
+                trace["actual_route"] = "multistage_hybrid"
+                trace["skipped_stages"] = ["weighted_similarity", "cross_encoder"]
+                trace["executed_stages"] = ["candidate_generation", "bm25", "faiss", "metadata_filter"]
+                trace["candidate_counts"] = {
+                    "candidate_generation": 0,
+                    "bm25": 0,
+                    "faiss": 0,
+                    "metadata_filter": len(fallback_res) if not fallback_res.empty else 0,
+                    "weighted_similarity": 0,
+                    "cross_encoder": 0
+                }
+            return fallback_res
             
         candidates_df = pd.DataFrame(candidate_list)
         
@@ -265,6 +331,7 @@ class MultistageRetriever:
             candidate_embeddings = embedder_model.encode(candidate_profiles, convert_to_numpy=True)
             
         matched_rows = []
+        trace_similarity = []
         for idx, (_, row) in enumerate(filtered_df.iterrows()):
             row_features = self.builder.transform_row(row)
             
@@ -286,7 +353,15 @@ class MultistageRetriever:
 
                 
             sim_breakdown = compute_weighted_similarity(row_features, ref_features)
-
+            
+            if trace is not None:
+                clean_sim = {}
+                for k, v in sim_breakdown.items():
+                    if isinstance(v, (np.integer, np.floating)):
+                        clean_sim[k] = v.item()
+                    else:
+                        clean_sim[k] = v
+                trace_similarity.append(clean_sim)
             
             # Attach score breakdown to movie row
             row_copy = row.copy()
@@ -323,7 +398,34 @@ class MultistageRetriever:
             row_copy["similarity_reason"] = "Phim " + ", ".join(reasons) + "."
             matched_rows.append(row_copy)
             
+        if trace is not None:
+            trace["stage4_weighted_similarity"]["per_candidate_scores"] = trace_similarity
+            
         if not matched_rows:
+            if trace is not None:
+                executed_stages = ["candidate_generation"]
+                skipped_stages = ["cross_encoder"]
+                if query:
+                    executed_stages.append("bm25")
+                else:
+                    skipped_stages.append("bm25")
+                if faiss_index is not None and embedder_model is not None and query:
+                    executed_stages.append("faiss")
+                else:
+                    skipped_stages.append("faiss")
+                executed_stages.extend(["metadata_filter", "weighted_similarity"])
+                
+                trace["actual_route"] = "multistage_hybrid"
+                trace["executed_stages"] = executed_stages
+                trace["skipped_stages"] = skipped_stages
+                trace["candidate_counts"] = {
+                    "candidate_generation": len(candidates_df) if not candidates_df.empty else 0,
+                    "bm25": len(bm25_candidates) if not bm25_candidates.empty else 0,
+                    "faiss": len(faiss_candidates) if not faiss_candidates.empty else 0,
+                    "metadata_filter": len(filtered_df) if not filtered_df.empty else 0,
+                    "weighted_similarity": 0,
+                    "cross_encoder": 0
+                }
             return pd.DataFrame()
             
         ranked_df = pd.DataFrame(matched_rows)
@@ -339,6 +441,17 @@ class MultistageRetriever:
             query_rerank = query or "Phim hay được đánh giá cao."
             
         reranked_df = rerank_results(query_rerank, top_100_df, top_k=20)
+        
+        if trace is not None and not reranked_df.empty:
+            rerank_trace = []
+            for _, row in reranked_df.iterrows():
+                val = row.get("rerank_score")
+                rerank_trace.append({
+                    "title": row.get("Title"),
+                    "imdb_id": row.get("imdb_id"),
+                    "rerank_score": val.item() if isinstance(val, (np.integer, np.floating)) else val
+                })
+            trace["stage3_rerank"]["candidates"] = rerank_trace
         
         # --- Stage 5: Final Results ---
         if not reranked_df.empty:
@@ -356,4 +469,29 @@ class MultistageRetriever:
                 reranked_df = reranked_df.drop_duplicates(subset='imdb_id', keep='first')
                 reranked_df = reranked_df.drop(columns=['_genre_len'])
         
+        if trace is not None:
+            executed_stages = ["candidate_generation"]
+            skipped_stages = []
+            if query:
+                executed_stages.append("bm25")
+            else:
+                skipped_stages.append("bm25")
+            if faiss_index is not None and embedder_model is not None and query:
+                executed_stages.append("faiss")
+            else:
+                skipped_stages.append("faiss")
+            executed_stages.extend(["metadata_filter", "weighted_similarity", "cross_encoder"])
+            
+            trace["actual_route"] = "multistage_hybrid"
+            trace["executed_stages"] = executed_stages
+            trace["skipped_stages"] = skipped_stages
+            trace["candidate_counts"] = {
+                "candidate_generation": len(candidates_df) if not candidates_df.empty else 0,
+                "bm25": len(bm25_candidates) if not bm25_candidates.empty else 0,
+                "faiss": len(faiss_candidates) if not faiss_candidates.empty else 0,
+                "metadata_filter": len(filtered_df) if not filtered_df.empty else 0,
+                "weighted_similarity": len(matched_rows),
+                "cross_encoder": len(reranked_df) if not reranked_df.empty else 0
+            }
+
         return reranked_df.head(final_k)

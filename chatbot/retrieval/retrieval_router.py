@@ -35,13 +35,15 @@ def route_retrieval(
     intent: str,
     faiss_index,
     embedder_model,
-    final_k: int = FINAL_TOP_K
+    final_k: int = FINAL_TOP_K,
+    trace: dict = None
 ) -> tuple[pd.DataFrame, str]:
     """
     Định tuyến truy vấn (Retrieval Router) sang hệ thống Multi-stage Hybrid Retrieval V3.
     Bổ sung thêm bước lấy candidate từ Graph RAG (NetworkX) nếu là truy vấn tìm phim tương tự.
     Trả về tuple: (DataFrame kết quả, tên luồng định tuyến)
     """
+    import numpy as np
     from chatbot.retrieval.multistage_retriever import MultistageRetriever
     retriever = MultistageRetriever()
     
@@ -62,6 +64,19 @@ def route_retrieval(
                 G = load_or_build_graph(df)
                 # Tìm phim có đường đi quan hệ trên đồ thị (max_hops=3)
                 graph_results = find_movies_by_collab_path(G, reference_movie_title, max_hops=3, max_neighbors_per_hop=20)
+                
+                if trace is not None:
+                    trace["stage0_graph"]["called"] = True
+                    serializable_graph = []
+                    for res in graph_results:
+                        clean_res = {}
+                        for k, v in res.items():
+                            if isinstance(v, (np.integer, np.floating)):
+                                clean_res[k] = v.item()
+                            else:
+                                clean_res[k] = v
+                        serializable_graph.append(clean_res)
+                    trace["stage0_graph"]["candidates"] = serializable_graph
                 
                 graph_rows = []
                 # Tối ưu hóa: Tạo map tra cứu tiêu đề O(1) thay vì quét DataFrame O(N) trong vòng lặp
@@ -85,6 +100,7 @@ def route_retrieval(
             except Exception as e:
                 print(f"⚠️ Lỗi khi lấy candidates từ Graph RAG: {e}")
                 
+    local_trace = trace if trace is not None else {}
     result = retriever.retrieve(
         query=query,
         df=df,
@@ -93,6 +109,8 @@ def route_retrieval(
         faiss_index=faiss_index,
         embedder_model=embedder_model,
         final_k=final_k,
-        graph_candidates=graph_candidates
+        graph_candidates=graph_candidates,
+        trace=local_trace
     )
-    return result, "multistage_hybrid"
+    actual_route = local_trace.get("actual_route", "multistage_hybrid")
+    return result, actual_route

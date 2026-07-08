@@ -1,0 +1,62 @@
+[
+  {
+    "id": "q1",
+    "question": "Tìm phim hành động có điểm IMDb trên 8.0",
+    "difficulty": "easy",
+    "category": "factual"
+  },
+  {
+    "id": "q2",
+    "question": "Ai là đạo diễn của bộ phim Oppenheimer?",
+    "difficulty": "easy",
+    "category": "factual"
+  },
+  {
+    "id": "q3",
+    "question": "Hãy gợi ý cho tôi một số phim khoa học viễn tưởng của Christopher Nolan",
+    "difficulty": "medium",
+    "category": "recommendation"
+  },
+  {
+    "id": "q4",
+    "question": "Tìm phim giống như phim Inception",
+    "difficulty": "medium",
+    "category": "similarity"
+  },
+  {
+    "id": "q5",
+    "question": "Tìm phim kinh dị sản xuất sau năm 2020",
+    "difficulty": "easy",
+    "category": "factual"
+  },
+  {
+    "id": "q6",
+    "question": "Ai đã hợp tác nhiều nhất với Christopher Nolan?",
+    "difficulty": "hard",
+    "category": "multi_hop"
+  },
+  {
+    "id": "q7",
+    "question": "Gợi ý phim tâm lý của Mỹ đoạt giải Oscar",
+    "difficulty": "hard",
+    "category": "recommendation"
+  },
+  {
+    "id": "q8",
+    "question": "Có phim nào tương tự như Interstellar không?",
+    "difficulty": "medium",
+    "category": "similarity"
+  },
+  {
+    "id": "q9",
+    "question": "Diễn viên Leonardo DiCaprio đã từng đóng trong những phim nào sau năm 2010?",
+    "difficulty": "hard",
+    "category": "factual"
+  },
+  {
+    "id": "q10",
+    "question": "Đạo diễn của phim Alien: Romulus đã từng làm những phim kinh dị nào khác?",
+    "difficulty": "very_hard",
+    "category": "multi_hop"
+  }
+]
