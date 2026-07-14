@@ -1,0 +1,62 @@
+[
+  {
+    "id": "hq1",
+    "question": "Tìm các phim hành động hoặc khoa học viễn tưởng có điểm IMDb trên 8.5, thời lượng dưới 150 phút và được phát hành sau năm 2010.",
+    "difficulty": "hard",
+    "category": "complex_filter"
+  },
+  {
+    "id": "hq2",
+    "question": "Christopher Nolan đã đạo diễn những bộ phim nào mà đồng thời ông cũng tham gia viết kịch bản?",
+    "difficulty": "hard",
+    "category": "multi_constraint"
+  },
+  {
+    "id": "hq3",
+    "question": "Hãy gợi ý cho tôi những bộ phim có phong cách tương tự Interstellar nhưng không phải do Christopher Nolan đạo diễn.",
+    "difficulty": "hard",
+    "category": "recommendation"
+  },
+  {
+    "id": "hq4",
+    "question": "Tìm những bộ phim giống Inception nhưng có bối cảnh ngoài không gian hoặc liên quan đến du hành thời gian.",
+    "difficulty": "hard",
+    "category": "semantic_similarity"
+  },
+  {
+    "id": "hq5",
+    "question": "Có những bộ phim kinh dị nào sau năm 2020 đạt điểm IMDb cao hơn mức trung bình của toàn bộ phim kinh dị trong cơ sở dữ liệu?",
+    "difficulty": "very_hard",
+    "category": "aggregation"
+  },
+  {
+    "id": "hq6",
+    "question": "Diễn viên nào hợp tác với Christopher Nolan nhiều nhất và trong những bộ phim đó họ thường đảm nhận vai chính hay vai phụ?",
+    "difficulty": "very_hard",
+    "category": "graph_reasoning"
+  },
+  {
+    "id": "hq7",
+    "question": "Hãy gợi ý các phim tâm lý của Mỹ từng đoạt giải Oscar nhưng chưa có phần tiếp theo.",
+    "difficulty": "very_hard",
+    "category": "recommendation"
+  },
+  {
+    "id": "hq8",
+    "question": "Ngoài Interstellar, hãy tìm những bộ phim có chủ đề khám phá vũ trụ, cảm xúc gia đình và điểm IMDb từ 8.0 trở lên.",
+    "difficulty": "hard",
+    "category": "semantic_similarity"
+  },
+  {
+    "id": "hq9",
+    "question": "Leonardo DiCaprio đã hợp tác với những đạo diễn nào nhiều hơn một lần sau năm 2010 và các bộ phim đó có điểm IMDb trung bình là bao nhiêu?",
+    "difficulty": "very_hard",
+    "category": "graph_aggregation"
+  },
+  {
+    "id": "hq10",
+    "question": "Đạo diễn của Alien: Romulus từng hợp tác với những diễn viên nào nhiều hơn một lần và các bộ phim đó thuộc những thể loại gì?",
+    "difficulty": "expert",
+    "category": "multi_hop"
+  }
+]

@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import faiss
 import streamlit as st
-from chatbot.config import PROFILE_INDEX_PATH, MIN_VOTES_THRESHOLD
+from chatbot.config import PROFILE_INDEX_PATH
 from chatbot.retrieval.reranker import rerank_results
 from chatbot.tools import get_movie_detail_tool, search_movies_tool
 
@@ -126,8 +126,14 @@ def find_similar_movies_v2(df: pd.DataFrame, index, model, user_input: str, filt
     base_profile = make_profile(base_row)
     base_vector = model.encode([base_profile], convert_to_numpy=True).astype('float32')
     
-    # Lọc danh sách phim ứng viên có num_votes >= MIN_VOTES_THRESHOLD
-    df_filtered = df[df['num_votes'] >= MIN_VOTES_THRESHOLD].reset_index(drop=True)
+    # Dùng toàn bộ phim; không loại phim thiếu vote/rating.
+    df_filtered = df.reset_index(drop=True)
+    if profile_index.ntotal != len(df_filtered):
+        print(
+            "⚠️ Profile index không khớp số dòng dữ liệu. "
+            "Hãy chạy lại generate_movie_profile_embeddings.py để recommend tương tự không lọc vote."
+        )
+        return pd.DataFrame(), False
     
     # Tìm kiếm FAISS profile
     k_search = min(150, len(df_filtered))

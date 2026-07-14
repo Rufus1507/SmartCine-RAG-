@@ -7,7 +7,7 @@ import streamlit as st
 import faiss
 import torch
 from sentence_transformers import SentenceTransformer
-from chatbot.config import CHATBOT_DIR, MIN_VOTES_THRESHOLD
+from chatbot.config import CHATBOT_DIR
 
 REPRESENTATION_DIR = os.path.dirname(os.path.abspath(__file__))
 INDEX_A_PATH = os.path.join(CHATBOT_DIR, "representation_a.index")

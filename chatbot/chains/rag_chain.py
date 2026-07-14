@@ -1,3 +1,4 @@
+import re
 import unicodedata
 import pandas as pd
 from langchain_core.language_models import BaseChatModel
@@ -101,6 +102,15 @@ def run_rag_pipeline(
 
     # Chuẩn hoá thể loại và quốc gia
     if filters.get("genre"):
+        # Xác định chế độ logic cho nhiều thể loại
+        # CHỈ dùng AND khi chuỗi genre chứa "và/and/&" giữa các tên thể loại
+        # (không dùng toàn bộ user_input để tránh match nhầm "và" trong mệnh đề khác)
+        genre_str = str(filters["genre"])
+        if re.search(r'\bvà\b|\band\b|&', genre_str, re.IGNORECASE):
+            filters["genre_mode"] = "AND"
+        else:
+            filters["genre_mode"] = "OR"
+            
         from chatbot.tools import normalize_genre
         filters["genre"] = normalize_genre(filters["genre"])
     if filters.get("country"):
@@ -124,6 +134,47 @@ def run_rag_pipeline(
     if intent == "aggregation":
         # Xử lý câu hỏi tổng hợp: "ai hợp tác nhiều nhất với X"
         person_name = filters.get("director") or filters.get("star")
+        
+        # PRIORITY 5 FIX: Nếu không có director/star nhưng có title,
+        # thực hiện tra cứu multi-hop: title → tìm đạo diễn trong dataset → tìm collaborators
+        if not person_name and filters.get("title"):
+            movie_title = filters["title"]
+            # Ưu tiên exact match (case-insensitive) trước để tránh khớp nhầm tên phim gần giống
+            exact_match = df[df['Title'].astype(str).str.lower() == movie_title.lower()]
+            if not exact_match.empty:
+                title_match = exact_match
+            else:
+                # Fallback: tìm kiếm mờ (fuzzy contains) nếu không có kết quả exact
+                title_match = df[df['Title'].astype(str).str.contains(re.escape(movie_title), case=False, na=False)]
+                # Sắp xếp ưu tiên kết quả có tên phim ngắn hơn (khớp gần hơn với tên tìm kiếm)
+                if not title_match.empty:
+                    title_match = title_match.assign(
+                        _title_len=title_match['Title'].str.len()
+                    ).sort_values('_title_len').drop(columns=['_title_len'])
+            
+            if not title_match.empty:
+                row = title_match.iloc[0]
+                director_val = row.get("directors", None) or row.get("Director", None)
+                if director_val:
+                    # Lấy tên đạo diễn đầu tiên nếu có nhiều người
+                    person_name = str(director_val).split(",")[0].strip()
+                    filters["director"] = person_name
+            else:
+                # Movie không có trong dataset - trả về thông báo data limitation
+                not_found_row = [{
+                    "Title": f"[Không tìm thấy: {movie_title}]",
+                    "Rating": None,
+                    "Year": None,
+                    "genres": "",
+                    "directors": "",
+                    "countries_origin": "N/A",
+                    "stars": "",
+                    "Movie Link": "",
+                    "final_context": f"Phim '{movie_title}' không có trong cơ sở dữ liệu hiện tại. Đây có thể là phim quá mới hoặc chưa được cập nhật vào hệ thống. Vui lòng thử với tên phim khác."
+                }]
+                filtered_df = pd.DataFrame(not_found_row)
+                route_name = "aggregation_not_found"
+                
         if person_name:
             try:
                 from chatbot.graph.build_movie_graph import load_or_build_graph

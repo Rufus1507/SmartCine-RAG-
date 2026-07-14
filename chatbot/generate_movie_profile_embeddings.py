@@ -15,7 +15,7 @@ sys.path.append(workspace_dir)
 # Đảm bảo in UTF-8
 sys.stdout.reconfigure(encoding='utf-8')
 
-from chatbot.config import PROFILE_INDEX_PATH, MIN_VOTES_THRESHOLD
+from chatbot.config import PROFILE_INDEX_PATH
 from chatbot.data_loader import load_data
 
 def make_profile(row):
@@ -44,9 +44,8 @@ def main():
     df = load_data()
     print(f"✅ Đã tải xong {len(df):,} phim.")
     
-    print(f"🧹 Lọc phim có num_votes >= {MIN_VOTES_THRESHOLD}...")
-    df_filtered = df[df['num_votes'] >= MIN_VOTES_THRESHOLD].reset_index(drop=True)
-    print(f"✅ Số lượng phim sau khi lọc: {len(df_filtered):,}")
+    df_filtered = df.reset_index(drop=True)
+    print(f"✅ Số lượng phim đưa vào profile index: {len(df_filtered):,}")
     
     print("🧹 Chuẩn bị văn bản profile cho mỗi phim...")
     profiles = df_filtered.apply(make_profile, axis=1).tolist()

@@ -18,8 +18,18 @@ class Filters(BaseModel):
     year_min: Optional[int] = None
     year_max: Optional[int] = None
     rating_min: Optional[float] = None
+    director_exclude: Optional[str] = None
+    star_exclude: Optional[str] = None
+    runtime_min: Optional[int] = None
+    runtime_max: Optional[int] = None
+    duration_min: Optional[int] = None
+    duration_max: Optional[int] = None
+    has_oscar: Optional[bool] = None
+    has_awards: Optional[bool] = None
+    meta_score_min: Optional[int] = None
     sort_by: Optional[str] = None
     sort_order: Optional[str] = None
+
 
     @field_validator('year_min', 'year_max', mode='before')
     @classmethod
@@ -44,6 +54,34 @@ class Filters(BaseModel):
             return float(v)
         except Exception:
             return None
+
+    @field_validator('runtime_min', 'runtime_max', 'duration_min', 'duration_max', 'meta_score_min', mode='before')
+    @classmethod
+    def coerce_int(cls, v):
+        if v is None or v == "":
+            return None
+        try:
+            clean_val = str(v).lower().replace("phút", "").replace("phut", "").strip()
+            match = re.search(r'\d+', clean_val)
+            if match:
+                return int(match.group(0))
+            return int(clean_val)
+        except Exception:
+            return None
+
+    @field_validator('has_oscar', 'has_awards', mode='before')
+    @classmethod
+    def coerce_bool(cls, v):
+        if v is None or v == "":
+            return None
+        if isinstance(v, bool):
+            return v
+        val_str = str(v).lower().strip()
+        if val_str in ("true", "1", "yes", "đúng", "dung", "có", "co"):
+            return True
+        if val_str in ("false", "0", "no", "không", "khong"):
+            return False
+        return None
 
 class ParsedIntent(BaseModel):
     intent: str = "chitchat"
@@ -152,8 +190,14 @@ def run_intent_chain(llm: BaseChatModel, user_message: str, detected_entities: d
         if detected_entities.get("genres") and not filters.get("genre"):
             filters["genre"] = detected_entities["genres"][0]
         if detected_entities.get("directors") and not filters.get("director"):
-            filters["director"] = detected_entities["directors"][0]
+            det_dir = detected_entities["directors"][0]
+            exclude_dir = filters.get("director_exclude")
+            if not exclude_dir or (det_dir.lower() != exclude_dir.lower() and fuzz.QRatio(det_dir.lower(), exclude_dir.lower()) < 90):
+                filters["director"] = det_dir
         if detected_entities.get("stars") and not filters.get("star"):
-            filters["star"] = detected_entities["stars"][0]
+            det_star = detected_entities["stars"][0]
+            exclude_star = filters.get("star_exclude")
+            if not exclude_star or (det_star.lower() != exclude_star.lower() and fuzz.QRatio(det_star.lower(), exclude_star.lower()) < 90):
+                filters["star"] = det_star
 
     return parsed

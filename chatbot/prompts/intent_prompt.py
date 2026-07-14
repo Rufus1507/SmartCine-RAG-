@@ -23,10 +23,12 @@ Schema JSON:
     "year_min":   <int hoặc null>,
     "year_max":   <int hoặc null>,
     "rating_min": <float hoặc null>,
+    "director_exclude": <string hoặc null>, # Tên đạo diễn muốn loại trừ (ví dụ: "không phải của Christopher Nolan" -> "Christopher Nolan")
+    "star_exclude":     <string hoặc null>, # Tên diễn viên muốn loại trừ (ví dụ: "không có Leonardo DiCaprio" -> "Leonardo DiCaprio")
     "has_oscar":    <boolean hoặc null>, # Điền true nếu hỏi phim đoạt giải Oscar hoặc phim có Oscar
     "has_awards":   <boolean hoặc null>, # Điền true nếu hỏi phim đoạt giải thưởng nói chung (hoặc liên hoan phim)
-    "duration_min": <int hoặc null>,     # Thời lượng tối thiểu (phút), ví dụ: "trên 2 tiếng" -> 120
-    "duration_max": <int hoặc null>,     # Thời lượng tối đa (phút), ví dụ: "dưới 90 phút" -> 90
+    "runtime_min":  <int hoặc null>,     # Thời lượng tối thiểu (phút), ví dụ: "trên 2 tiếng" -> 120, "không dưới 100 phút" -> 100
+    "runtime_max":  <int hoặc null>,     # Thời lượng tối đa (phút), ví dụ: "dưới 150 phút" -> 150, "không quá 90 phút" -> 90
     "meta_score_min": <int hoặc null>,   # Điểm Metacritic tối thiểu, ví dụ: "metascore trên 80" -> 80
     "sort_by":    "rating" | "votes" | "year" | "metascore" | null,
     "sort_order": "asc" | "desc" | null
@@ -40,7 +42,13 @@ Hướng dẫn lọc "country":
 
 Ví dụ:
 User: "Tìm phim hành động đoạt giải Oscar dưới 2 tiếng có metascore trên 80"
-JSON: {{"intent":"search","filters":{{"title":null,"genre":"Action","director":null,"star":null,"country":null,"year_min":null,"year_max":null,"rating_min":null,"has_oscar":true,"has_awards":true,"duration_min":null,"duration_max":120,"meta_score_min":80,"sort_by":"metascore","sort_order":"desc"}},"free_text":"Tìm phim hành động đoạt giải Oscar dưới 2 tiếng có metascore trên 80"}}
+JSON: {{"intent":"search","filters":{{"title":null,"genre":"Action","director":null,"star":null,"country":null,"year_min":null,"year_max":null,"rating_min":null,"director_exclude":null,"star_exclude":null,"has_oscar":true,"has_awards":true,"runtime_min":null,"runtime_max":120,"meta_score_min":80,"sort_by":"metascore","sort_order":"desc"}},"free_text":"Tìm phim hành động đoạt giải Oscar dưới 2 tiếng có metascore trên 80"}}
+
+User: "phim tương tự Interstellar nhưng KHÔNG PHẢI của Christopher Nolan"
+JSON: {{"intent":"search","filters":{{"title":"Interstellar","genre":null,"director":null,"star":null,"country":null,"year_min":null,"year_max":null,"rating_min":null,"director_exclude":"Christopher Nolan","star_exclude":null,"has_oscar":null,"has_awards":null,"runtime_min":null,"runtime_max":null,"meta_score_min":null,"sort_by":null,"sort_order":null}},"free_text":"phim tương tự Interstellar nhưng KHÔNG PHẢI của Christopher Nolan"}}
+
+User: "Tìm phim hành động hoặc viễn tưởng không quá 150 phút và có điểm IMDB trên 8.5 sau năm 2010."
+JSON: {{"intent":"search","filters":{{"title":null,"genre":"Action, Sci-Fi","director":null,"star":null,"country":null,"year_min":2011,"year_max":null,"rating_min":8.5,"director_exclude":null,"star_exclude":null,"has_oscar":null,"has_awards":null,"runtime_min":null,"runtime_max":150,"meta_score_min":null,"sort_by":"rating","sort_order":"desc"}},"free_text":"Tìm phim hành động hoặc viễn tưởng không quá 150 phút và có điểm IMDB trên 8.5 sau năm 2010."}}
 
 {hints_str}
 {history_str}

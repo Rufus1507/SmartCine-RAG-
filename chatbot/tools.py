@@ -1,3 +1,4 @@
+import re
 import unicodedata
 import pandas as pd
 import numpy as np
@@ -73,13 +74,8 @@ def search_movies_tool(df: pd.DataFrame, filters: dict, top_k: int = 5) -> pd.Da
             
         result = df.copy()
 
-        # Xác định cột votes an toàn
+        # Xác định cột votes an toàn cho sort khi người dùng yêu cầu.
         votes_col = COL_VOTES if COL_VOTES in result.columns else ("Votes" if "Votes" in result.columns else None)
-        if votes_col and not filters.get("title"):
-            try:
-                result = result[result[votes_col] >= 1000]
-            except Exception:
-                pass
 
         # Bắt buộc có country (áp dụng cho mọi truy vấn)
         if "countries_origin" in result.columns:
@@ -94,10 +90,30 @@ def search_movies_tool(df: pd.DataFrame, filters: dict, top_k: int = 5) -> pd.Da
         # Lọc thể loại (Genre)
         if filters.get("genre") and COL_GENRE in result.columns:
             try:
-                genre_val = normalize_genre(filters["genre"])
-                result = result[result[COL_GENRE].astype(str).str.contains(
-                    genre_val, case=False, na=False
-                )]
+                # Tách nhiều thể loại dựa trên các dấu phân cách thông dụng
+                genres_raw = re.split(r'[,/;]|\bvà\b|\bhoặc\b|\band\b|\bor\b|&', str(filters["genre"]), flags=re.IGNORECASE)
+                genres_list = []
+                for g in genres_raw:
+                    g_clean = g.strip()
+                    if g_clean:
+                        normalized = normalize_genre(g_clean)
+                        if normalized:
+                            genres_list.append(normalized)
+                
+                if genres_list:
+                    genre_mode = filters.get("genre_mode", "OR")
+                    if genre_mode == "AND":
+                        # Bắt buộc khớp tất cả các thể loại trong danh sách
+                        for g in genres_list:
+                            result = result[result[COL_GENRE].astype(str).str.contains(
+                                re.escape(g), case=False, na=False
+                            )]
+                    else:
+                        # Khớp ít nhất một trong các thể loại (OR)
+                        pattern = "|".join(re.escape(g) for g in genres_list)
+                        result = result[result[COL_GENRE].astype(str).str.contains(
+                            pattern, case=False, na=False
+                        )]
             except Exception:
                 pass
 
@@ -118,6 +134,25 @@ def search_movies_tool(df: pd.DataFrame, filters: dict, top_k: int = 5) -> pd.Da
                 )]
             except Exception:
                 pass
+
+        # Lọc loại trừ đạo diễn (director_exclude)
+        if filters.get("director_exclude") and COL_DIRECTOR in result.columns:
+            try:
+                exclude_dirs = [d.strip().lower() for d in str(filters["director_exclude"]).split(",") if d.strip()]
+                for ed in exclude_dirs:
+                    result = result[~result[COL_DIRECTOR].astype(str).str.lower().str.contains(ed, na=False)]
+            except Exception:
+                pass
+
+        # Lọc loại trừ diễn viên (star_exclude)
+        if filters.get("star_exclude") and COL_STARS in result.columns:
+            try:
+                exclude_stars = [s.strip().lower() for s in str(filters["star_exclude"]).split(",") if s.strip()]
+                for es in exclude_stars:
+                    result = result[~result[COL_STARS].astype(str).str.lower().str.contains(es, na=False)]
+            except Exception:
+                pass
+
 
         # Lọc quốc gia (Country)
         if filters.get("country") and "countries_origin" in result.columns:
@@ -187,16 +222,18 @@ def search_movies_tool(df: pd.DataFrame, filters: dict, top_k: int = 5) -> pd.Da
                 pass
 
         # Lọc thời lượng tối thiểu (phút)
-        if filters.get("duration_min") and COL_DURATION in result.columns:
+        dur_min = filters.get("duration_min") or filters.get("runtime_min")
+        if dur_min is not None and COL_DURATION in result.columns:
             try:
-                result = result[result[COL_DURATION] >= float(filters["duration_min"])]
+                result = result[result[COL_DURATION] >= float(dur_min)]
             except Exception:
                 pass
 
         # Lọc thời lượng tối đa (phút)
-        if filters.get("duration_max") and COL_DURATION in result.columns:
+        dur_max = filters.get("duration_max") or filters.get("runtime_max")
+        if dur_max is not None and COL_DURATION in result.columns:
             try:
-                result = result[result[COL_DURATION] <= float(filters["duration_max"])]
+                result = result[result[COL_DURATION] <= float(dur_max)]
             except Exception:
                 pass
 
@@ -315,11 +352,6 @@ def recommend_by_actor_tool(df: pd.DataFrame, actor: str, top_k: int = 5) -> pd.
             
         result = df[df[COL_STARS].astype(str).str.contains(actor, case=False, na=False)]
         
-        # Bỏ qua các phim có ít lượt vote để đảm bảo chất lượng
-        votes_col = COL_VOTES if COL_VOTES in result.columns else ("Votes" if "Votes" in result.columns else None)
-        if votes_col:
-            result = result[result[votes_col] >= 1000]
-            
         if COL_RATING in result.columns:
             result = result.sort_values(COL_RATING, ascending=False)
             
@@ -338,11 +370,6 @@ def recommend_by_director_tool(df: pd.DataFrame, director: str, top_k: int = 5) 
             
         result = df[df[COL_DIRECTOR].astype(str).str.contains(director, case=False, na=False)]
         
-        # Bỏ qua các phim có ít lượt vote
-        votes_col = COL_VOTES if COL_VOTES in result.columns else ("Votes" if "Votes" in result.columns else None)
-        if votes_col:
-            result = result[result[votes_col] >= 1000]
-            
         if COL_RATING in result.columns:
             result = result.sort_values(COL_RATING, ascending=False)
             
@@ -384,7 +411,6 @@ def compare_movies_tool(df: pd.DataFrame, movie_titles: list) -> pd.DataFrame:
 # ============================================================
 # LANGCHAIN TOOL WRAPPERS & ADVANCED RETRIEVAL (similar movies)
 # ============================================================
-import re
 from langchain_core.tools import tool
 from chatbot.config import SEMANTIC_TOP_K
 

@@ -48,4 +48,4 @@ GEMINI_DEFAULT_MODEL = "gemini-2.5-flash"
 SEMANTIC_TOP_K = 150       # Số lượng kết quả lấy từ FAISS trước khi lọc Pandas
 BM25_TOP_K = 100           # Số lượng kết quả lấy từ BM25
 FINAL_TOP_K = 5            # Số lượng phim tối đa hiển thị cho người dùng
-MIN_VOTES_THRESHOLD = 1000 # Số lượt vote tối thiểu để đảm bảo chất lượng phim lọc
+MIN_VOTES_THRESHOLD = 0    # Không loại phim theo vote; giữ hằng số để tương thích ngược

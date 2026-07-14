@@ -4,7 +4,7 @@ import pickle
 import networkx as nx
 import pandas as pd
 from tqdm import tqdm
-from chatbot.config import MIN_VOTES_THRESHOLD, CHATBOT_DIR
+from chatbot.config import CHATBOT_DIR
 from chatbot.feature_engineering import clean_split
 
 # Đường dẫn cache cho đồ thị
@@ -29,8 +29,8 @@ def build_movie_graph(df: pd.DataFrame, vocab_data: dict, actor_metadata: dict, 
     """
     G = nx.MultiDiGraph()
     
-    # Lọc phim theo ngưỡng số lượt vote tối thiểu để đảm bảo chất lượng và kích thước đồ thị hợp lý
-    df_filtered = df[df['num_votes'] >= MIN_VOTES_THRESHOLD].reset_index(drop=True)
+    # Không loại phim theo vote/rating: phim thiếu vote hoặc rating vẫn phải có thể được recommend.
+    df_filtered = df.reset_index(drop=True)
     
     print(f"Xây dựng đồ thị với {len(df_filtered)} bộ phim...")
     
@@ -149,8 +149,24 @@ def load_or_build_graph(df: pd.DataFrame, force_rebuild: bool = False) -> nx.Mul
             with open(GRAPH_CACHE_PATH, "rb") as f:
                 G = pickle.load(f)
             print(f"Đã tải thành công đồ thị với {G.number_of_nodes()} nodes và {G.number_of_edges()} edges.")
-            _loaded_graph = G
-            return G
+            cached_movie_count = sum(
+                1 for _, data in G.nodes(data=True)
+                if data.get("type") == "Movie"
+            )
+            expected_movie_count = (
+                df["Title"].dropna().astype(str).str.strip().loc[lambda s: s.ne("")]
+                .nunique()
+                if "Title" in df.columns else 0
+            )
+            if expected_movie_count and cached_movie_count < expected_movie_count:
+                print(
+                    "Cache đồ thị đang thiếu phim so với dữ liệu hiện tại "
+                    f"({cached_movie_count:,}/{expected_movie_count:,}). "
+                    "Tiến hành rebuild không lọc vote..."
+                )
+            else:
+                _loaded_graph = G
+                return G
         except Exception as e:
             print(f"Không thể tải đồ thị từ cache: {e}. Tiến hành xây dựng lại đồ thị...")
             
@@ -174,4 +190,3 @@ def load_or_build_graph(df: pd.DataFrame, force_rebuild: bool = False) -> nx.Mul
         
     _loaded_graph = G
     return G
-

@@ -42,7 +42,9 @@ def render_movie_cards(df: pd.DataFrame):
             if "similarity_score" in row:
                 st.markdown(f"🎯 **Độ tương đồng: {row['similarity_score']}**")
                 
-            st.caption(f"⭐ {row[COL_RATING]}  •  {int(row[COL_YEAR]) if pd.notna(row[COL_YEAR]) else 'N/A'}")
+            rating_display = row[COL_RATING] if pd.notna(row[COL_RATING]) else "N/A"
+            year_display = int(row[COL_YEAR]) if pd.notna(row[COL_YEAR]) else "N/A"
+            st.caption(f"⭐ {rating_display}  •  {year_display}")
             st.caption(f"🎬 Đạo diễn: {row[COL_DIRECTOR]}")
             st.caption(f"🎭 Thể loại: {row[COL_GENRE]}")
             if "countries_origin" in row and pd.notna(row["countries_origin"]) and str(row["countries_origin"]).strip():

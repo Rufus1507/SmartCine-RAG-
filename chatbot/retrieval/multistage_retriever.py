@@ -1,7 +1,7 @@
 import re
 import numpy as np
 import pandas as pd
-from chatbot.config import FINAL_TOP_K, MIN_VOTES_THRESHOLD, PROFILE_INDEX_PATH
+from chatbot.config import FINAL_TOP_K
 from chatbot.retrieval.bm25_retriever import bm25_search, build_bm25_index
 from chatbot.retrieval.retriever import semantic_search_retriever
 from chatbot.tools import search_movies_tool, get_movie_detail_tool
@@ -48,7 +48,10 @@ class MultistageRetriever:
         if not candidate_title:
             return None, False
             
+        # Loại bỏ phần phủ định/loại trừ nếu regex lỡ khớp cả cụm phía sau
+        candidate_title = re.split(r'\b(nhưng|không\s+phải|trừ|ngoại\s+trừ|except|but\s+not)\b', candidate_title, flags=re.IGNORECASE)[0].strip()
         candidate_title = re.sub(r'^(bộ\s+phim|phim|bộ|cái|con|những|các|tựa|tựa\s+phim|như|nhu)\s+', '', candidate_title, flags=re.IGNORECASE).strip()
+
         
         # Get details
         base_movie = get_movie_detail_tool(df, candidate_title)
@@ -342,12 +345,9 @@ class MultistageRetriever:
                 row_features["semantic_embedding"] = None
                 
             # Đính kèm graph_score cho ứng viên nếu nó đến từ Graph RAG
+            # Cả hai loại (personnel và content) đều được gán graph_score=1.0 để tăng độ ưu tiên
             if "graph_path_explanation" in row and pd.notna(row["graph_path_explanation"]):
-                p_type = row.get("graph_path_type", "personnel")
-                if p_type == "personnel":
-                    row_features["graph_score"] = 1.0
-                else:
-                    row_features["graph_score"] = 0.0
+                row_features["graph_score"] = 1.0
             else:
                 row_features["graph_score"] = 0.0
 
@@ -434,9 +434,10 @@ class MultistageRetriever:
         top_100_df = ranked_df.head(100).copy()
         
         # --- Stage 4: Cross-Encoder Reranking ---
-        # Define rerank query
+        # Sử dụng câu truy vấn gốc của user để rerank chính xác hơn về nội dung/chủ đề
         if is_similar and base_row is not None:
-            query_rerank = f"Phim tương tự như {base_row['Title']} có thể loại, đạo diễn hoặc nội dung hấp dẫn."
+            # Kết hợp cả tên phim gốc và nội dung câu hỏi để reranker nắm bắt được yêu cầu chủ đề
+            query_rerank = f"{query} (phim tương tự như {base_row['Title']})"
         else:
             query_rerank = query or "Phim hay được đánh giá cao."
             
@@ -468,6 +469,38 @@ class MultistageRetriever:
                 reranked_df = reranked_df.sort_values('_genre_len', ascending=False)
                 reranked_df = reranked_df.drop_duplicates(subset='imdb_id', keep='first')
                 reranked_df = reranked_df.drop(columns=['_genre_len'])
+            
+            # 5c. PRIORITY 4 FIX: Áp dụng lại các ràng buộc cứng sau khi rerank
+            # (rating_min, runtime_max, runtime_min) để đảm bảo hard constraints không bị
+            # override bởi soft semantic score trong Cross-Encoder
+            from chatbot.config import COL_RATING, COL_DURATION
+            rating_min = filters.get("rating_min")
+            if rating_min is not None:
+                try:
+                    hard_filtered = reranked_df[reranked_df[COL_RATING] >= float(rating_min)]
+                    # Chỉ áp dụng nếu vẫn còn đủ kết quả (tránh trả về rỗng)
+                    if len(hard_filtered) >= max(1, final_k // 2):
+                        reranked_df = hard_filtered
+                except Exception:
+                    pass
+            
+            dur_min = filters.get("duration_min") or filters.get("runtime_min")
+            if dur_min is not None:
+                try:
+                    hard_filtered = reranked_df[reranked_df[COL_DURATION] >= float(dur_min)]
+                    if len(hard_filtered) >= max(1, final_k // 2):
+                        reranked_df = hard_filtered
+                except Exception:
+                    pass
+            
+            dur_max = filters.get("duration_max") or filters.get("runtime_max")
+            if dur_max is not None:
+                try:
+                    hard_filtered = reranked_df[reranked_df[COL_DURATION] <= float(dur_max)]
+                    if len(hard_filtered) >= max(1, final_k // 2):
+                        reranked_df = hard_filtered
+                except Exception:
+                    pass
         
         if trace is not None:
             executed_stages = ["candidate_generation"]
