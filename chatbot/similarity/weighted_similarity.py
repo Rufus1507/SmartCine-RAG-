@@ -1,9 +1,16 @@
 import numpy as np
 from chatbot.feature_engineering import DECADES
 
+# Trọng số mặc định cho các chiều đặc trưng trong tính toán similarity tổng hợp (P6 tuned):
+# - content: 0.35→0.40 (tăng sau P1 fix: FAISS dùng description phim gốc → content_score chính xác hơn)
+# - genre: 0.25→0.20 (giảm để tránh genre dominance khi so sánh phim cross-genre gần chủ đề)
+# - actor: giữ 0.15 (quan trọng cho "phim cùng diễn viên")
+# - director: giữ 0.10 (quan trọng cho "phim cùng đạo diễn")
+# - graph: 0.05→0.10 (tăng sau P3 fix: graph_score graduated → tín hiệu chính xác hơn)
+# - country: giữ 0.05, decade: giữ 0.03, award: giữ 0.02
 DEFAULT_WEIGHTS = {
-    "content": 0.35,
-    "genre": 0.25,
+    "content": 0.40,
+    "genre": 0.20,
     "actor": 0.15,
     "director": 0.10,
     "country": 0.05,
@@ -87,10 +94,24 @@ def compute_content_similarity(emb1, emb2) -> float:
         return 0.0
     return float(np.dot(v1, v2) / (norm1 * norm2))
 
-def compute_weighted_similarity(movie_features: dict, ref_features: dict, weights: dict = None) -> dict:
+def compute_weighted_similarity(
+    movie_features: dict,
+    ref_features: dict,
+    weights: dict = None,
+    active_dims: set = None
+) -> dict:
     """
-    Computes the weighted similarity scores between a movie's features and reference features.
-    Automatically redistributes weights for attributes that are unspecified in reference features.
+    Tính điểm similarity có trọng số giữa một phim ứng viên và phim tham chiếu.
+
+    Tham số `active_dims` (tuỳ chọn): tập các chiều đặc trưng được phép tính vào
+    final_score (ví dụ: {"content", "genre", "graph"}).
+    - Nếu None → behavior cũ: mọi chiều có dữ liệu tham chiếu đều được tính.
+    - Nếu được cung cấp → chỉ các chiều trong tập này mới active, phần còn lại bị
+      loại khỏi formula (không phantom 1.0 inflate score nữa).
+
+    Dùng active_dims để tránh bug "phantom perfect score": khi query là
+    "phim tương tự Inception" nhưng không yêu cầu cùng diễn viên, actor_score=1.0
+    từ base movie vẫn inflate final_score nếu không bị loại ra.
     """
     if weights is None:
         weights = DEFAULT_WEIGHTS.copy()
@@ -98,10 +119,14 @@ def compute_weighted_similarity(movie_features: dict, ref_features: dict, weight
     scores = {}
     active_weights = {}
     
-    # 1. Content (always active if reference embedding is present)
+    # Helper: kiểm tra xem dimension có được phép active không
+    def _dim_allowed(dim: str) -> bool:
+        return active_dims is None or dim in active_dims
+    
+    # 1. Content (luôn active nếu có embedding tham chiếu VÀ dimension được phép)
     ref_emb = ref_features.get("semantic_embedding")
     movie_emb = movie_features.get("semantic_embedding")
-    if ref_emb is not None and movie_emb is not None:
+    if ref_emb is not None and movie_emb is not None and _dim_allowed("content"):
         scores["content_score"] = compute_content_similarity(movie_emb, ref_emb)
         active_weights["content"] = weights["content"]
     else:
@@ -110,25 +135,25 @@ def compute_weighted_similarity(movie_features: dict, ref_features: dict, weight
     # 2. Genre
     ref_genre = ref_features.get("genre_vector")
     movie_genre = movie_features.get("genre_vector")
-    if ref_genre is not None and np.sum(ref_genre) > 0 and movie_genre is not None:
+    if ref_genre is not None and np.sum(ref_genre) > 0 and movie_genre is not None and _dim_allowed("genre"):
         scores["genre_score"] = compute_genre_similarity(movie_genre, ref_genre)
         active_weights["genre"] = weights["genre"]
     else:
         scores["genre_score"] = 1.0
         
-    # 3. Actor
+    # 3. Actor — chỉ active nếu query thực sự yêu cầu (tránh dùng cast của base movie)
     ref_actor = ref_features.get("actor_vector")
     movie_actor = movie_features.get("actor_vector")
-    if ref_actor and movie_actor:
+    if ref_actor and movie_actor and _dim_allowed("actor"):
         scores["actor_score"] = compute_actor_similarity(movie_actor, ref_actor)
         active_weights["actor"] = weights["actor"]
     else:
         scores["actor_score"] = 1.0
         
-    # 4. Director
+    # 4. Director — chỉ active nếu query thực sự yêu cầu (tránh dùng director của base movie)
     ref_dir = ref_features.get("director_vector")
     movie_dir = movie_features.get("director_vector")
-    if ref_dir and movie_dir:
+    if ref_dir and movie_dir and _dim_allowed("director"):
         scores["director_score"] = compute_director_similarity(movie_dir, ref_dir)
         active_weights["director"] = weights["director"]
     else:
@@ -137,7 +162,7 @@ def compute_weighted_similarity(movie_features: dict, ref_features: dict, weight
     # 5. Country
     ref_country = ref_features.get("country_vector")
     movie_country = movie_features.get("country_vector")
-    if ref_country is not None and np.sum(ref_country) > 0 and movie_country is not None:
+    if ref_country is not None and np.sum(ref_country) > 0 and movie_country is not None and _dim_allowed("country"):
         scores["country_score"] = compute_country_similarity(movie_country, ref_country)
         active_weights["country"] = weights["country"]
     else:
@@ -146,7 +171,7 @@ def compute_weighted_similarity(movie_features: dict, ref_features: dict, weight
     # 6. Decade
     ref_dec = ref_features.get("decade_vector")
     movie_dec = movie_features.get("decade_vector")
-    if ref_dec is not None and np.sum(ref_dec) > 0 and movie_dec is not None:
+    if ref_dec is not None and np.sum(ref_dec) > 0 and movie_dec is not None and _dim_allowed("decade"):
         scores["decade_score"] = compute_decade_similarity(movie_dec, ref_dec)
         active_weights["decade"] = weights["decade"]
     else:
@@ -155,7 +180,7 @@ def compute_weighted_similarity(movie_features: dict, ref_features: dict, weight
     # 7. Award
     ref_award = ref_features.get("award_vector")
     movie_award = movie_features.get("award_vector")
-    if ref_award is not None and np.sum(ref_award) > 0 and movie_award is not None:
+    if ref_award is not None and np.sum(ref_award) > 0 and movie_award is not None and _dim_allowed("award"):
         scores["award_score"] = compute_award_similarity(movie_award, ref_award)
         active_weights["award"] = weights["award"]
     else:
@@ -164,13 +189,13 @@ def compute_weighted_similarity(movie_features: dict, ref_features: dict, weight
     # 8. Graph Connection (Collaboration Path)
     ref_graph = ref_features.get("graph_score")
     movie_graph = movie_features.get("graph_score")
-    if ref_graph is not None and movie_graph is not None:
+    if ref_graph is not None and movie_graph is not None and _dim_allowed("graph"):
         scores["graph_score"] = float(movie_graph)
         active_weights["graph"] = weights["graph"]
     else:
         scores["graph_score"] = 1.0
         
-    # Calculate weighted final score based on active weights
+    # Tính final_score có trọng số từ các dimension active
     total_active_weight = sum(active_weights.values())
     if total_active_weight > 0:
         final_score = 0.0

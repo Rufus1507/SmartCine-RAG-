@@ -135,9 +135,57 @@ def run_rag_pipeline(
         # Xử lý câu hỏi tổng hợp: "ai hợp tác nhiều nhất với X"
         person_name = filters.get("director") or filters.get("star")
         
+        # PRIORITY 4 FIX: Phát hiện truy vấn tính thống kê (trung bình, cao hơn mức trung bình...)
+        # và tính TRỰC TIẾP từ toàn bộ df theo filter, không qua tập ứng viên bị giới hạn top-K.
+        import re as _re
+        _stat_pattern = r'trung\s*b[ìi]nh|average|avg|cao\s*h[ơo]n.*m[uứ]c|so\s*s[áa]nh|mean|median|điểm\s*tb|điểm\s*trung\s*b[ìi]nh'
+        if _re.search(_stat_pattern, user_input, _re.IGNORECASE) and not person_name:
+            from chatbot.tools import search_movies_tool
+            from chatbot.config import COL_RATING, COL_GENRE, COL_YEAR
+            # Chỉ áp dụng filter thể loại/năm/quốc gia — không bị giới hạn bởi top-K retrieval
+            _stat_filters = {k: v for k, v in filters.items() if k in ('genre', 'year_min', 'year_max', 'country') and v is not None}
+            _full_filtered = search_movies_tool(df, _stat_filters, top_k=len(df))
+            if not _full_filtered.empty and COL_RATING in _full_filtered.columns:
+                _ratings = _full_filtered[COL_RATING].dropna()
+                _avg_rating = round(_ratings.mean(), 2) if len(_ratings) > 0 else None
+                _count = len(_ratings)
+                _genre_label = filters.get('genre', 'phim')
+                _year_label = f" sau năm {filters.get('year_min')}" if filters.get('year_min') else ""
+                # Tìm các phim vượt mức trung bình
+                if _avg_rating is not None:
+                    _above_avg = _full_filtered[_full_filtered[COL_RATING] > _avg_rating] if COL_RATING in _full_filtered.columns else pd.DataFrame()
+                    _above_avg = _above_avg.sort_values(COL_RATING, ascending=False).head(10)
+                    _stat_rows = []
+                    _stat_rows.append({
+                        "Title": f"[Thống kê: {_genre_label}{_year_label}]",
+                        "Rating": _avg_rating,
+                        "Year": None,
+                        "genres": _genre_label,
+                        "directors": "",
+                        "countries_origin": "",
+                        "stars": "",
+                        "Movie Link": "",
+                        "final_context": f"Điểm IMDb trung bình của {_count} phim {_genre_label}{_year_label} trong cơ sở dữ liệu: {_avg_rating}/10"
+                    })
+                    for _, _r in _above_avg.iterrows():
+                        _stat_rows.append({
+                            "Title": _r.get('Title', ''),
+                            "Rating": _r.get(COL_RATING),
+                            "Year": _r.get(COL_YEAR),
+                            "genres": _r.get('genres', ''),
+                            "directors": _r.get('directors', ''),
+                            "countries_origin": _r.get('countries_origin', ''),
+                            "stars": _r.get('stars', ''),
+                            "Movie Link": _r.get('Movie Link', ''),
+                            "final_context": f"Tên: {_r.get('Title')} | Năm: {_r.get(COL_YEAR)} | Điểm IMDb: {_r.get(COL_RATING)} | Thể loại: {_r.get('genres', '')}"
+                        })
+                    filtered_df = pd.DataFrame(_stat_rows)
+                    route_name = "aggregation_stat"
+        
         # PRIORITY 5 FIX: Nếu không có director/star nhưng có title,
-        # thực hiện tra cứu multi-hop: title → tìm đạo diễn trong dataset → tìm collaborators
-        if not person_name and filters.get("title"):
+        # thực hiện tra cứu multi-hop: title → tìm đạo diễn trong dataset → tìm collaborators.
+        # Bỏ qua nếu P4 đã xử lý query này dưới dạng thống kê (aggregation_stat).
+        if not person_name and filters.get("title") and route_name != "aggregation_stat":
             movie_title = filters["title"]
             # Ưu tiên exact match (case-insensitive) trước để tránh khớp nhầm tên phim gần giống
             exact_match = df[df['Title'].astype(str).str.lower() == movie_title.lower()]
@@ -175,7 +223,8 @@ def run_rag_pipeline(
                 filtered_df = pd.DataFrame(not_found_row)
                 route_name = "aggregation_not_found"
                 
-        if person_name:
+        # Thực hiện Graph RAG tìm cộng tác viên chỉ nếu chưa được xử lý bởi P4 (aggregation_stat)
+        if person_name and route_name != "aggregation_stat":
             try:
                 from chatbot.graph.build_movie_graph import load_or_build_graph
                 from chatbot.graph.graph_query import find_top_collaborator
@@ -199,16 +248,54 @@ def run_rag_pipeline(
                 if top_collabs:
                     collab_rows = []
                     for c in top_collabs:
+                        collab_name = c['name']
+                        # PRIORITY 5 FIX: Bổ sung danh sách phim chung và điểm IMDb trung bình
+                        # để LLM có thể trả lời câu hỏi multi-hop (vai chính/phụ, điểm TB...)
+                        _shared_movies_info = ""
+                        _avg_rating_info = ""
+                        _role_info = ""
+                        try:
+                            from chatbot.config import COL_RATING, COL_STARS
+                            # Tìm phim chung giữa person_name và collab_name trong dataset
+                            _shared = df[
+                                df.get('directors', pd.Series(dtype=str)).astype(str).str.contains(re.escape(person_name), case=False, na=False) &
+                                df.get('stars', pd.Series(dtype=str)).astype(str).str.contains(re.escape(collab_name), case=False, na=False)
+                            ] if 'directors' in df.columns and 'stars' in df.columns else pd.DataFrame()
+                            if _shared.empty:
+                                # Thử ngược lại: collab là đạo diễn, person_name là diễn viên
+                                _shared = df[
+                                    df['directors'].astype(str).str.contains(re.escape(collab_name), case=False, na=False) &
+                                    df['stars'].astype(str).str.contains(re.escape(person_name), case=False, na=False)
+                                ] if 'directors' in df.columns and 'stars' in df.columns else pd.DataFrame()
+                            if not _shared.empty:
+                                _movie_titles = _shared['Title'].tolist()[:5]
+                                _shared_movies_info = f" | Phim chung: {', '.join(_movie_titles)}"
+                                _avg_r = _shared[COL_RATING].dropna().mean() if COL_RATING in _shared.columns else None
+                                if _avg_r is not None:
+                                    _avg_rating_info = f" | Điểm IMDb trung bình: {round(_avg_r, 2)}"
+                                # Phát hiện vai chính/phụ dựa trên vị trí trong cột stars
+                                _lead_count = 0
+                                _support_count = 0
+                                for _, _sr in _shared.iterrows():
+                                    _stars_list = str(_sr.get('stars', '')).split(',')
+                                    _stars_clean = [s.strip() for s in _stars_list]
+                                    if _stars_clean and _stars_clean[0].lower().startswith(collab_name.lower()[:8]):
+                                        _lead_count += 1
+                                    else:
+                                        _support_count += 1
+                                _role_info = f" | Vai chính: {_lead_count} phim, Vai phụ: {_support_count} phim"
+                        except Exception:
+                            pass
                         collab_rows.append({
-                            "Title": f"{c['name']} ({c['type']})",
+                            "Title": f"{collab_name} ({c['type']})",
                             "Rating": c["weight"],
                             "Year": None,
                             "genres": "",
                             "directors": person_name,
                             "countries_origin": "",
-                            "stars": c["name"],
+                            "stars": collab_name,
                             "Movie Link": "",
-                            "final_context": f"Tên: {c['name']} | Vai trò: {c['type']} | Số lần hợp tác: {c['weight']}"
+                            "final_context": f"Tên: {collab_name} | Vai trò: {c['type']} | Số lần hợp tác: {c['weight']}{_shared_movies_info}{_avg_rating_info}{_role_info}"
                         })
                     filtered_df = pd.DataFrame(collab_rows)
                     route_name = "aggregation_graph"

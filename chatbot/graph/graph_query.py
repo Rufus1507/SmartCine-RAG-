@@ -353,6 +353,7 @@ def find_movies_by_collab_path(
             "has_awards": node_data.get("has_awards"),
             "has_oscar": node_data.get("has_oscar"),
             "has_nomination": node_data.get("has_nomination"),
+            "hop_count": len(path) - 1,  # Số bước từ phim gốc tới phim ứng viên (1 = cùng diễn viên/đạo diễn trực tiếp)
             "graph_path_explanation": explanation,
             "graph_path_type": p_type
         })
@@ -361,8 +362,13 @@ def find_movies_by_collab_path(
 
 def find_top_collaborator(graph: nx.MultiDiGraph, person_name: str, top_k: int = 5) -> list[dict]:
     """
-    Tìm top collaborator của một Director/Actor dựa trên trọng số cạnh COLLAB_WITH.
-    person_name: tên director hoặc actor (ví dụ "Christopher Nolan").
+    Tim top collaborator cua mot Director/Actor dua tren trong so canh COLLAB_WITH.
+    person_name: ten director hoac actor (vi du "Christopher Nolan").
+
+    P4 FIX: Graph co canh bidirectional (d->a va a->d deu co COLLAB_WITH weight=N).
+    Phien ban cu cong weight tu ca successors lan predecessors -> bi dem 2 lan.
+    Fix: chi duyet mot chieu (successors), neu khong co thi moi duyet predecessors
+    (truong hop person la Actor - duoc Director->Actor COLLAB_WITH point to).
     """
     person_node = None
     person_name_lower = person_name.lower()
@@ -376,6 +382,9 @@ def find_top_collaborator(graph: nx.MultiDiGraph, person_name: str, top_k: int =
     
     collaborators = {}
     if graph.has_node(person_node):
+        # Chi duyet successors (chieu d_node -> a_node) de tranh double-count.
+        # Do graph co a_node -> d_node la canh nguoc cung COLLAB_WITH weight,
+        # neu dem ca predecessors se bi nhan doi so lan hop tac.
         for v in graph.successors(person_node):
             for key in graph[person_node][v]:
                 etype = graph[person_node][v][key].get("type")
@@ -387,17 +396,21 @@ def find_top_collaborator(graph: nx.MultiDiGraph, person_name: str, top_k: int =
                         collaborators[v] = {"name": vname, "type": vtype, "weight": weight}
                     else:
                         collaborators[v]["weight"] += weight
-        for v in graph.predecessors(person_node):
-            for key in graph[v][person_node]:
-                etype = graph[v][person_node][key].get("type")
-                if etype == "COLLAB_WITH":
-                    weight = graph[v][person_node][key].get("weight", 1)
-                    vtype = graph.nodes[v].get("type")
-                    vname = clean_name(v)
-                    if v not in collaborators:
-                        collaborators[v] = {"name": vname, "type": vtype, "weight": weight}
-                    else:
-                        collaborators[v]["weight"] += weight
+        
+        # Neu khong co successors COLLAB_WITH (person la Actor, khong phai Director),
+        # thi moi duyet predecessors de lay Director -> Actor direction.
+        if not collaborators:
+            for v in graph.predecessors(person_node):
+                for key in graph[v][person_node]:
+                    etype = graph[v][person_node][key].get("type")
+                    if etype == "COLLAB_WITH":
+                        weight = graph[v][person_node][key].get("weight", 1)
+                        vtype = graph.nodes[v].get("type")
+                        vname = clean_name(v)
+                        if v not in collaborators:
+                            collaborators[v] = {"name": vname, "type": vtype, "weight": weight}
+                        else:
+                            collaborators[v]["weight"] += weight
     
     result = sorted(collaborators.values(), key=lambda x: x["weight"], reverse=True)
     return result[:top_k]

@@ -184,12 +184,15 @@ class MultistageRetriever:
         is_similar = False
         if graph_candidates is not None and not graph_candidates.empty:
             base_row, is_similar = self._get_base_movie(df, query, filters)
-            if is_similar:
+            from chatbot.retrieval.retrieval_router import is_director_filmography_query
+            if is_similar or is_director_filmography_query(query, filters):
                 filters_for_retrieval["title"] = None
         
         # --- Shortcut: Exact filter theo director/star → query trực tiếp trên toàn bộ DataFrame ---
+        # P3 FIX: Nếu truy vấn có graph_candidates (stage0_graph đã chạy), ta KHONG đi tắt qua
+        # exact_filter_shortcut, để cho phép đi tiếp vào pipeline multistage nhằm hợp nhất và xếp hạng.
         has_exact_person_filter = any(filters_for_retrieval.get(k) for k in ["director", "star"])
-        if has_exact_person_filter and not is_similar:
+        if has_exact_person_filter and not is_similar and graph_candidates is None:
             result = search_movies_tool(df, filters_for_retrieval, top_k=final_k * 3)
             # Dedup theo imdb_id + country filter
             if not result.empty:
@@ -223,7 +226,16 @@ class MultistageRetriever:
         # Get up to 150 semantic search candidates
         faiss_candidates = pd.DataFrame()
         if faiss_index is not None and embedder_model is not None and query:
-            faiss_candidates = semantic_search_retriever(query, df, faiss_index, embedder_model, top_k=150)
+            # Với truy vấn tìm phim tương tự: dùng mô tả phim gốc thay vì câu hỏi thô để tìm kiếm FAISS.
+            # Tránh FAISS khớp theo từ khoá tiêu đề (ví dụ: "Interstellar" → "Container Interstellar")
+            # thay vì nội dung/chủ đề tương đồng thực sự.
+            faiss_query = query
+            if is_similar and base_row is not None:
+                from chatbot.config import COL_OVERVIEW
+                base_desc = base_row.get(COL_OVERVIEW) or base_row.get("description", "")
+                if base_desc and str(base_desc).strip():
+                    faiss_query = str(base_desc).strip()
+            faiss_candidates = semantic_search_retriever(faiss_query, df, faiss_index, embedder_model, top_k=150)
             
         if trace is not None and not faiss_candidates.empty:
             faiss_trace = []
@@ -344,15 +356,49 @@ class MultistageRetriever:
             else:
                 row_features["semantic_embedding"] = None
                 
-            # Đính kèm graph_score cho ứng viên nếu nó đến từ Graph RAG
-            # Cả hai loại (personnel và content) đều được gán graph_score=1.0 để tăng độ ưu tiên
+            # Tính graph_score theo thang điểm dựa trên số hop và loại đường đi
+            # (personnel: cùng diễn viên/đạo diễn vs shared_attribute: cùng thể loại/quốc gia).
+            # Trước đây là binary flag (1.0 / 0.0) không phân biệt chất lượng liên kết.
             if "graph_path_explanation" in row and pd.notna(row["graph_path_explanation"]):
-                row_features["graph_score"] = 1.0
+                hop = int(row.get("graph_hop_count", 2))
+                p_type_val = row.get("graph_path_type", "personnel")
+                if p_type_val == "personnel":
+                    if hop <= 1:
+                        row_features["graph_score"] = 1.00   # Cùng diễn viên/đạo diễn trực tiếp
+                    elif hop == 2:
+                        row_features["graph_score"] = 0.60   # 2-hop qua nhân sự
+                    else:
+                        row_features["graph_score"] = 0.20   # 3+ hop, xa hơn
+                else:  # shared_attribute (cùng thể loại/quốc gia)
+                    if hop <= 1:
+                        row_features["graph_score"] = 0.50   # Cùng thuộc tính trực tiếp
+                    else:
+                        row_features["graph_score"] = 0.20   # Thuộc tính gián tiếp
             else:
                 row_features["graph_score"] = 0.0
 
-                
-            sim_breakdown = compute_weighted_similarity(row_features, ref_features)
+            # P1 FIX: Xác định tập dimension active để tránh phantom 1.0 score.
+            # Với similar-to query: chỉ content + genre + graph được dùng.
+            # Actor/director của BASE MOVIE không được dùng làm reference khi query
+            # hỏi "phim giống X" (không yêu cầu cùng diễn viên/đạo diễn).
+            if is_similar and base_row is not None:
+                # Similar-to mode: đặt active_dims cứng, loại actor + director khỏi formula
+                _active_dims = {"content", "genre", "graph"}
+            else:
+                # General query mode: bật dim theo các filter thực tế trong query
+                _active_dims = {"content"}  # content luôn active
+                if filters.get("genre"):       _active_dims.add("genre")
+                if filters.get("star"):        _active_dims.add("actor")
+                if filters.get("director"):    _active_dims.add("director")
+                if filters.get("country"):     _active_dims.add("country")
+                # decade và award luôn active nếu ref có dữ liệu (không queryable trực tiếp)
+                _active_dims.add("decade")
+                _active_dims.add("award")
+                # graph chỉ active nếu có graph path
+                if row_features.get("graph_score", 0.0) > 0.0:
+                    _active_dims.add("graph")
+
+            sim_breakdown = compute_weighted_similarity(row_features, ref_features, active_dims=_active_dims)
             
             if trace is not None:
                 clean_sim = {}
@@ -441,7 +487,14 @@ class MultistageRetriever:
         else:
             query_rerank = query or "Phim hay được đánh giá cao."
             
-        reranked_df = rerank_results(query_rerank, top_100_df, top_k=20)
+        # Với similar_to queries: dùng profile phim gốc làm query cho cross-encoder
+        # thay vì câu hỏi thô để so sánh nội dung chính xác hơn
+        base_movie_profile_str = None
+        if is_similar and base_row is not None:
+            base_movie_profile_str = make_profile(base_row, version)
+            
+        reranked_df = rerank_results(query_rerank, top_100_df, top_k=20,
+                                     base_movie_profile=base_movie_profile_str)
         
         if trace is not None and not reranked_df.empty:
             rerank_trace = []

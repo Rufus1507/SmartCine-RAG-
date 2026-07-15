@@ -167,7 +167,18 @@ def preprocess_bm25_query(query: str) -> tuple[list[str], list[str]]:
     # 5. Tách từ
     tokens = query_processed.split()
     
-    generic_tokens = {"imdb", "movie", "film", "phim", "điểm", "diem", "rating"}
+    generic_tokens = {
+        "imdb", "movie", "film", "phim", "điểm", "diem", "rating",
+        "tìm", "tim", "kiếm", "kiem", "có", "co", "trên", "tren", "dưới", "duoi",
+        "năm", "nam", "trong", "ngoại", "ngoai", "trừ", "tru", "nhưng", "nhung",
+        "không", "khong", "phải", "phai", "và", "va", "hoặc", "hoac", "những", "nhung",
+        "các", "cac", "cho", "của", "cua", "tại", "tai", "ở", "o", "được", "duoc",
+        "bộ", "bo", "một", "mot", "như", "nhu", "với", "voi", "từ", "tu", "ra",
+        "đã", "da", "đang", "dang", "sẽ", "se", "từng", "tung", "làm", "lam",
+        "đạo", "diễn", "dao", "dien", "viên", "vien", "vai", "chính", "phụ", "chinh", "phu",
+        "thể", "loại", "the", "loai", "nào", "nao", "sản", "xuất", "san", "xuat",
+        "đề", "de", "ai", "là", "la", "này", "nay", "đó", "do", "bản", "ban", "nước", "nuoc"
+    }
     
     tokenized_query = []
     for token in tokens:
@@ -176,7 +187,7 @@ def preprocess_bm25_query(query: str) -> tuple[list[str], list[str]]:
             removed_tokens.append(token)
             continue
             
-        # Loại bỏ các từ khóa chung chung
+        # Loại bỏ các từ khóa chung chung và stop-words
         if token in generic_tokens:
             removed_tokens.append(token)
             continue
@@ -213,18 +224,25 @@ def build_bm25_index(df: pd.DataFrame) -> BM25Okapi:
         countries = str(row.get("countries_origin", ""))
         description = str(row.get(desc_col, ""))
         
-        # Tokenize từng trường và lặp lại theo trọng số tương ứng
-        title_tokens = clean_tokenize_corpus(title) * 2
-        genres_tokens = clean_tokenize_corpus(genres) * 4
+        # Trọng số trường BM25 (P6 tuned):
+        # - title ×3: tăng từ ×2 để khớp tốt hơn cho truy vấn exact-title
+        # - genres ×3: giảm từ ×4 để giảm dominance thể loại, cho phép khớp cross-genre
+        # - directors ×3: giữ nguyên — quan trọng cho truy vấn theo đạo diễn
+        # - stars ×3: giữ nguyên — quan trọng cho truy vấn theo diễn viên
+        # - countries ×2: giữ nguyên
+        # - description ×2: tăng từ ×1 để cải thiện khớp chủ đề/nội dung cho similar_to queries
+        title_tokens = clean_tokenize_corpus(title) * 3
+        genres_tokens = clean_tokenize_corpus(genres) * 3
         directors_tokens = clean_tokenize_corpus(directors) * 3
         stars_tokens = clean_tokenize_corpus(stars) * 3
         countries_tokens = clean_tokenize_corpus(countries) * 2
-        desc_tokens = clean_tokenize_corpus(description) * 1
+        desc_tokens = clean_tokenize_corpus(description) * 2
         
         doc_tokens = title_tokens + genres_tokens + directors_tokens + stars_tokens + countries_tokens + desc_tokens
         corpus.append(doc_tokens)
         
     return BM25Okapi(corpus)
+
 
 def bm25_search(query: str, df: pd.DataFrame, bm25_index: BM25Okapi, top_k: int = 100, trace: dict = None) -> pd.DataFrame:
     """
