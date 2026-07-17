@@ -1,62 +1,702 @@
 [
   {
-    "id": "hq1",
-    "question": "Tìm các phim hành động hoặc khoa học viễn tưởng có điểm IMDb trên 8.5, thời lượng dưới 150 phút và được phát hành sau năm 2010.",
-    "difficulty": "hard",
-    "category": "complex_filter"
+    "id": "q1",
+    "question": "Tìm cho tôi một bộ phim về khủng long.",
+    "level": 1,
+    "difficulty": "very_easy",
+    "category": "semantic_retrieval"
   },
   {
-    "id": "hq2",
-    "question": "Christopher Nolan đã đạo diễn những bộ phim nào mà đồng thời ông cũng tham gia viết kịch bản?",
-    "difficulty": "hard",
-    "category": "multi_constraint"
+    "id": "q2",
+    "question": "Có phim nào kể về một chuyến du hành vượt thời gian không?",
+    "level": 1,
+    "difficulty": "very_easy",
+    "category": "semantic_retrieval"
   },
   {
-    "id": "hq3",
-    "question": "Hãy gợi ý cho tôi những bộ phim có phong cách tương tự Interstellar nhưng không phải do Christopher Nolan đạo diễn.",
-    "difficulty": "hard",
+    "id": "q3",
+    "question": "Gợi ý một bộ phim hoạt hình dành cho trẻ em.",
+    "level": 1,
+    "difficulty": "very_easy",
     "category": "recommendation"
   },
   {
-    "id": "hq4",
-    "question": "Tìm những bộ phim giống Inception nhưng có bối cảnh ngoài không gian hoặc liên quan đến du hành thời gian.",
-    "difficulty": "hard",
-    "category": "semantic_similarity"
+    "id": "q4",
+    "question": "Tôi muốn xem phim về siêu anh hùng.",
+    "level": 1,
+    "difficulty": "very_easy",
+    "category": "semantic_retrieval"
   },
   {
-    "id": "hq5",
-    "question": "Có những bộ phim kinh dị nào sau năm 2020 đạt điểm IMDb cao hơn mức trung bình của toàn bộ phim kinh dị trong cơ sở dữ liệu?",
+    "id": "q5",
+    "question": "Có bộ phim nào nói về tình bạn giữa con người và robot không?",
+    "level": 1,
+    "difficulty": "very_easy",
+    "category": "semantic_retrieval"
+  },
+  {
+    "id": "q6",
+    "question": "Tìm phim về cuộc sống ở vùng nông thôn.",
+    "level": 1,
+    "difficulty": "very_easy",
+    "category": "semantic_retrieval"
+  },
+  {
+    "id": "q7",
+    "question": "Gợi ý một bộ phim về đề tài chiến tranh.",
+    "level": 1,
+    "difficulty": "very_easy",
+    "category": "recommendation"
+  },
+  {
+    "id": "q8",
+    "question": "Có phim nào kể về một thám tử phá án không?",
+    "level": 1,
+    "difficulty": "very_easy",
+    "category": "semantic_retrieval"
+  },
+  {
+    "id": "q9",
+    "question": "Tôi muốn tìm phim về vũ trụ và các phi hành gia.",
+    "level": 1,
+    "difficulty": "very_easy",
+    "category": "semantic_retrieval"
+  },
+  {
+    "id": "q10",
+    "question": "Gợi ý một bộ phim tình cảm lãng mạn nhẹ nhàng.",
+    "level": 1,
+    "difficulty": "very_easy",
+    "category": "recommendation"
+  },
+  {
+    "id": "q11",
+    "question": "Tìm phim kinh dị có ma quỷ ám ảnh trong một căn nhà cũ.",
+    "level": 2,
+    "difficulty": "easy",
+    "category": "semantic_retrieval"
+  },
+  {
+    "id": "q12",
+    "question": "Gợi ý phim hài có bối cảnh đám cưới.",
+    "level": 2,
+    "difficulty": "easy",
+    "category": "recommendation"
+  },
+  {
+    "id": "q13",
+    "question": "Tìm phim hành động có cảnh rượt đuổi xe hơi.",
+    "level": 2,
+    "difficulty": "easy",
+    "category": "semantic_retrieval"
+  },
+  {
+    "id": "q14",
+    "question": "Gợi ý phim tâm lý về mối quan hệ mẹ con.",
+    "level": 2,
+    "difficulty": "easy",
+    "category": "recommendation"
+  },
+  {
+    "id": "q15",
+    "question": "Tìm phim khoa học viễn tưởng về trí tuệ nhân tạo nổi loạn.",
+    "level": 2,
+    "difficulty": "easy",
+    "category": "semantic_retrieval"
+  },
+  {
+    "id": "q16",
+    "question": "Gợi ý phim tài liệu về động vật hoang dã châu Phi.",
+    "level": 2,
+    "difficulty": "easy",
+    "category": "recommendation"
+  },
+  {
+    "id": "q17",
+    "question": "Tìm phim phiêu lưu về kho báu bị chôn giấu.",
+    "level": 2,
+    "difficulty": "easy",
+    "category": "semantic_retrieval"
+  },
+  {
+    "id": "q18",
+    "question": "Gợi ý phim âm nhạc về một ban nhạc rock.",
+    "level": 2,
+    "difficulty": "easy",
+    "category": "recommendation"
+  },
+  {
+    "id": "q19",
+    "question": "Tìm phim thể thao về một đội bóng đá nghiệp dư.",
+    "level": 2,
+    "difficulty": "easy",
+    "category": "semantic_retrieval"
+  },
+  {
+    "id": "q20",
+    "question": "Gợi ý phim tội phạm về một vụ cướp ngân hàng.",
+    "level": 2,
+    "difficulty": "easy",
+    "category": "recommendation"
+  },
+  {
+    "id": "q21",
+    "question": "Tìm các phim hài phát hành sau năm 2018.",
+    "level": 3,
+    "difficulty": "easy_medium",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q22",
+    "question": "Gợi ý phim có điểm IMDb trên 8.0.",
+    "level": 3,
+    "difficulty": "easy_medium",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q23",
+    "question": "Tìm phim hoạt hình có thời lượng dưới 100 phút.",
+    "level": 3,
+    "difficulty": "easy_medium",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q24",
+    "question": "Gợi ý phim kinh dị sản xuất tại Hàn Quốc.",
+    "level": 3,
+    "difficulty": "easy_medium",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q25",
+    "question": "Tìm phim hành động phát hành trước năm 2000.",
+    "level": 3,
+    "difficulty": "easy_medium",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q26",
+    "question": "Gợi ý phim tâm lý có điểm IMDb từ 7.5 trở lên.",
+    "level": 3,
+    "difficulty": "easy_medium",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q27",
+    "question": "Tìm phim khoa học viễn tưởng ra mắt trong năm 2023.",
+    "level": 3,
+    "difficulty": "easy_medium",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q28",
+    "question": "Gợi ý phim tình cảm có thời lượng trên 120 phút.",
+    "level": 3,
+    "difficulty": "easy_medium",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q29",
+    "question": "Tìm phim chiến tranh sản xuất tại Anh.",
+    "level": 3,
+    "difficulty": "easy_medium",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q30",
+    "question": "Gợi ý phim tội phạm từng đoạt giải Oscar.",
+    "level": 3,
+    "difficulty": "easy_medium",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q31",
+    "question": "Tìm phim vừa có yếu tố kinh dị vừa mang tính hài hước đen tối.",
+    "level": 4,
+    "difficulty": "medium",
+    "category": "semantic_reasoning"
+  },
+  {
+    "id": "q32",
+    "question": "Gợi ý phim khoa học viễn tưởng có tông u ám, mang tính triết lý về sự tồn tại.",
+    "level": 4,
+    "difficulty": "medium",
+    "category": "semantic_reasoning"
+  },
+  {
+    "id": "q33",
+    "question": "Tìm phim hành động nhưng tập trung nhiều vào phát triển tâm lý nhân vật.",
+    "level": 4,
+    "difficulty": "medium",
+    "category": "semantic_reasoning"
+  },
+  {
+    "id": "q34",
+    "question": "Gợi ý phim hoạt hình dành cho người lớn với chủ đề xã hội.",
+    "level": 4,
+    "difficulty": "medium",
+    "category": "semantic_reasoning"
+  },
+  {
+    "id": "q35",
+    "question": "Tìm phim tình cảm có bối cảnh chiến tranh.",
+    "level": 4,
+    "difficulty": "medium",
+    "category": "semantic_reasoning"
+  },
+  {
+    "id": "q36",
+    "question": "Gợi ý phim tội phạm kể theo góc nhìn phi tuyến tính, không theo trình tự thời gian.",
+    "level": 4,
+    "difficulty": "medium",
+    "category": "semantic_reasoning"
+  },
+  {
+    "id": "q37",
+    "question": "Tìm phim phiêu lưu có yếu tố giả tưởng và thần thoại.",
+    "level": 4,
+    "difficulty": "medium",
+    "category": "semantic_reasoning"
+  },
+  {
+    "id": "q38",
+    "question": "Gợi ý phim tâm lý xoay quanh chứng rối loạn nhân cách.",
+    "level": 4,
+    "difficulty": "medium",
+    "category": "semantic_reasoning"
+  },
+  {
+    "id": "q39",
+    "question": "Tìm phim thể thao truyền cảm hứng vượt qua nghịch cảnh cá nhân.",
+    "level": 4,
+    "difficulty": "medium",
+    "category": "semantic_reasoning"
+  },
+  {
+    "id": "q40",
+    "question": "Gợi ý phim âm nhạc dựa trên câu chuyện có thật về tiểu sử một nghệ sĩ.",
+    "level": 4,
+    "difficulty": "medium",
+    "category": "semantic_reasoning"
+  },
+  {
+    "id": "q41",
+    "question": "Tìm phim hành động có điểm IMDb trên 7.5 và phát hành sau năm 2015.",
+    "level": 5,
+    "difficulty": "medium",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q42",
+    "question": "Gợi ý phim hài có thời lượng dưới 110 phút và sản xuất tại Mỹ.",
+    "level": 5,
+    "difficulty": "medium",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q43",
+    "question": "Tìm phim kinh dị phát hành từ năm 2019 đến 2023.",
+    "level": 5,
+    "difficulty": "medium",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q44",
+    "question": "Gợi ý phim khoa học viễn tưởng có điểm IMDb trên 8.0 và thời lượng dưới 140 phút.",
+    "level": 5,
+    "difficulty": "medium",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q45",
+    "question": "Tìm phim tâm lý sản xuất tại Pháp với điểm IMDb trên 7.0.",
+    "level": 5,
+    "difficulty": "medium",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q46",
+    "question": "Gợi ý phim hoạt hình phát hành sau năm 2020 có điểm IMDb trên 7.5.",
+    "level": 5,
+    "difficulty": "medium",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q47",
+    "question": "Tìm phim chiến tranh có thời lượng trên 150 phút và sản xuất trước năm 1990.",
+    "level": 5,
+    "difficulty": "medium",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q48",
+    "question": "Gợi ý phim tình cảm Hàn Quốc phát hành trong 5 năm gần đây.",
+    "level": 5,
+    "difficulty": "medium",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q49",
+    "question": "Tìm phim tội phạm có điểm IMDb trên 8.5.",
+    "level": 5,
+    "difficulty": "medium",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q50",
+    "question": "Gợi ý phim phiêu lưu dành cho gia đình, thời lượng dưới 120 phút.",
+    "level": 5,
+    "difficulty": "medium",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q51",
+    "question": "Tìm các phim hành động hoặc khoa học viễn tưởng có điểm IMDb trên 8.0, thời lượng dưới 140 phút và phát hành sau năm 2015.",
+    "level": 6,
+    "difficulty": "medium_hard",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q52",
+    "question": "Gợi ý phim hài hoặc tâm lý sản xuất tại Anh, điểm IMDb trên 7.5, phát hành từ 2010 đến 2020.",
+    "level": 6,
+    "difficulty": "medium_hard",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q53",
+    "question": "Tìm phim kinh dị Hàn Quốc hoặc Nhật Bản, thời lượng dưới 110 phút, điểm trên 7.0.",
+    "level": 6,
+    "difficulty": "medium_hard",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q54",
+    "question": "Gợi ý phim tội phạm Mỹ có điểm trên 8.0, phát hành sau năm 2000, thời lượng trên 130 phút.",
+    "level": 6,
+    "difficulty": "medium_hard",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q55",
+    "question": "Tìm phim hoạt hình gia đình, điểm IMDb trên 7.8, thời lượng dưới 100 phút, phát hành sau năm 2018.",
+    "level": 6,
+    "difficulty": "medium_hard",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q56",
+    "question": "Gợi ý phim chiến tranh hoặc lịch sử, điểm trên 8.0, sản xuất tại Mỹ hoặc Anh, thời lượng trên 140 phút.",
+    "level": 6,
+    "difficulty": "medium_hard",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q57",
+    "question": "Tìm phim tâm lý hoặc chính kịch có điểm từ 8.5 trở lên, phát hành trước năm 2010.",
+    "level": 6,
+    "difficulty": "medium_hard",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q58",
+    "question": "Gợi ý phim khoa học viễn tưởng Trung Quốc hoặc Nhật Bản, điểm trên 7.5, phát hành sau năm 2019.",
+    "level": 6,
+    "difficulty": "medium_hard",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q59",
+    "question": "Tìm phim tình cảm hoặc hài lãng mạn, điểm trên 7.0, thời lượng dưới 105 phút, sản xuất sau năm 2015.",
+    "level": 6,
+    "difficulty": "medium_hard",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q60",
+    "question": "Gợi ý phim phiêu lưu giả tưởng có điểm trên 8.0, thời lượng trên 120 phút, phát hành trong thập niên 2010.",
+    "level": 6,
+    "difficulty": "medium_hard",
+    "category": "metadata_filter"
+  },
+  {
+    "id": "q61",
+    "question": "Gợi ý những bộ phim có phong cách tương tự Interstellar nhưng không phải do Christopher Nolan đạo diễn.",
+    "level": 7,
+    "difficulty": "hard",
+    "category": "negative_constraint"
+  },
+  {
+    "id": "q62",
+    "question": "Tìm phim giống Parasite về mặt châm biếm xã hội nhưng không phải của đạo diễn Bong Joon-ho.",
+    "level": 7,
+    "difficulty": "hard",
+    "category": "negative_constraint"
+  },
+  {
+    "id": "q63",
+    "question": "Gợi ý phim hành động giống John Wick nhưng không có Keanu Reeves đóng chính.",
+    "level": 7,
+    "difficulty": "hard",
+    "category": "negative_constraint"
+  },
+  {
+    "id": "q64",
+    "question": "Tìm phim kinh dị tương tự Get Out nhưng không phải do Jordan Peele đạo diễn.",
+    "level": 7,
+    "difficulty": "hard",
+    "category": "negative_constraint"
+  },
+  {
+    "id": "q65",
+    "question": "Gợi ý phim hoạt hình theo phong cách Studio Ghibli nhưng không phải do Hayao Miyazaki đạo diễn.",
+    "level": 7,
+    "difficulty": "hard",
+    "category": "negative_constraint"
+  },
+  {
+    "id": "q66",
+    "question": "Tìm phim tâm lý tội phạm giống Joker nhưng không có Joaquin Phoenix đóng chính.",
+    "level": 7,
+    "difficulty": "hard",
+    "category": "negative_constraint"
+  },
+  {
+    "id": "q67",
+    "question": "Gợi ý phim khoa học viễn tưởng giống Inception nhưng không do Christopher Nolan thực hiện.",
+    "level": 7,
+    "difficulty": "hard",
+    "category": "negative_constraint"
+  },
+  {
+    "id": "q68",
+    "question": "Tìm phim chiến tranh giống Dunkirk nhưng không sản xuất tại Anh.",
+    "level": 7,
+    "difficulty": "hard",
+    "category": "negative_constraint"
+  },
+  {
+    "id": "q69",
+    "question": "Gợi ý phim tình cảm giống La La Land nhưng không có yếu tố âm nhạc, ca hát.",
+    "level": 7,
+    "difficulty": "hard",
+    "category": "negative_constraint"
+  },
+  {
+    "id": "q70",
+    "question": "Tìm phim hài đen tương tự phong cách Quentin Tarantino nhưng không phải do ông đạo diễn.",
+    "level": 7,
+    "difficulty": "hard",
+    "category": "negative_constraint"
+  },
+  {
+    "id": "q71",
+    "question": "Có những bộ phim kinh dị nào sau năm 2020 đạt điểm IMDb cao hơn mức trung bình của toàn bộ phim kinh dị trong database?",
+    "level": 8,
     "difficulty": "very_hard",
     "category": "aggregation"
   },
   {
-    "id": "hq6",
-    "question": "Diễn viên nào hợp tác với Christopher Nolan nhiều nhất và trong những bộ phim đó họ thường đảm nhận vai chính hay vai phụ?",
+    "id": "q72",
+    "question": "Thể loại nào có điểm IMDb trung bình cao nhất trong toàn bộ cơ sở dữ liệu?",
+    "level": 8,
     "difficulty": "very_hard",
+    "category": "aggregation"
+  },
+  {
+    "id": "q73",
+    "question": "So sánh điểm IMDb trung bình của phim hài Mỹ và phim hài Hàn Quốc.",
+    "level": 8,
+    "difficulty": "very_hard",
+    "category": "aggregation"
+  },
+  {
+    "id": "q74",
+    "question": "Có bao nhiêu phim khoa học viễn tưởng phát hành sau năm 2015 đạt điểm trên mức trung bình chung của toàn ngành?",
+    "level": 8,
+    "difficulty": "very_hard",
+    "category": "aggregation"
+  },
+  {
+    "id": "q75",
+    "question": "Đạo diễn nào có số lượng phim đạt điểm trên 8.0 nhiều nhất trong database?",
+    "level": 8,
+    "difficulty": "very_hard",
+    "category": "aggregation"
+  },
+  {
+    "id": "q76",
+    "question": "Thời lượng trung bình của các phim đoạt giải Oscar hạng mục Phim hay nhất là bao nhiêu?",
+    "level": 8,
+    "difficulty": "very_hard",
+    "category": "aggregation"
+  },
+  {
+    "id": "q77",
+    "question": "Quốc gia nào sản xuất nhiều phim tội phạm đạt điểm IMDb trên 8.0 nhất?",
+    "level": 8,
+    "difficulty": "very_hard",
+    "category": "aggregation"
+  },
+  {
+    "id": "q78",
+    "question": "Tìm những phim hoạt hình có điểm IMDb cao hơn mức trung bình của thể loại tâm lý.",
+    "level": 8,
+    "difficulty": "very_hard",
+    "category": "aggregation"
+  },
+  {
+    "id": "q79",
+    "question": "Năm nào có số lượng phim hành động điểm cao (trên 8.0) được phát hành nhiều nhất?",
+    "level": 8,
+    "difficulty": "very_hard",
+    "category": "aggregation"
+  },
+  {
+    "id": "q80",
+    "question": "So sánh thời lượng trung bình giữa phim chiến tranh và phim tình cảm trong database.",
+    "level": 8,
+    "difficulty": "very_hard",
+    "category": "aggregation"
+  },
+  {
+    "id": "q81",
+    "question": "Diễn viên nào hợp tác với Christopher Nolan nhiều nhất và họ thường đóng vai chính hay vai phụ?",
+    "level": 9,
+    "difficulty": "expert",
     "category": "graph_reasoning"
   },
   {
-    "id": "hq7",
-    "question": "Hãy gợi ý các phim tâm lý của Mỹ từng đoạt giải Oscar nhưng chưa có phần tiếp theo.",
-    "difficulty": "very_hard",
-    "category": "recommendation"
-  },
-  {
-    "id": "hq8",
-    "question": "Ngoài Interstellar, hãy tìm những bộ phim có chủ đề khám phá vũ trụ, cảm xúc gia đình và điểm IMDb từ 8.0 trở lên.",
-    "difficulty": "hard",
-    "category": "semantic_similarity"
-  },
-  {
-    "id": "hq9",
-    "question": "Leonardo DiCaprio đã hợp tác với những đạo diễn nào nhiều hơn một lần sau năm 2010 và các bộ phim đó có điểm IMDb trung bình là bao nhiêu?",
-    "difficulty": "very_hard",
-    "category": "graph_aggregation"
-  },
-  {
-    "id": "hq10",
-    "question": "Đạo diễn của Alien: Romulus từng hợp tác với những diễn viên nào nhiều hơn một lần và các bộ phim đó thuộc những thể loại gì?",
+    "id": "q82",
+    "question": "Leonardo DiCaprio đã hợp tác với những đạo diễn nào nhiều hơn một lần?",
+    "level": 9,
     "difficulty": "expert",
-    "category": "multi_hop"
+    "category": "graph_reasoning"
+  },
+  {
+    "id": "q83",
+    "question": "Đạo diễn Bong Joon-ho từng làm việc cùng những diễn viên nào nhiều lần?",
+    "level": 9,
+    "difficulty": "expert",
+    "category": "graph_reasoning"
+  },
+  {
+    "id": "q84",
+    "question": "Christopher Nolan đã đạo diễn những bộ phim nào mà đồng thời ông cũng tham gia viết kịch bản?",
+    "level": 9,
+    "difficulty": "expert",
+    "category": "graph_reasoning"
+  },
+  {
+    "id": "q85",
+    "question": "Diễn viên nào từng đóng chung với Meryl Streep trong nhiều hơn một bộ phim?",
+    "level": 9,
+    "difficulty": "expert",
+    "category": "graph_reasoning"
+  },
+  {
+    "id": "q86",
+    "question": "Đạo diễn nào từng hợp tác với nhà soạn nhạc Hans Zimmer nhiều lần nhất?",
+    "level": 9,
+    "difficulty": "expert",
+    "category": "graph_reasoning"
+  },
+  {
+    "id": "q87",
+    "question": "Tom Hanks và Steven Spielberg đã hợp tác với nhau trong những bộ phim nào?",
+    "level": 9,
+    "difficulty": "expert",
+    "category": "graph_reasoning"
+  },
+  {
+    "id": "q88",
+    "question": "Diễn viên nào thường xuyên xuất hiện trong các phim của Quentin Tarantino?",
+    "level": 9,
+    "difficulty": "expert",
+    "category": "graph_reasoning"
+  },
+  {
+    "id": "q89",
+    "question": "Đạo diễn nào đã hợp tác nhiều lần với diễn viên Cillian Murphy?",
+    "level": 9,
+    "difficulty": "expert",
+    "category": "graph_reasoning"
+  },
+  {
+    "id": "q90",
+    "question": "Những diễn viên nào từng đóng cùng nhau trong ít nhất hai bộ phim của đạo diễn Martin Scorsese?",
+    "level": 9,
+    "difficulty": "expert",
+    "category": "graph_reasoning"
+  },
+  {
+    "id": "q91",
+    "question": "Đạo diễn của Alien: Romulus từng hợp tác với những diễn viên nào nhiều hơn một lần và các bộ phim đó thuộc những thể loại gì?",
+    "level": 10,
+    "difficulty": "expert_plus",
+    "category": "multi_hop_reasoning"
+  },
+  {
+    "id": "q92",
+    "question": "Những diễn viên nào từng đóng chung với cả Leonardo DiCaprio và một diễn viên trong phim của Christopher Nolan, trong các phim khác nhau sau năm 2010?",
+    "level": 10,
+    "difficulty": "expert_plus",
+    "category": "multi_hop_reasoning"
+  },
+  {
+    "id": "q93",
+    "question": "Đạo diễn nào từng hợp tác với diễn viên chính của Oppenheimer trong một bộ phim khác trước năm 2015, và bộ phim đó đạt điểm IMDb bao nhiêu?",
+    "level": 10,
+    "difficulty": "expert_plus",
+    "category": "multi_hop_reasoning"
+  },
+  {
+    "id": "q94",
+    "question": "Trong số các diễn viên hợp tác nhiều lần với Martin Scorsese, ai từng đóng phim với một đạo diễn khác đạt điểm IMDb trên 8.5 sau năm 2018?",
+    "level": 10,
+    "difficulty": "expert_plus",
+    "category": "multi_hop_reasoning"
+  },
+  {
+    "id": "q95",
+    "question": "Đạo diễn của Parasite từng làm việc với diễn viên nào, và diễn viên đó từng đóng phim với đạo diễn nước ngoài nào khác?",
+    "level": 10,
+    "difficulty": "expert_plus",
+    "category": "multi_hop_reasoning"
+  },
+  {
+    "id": "q96",
+    "question": "Diễn viên nào xuất hiện trong nhiều phim đoạt giải Oscar nhất, và các đạo diễn của những phim đó có từng hợp tác lại với nhau không?",
+    "level": 10,
+    "difficulty": "expert_plus",
+    "category": "multi_hop_reasoning"
+  },
+  {
+    "id": "q97",
+    "question": "Trong mạng lưới hợp tác của Quentin Tarantino, diễn viên nào có kết nối gián tiếp qua một diễn viên khác với các phim của Christopher Nolan?",
+    "level": 10,
+    "difficulty": "expert_plus",
+    "category": "multi_hop_reasoning"
+  },
+  {
+    "id": "q98",
+    "question": "Đạo diễn nào hợp tác từ 2 lần trở lên với diễn viên đóng vai chính trong Dune: Part Two, tính từ sau năm 2015?",
+    "level": 10,
+    "difficulty": "expert_plus",
+    "category": "multi_hop_reasoning"
+  },
+  {
+    "id": "q99",
+    "question": "Tìm các diễn viên đóng vai chính trong ít nhất 2 phim của cùng một đạo diễn đạt điểm IMDb trên 8.0, và liệt kê các thể loại phim đó.",
+    "level": 10,
+    "difficulty": "expert_plus",
+    "category": "multi_hop_reasoning"
+  },
+  {
+    "id": "q100",
+    "question": "Từ đạo diễn của Everything Everywhere All at Once, tìm diễn viên hợp tác nhiều lần với người này, rồi tìm đạo diễn khác mà diễn viên đó từng làm việc cùng sau năm 2015.",
+    "level": 10,
+    "difficulty": "expert_plus",
+    "category": "multi_hop_reasoning"
   }
 ]

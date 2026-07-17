@@ -57,13 +57,36 @@ def main():
         questions = json.load(f)
         
     print(f"📋 Loaded {len(questions)} test questions.")
-    
-    results = []
-    
+
+    # Load existing results (for resume support)
+    os.makedirs(os.path.dirname(results_path), exist_ok=True)
+    if os.path.exists(results_path):
+        with open(results_path, "r", encoding="utf-8") as f:
+            try:
+                results = json.load(f)
+            except json.JSONDecodeError:
+                results = []
+        done_ids = {r["id"] for r in results}
+        print(f"♻️  Resuming: {len(done_ids)} question(s) already completed, skipping them.")
+    else:
+        results = []
+        done_ids = set()
+
+    def save_results():
+        """Persist current results list to disk immediately."""
+        with open(results_path, "w", encoding="utf-8") as f:
+            json.dump(results, f, ensure_ascii=False, indent=2)
+
     # 3. Execution Loop
     for idx, q in enumerate(questions):
         q_id = q["id"]
         query = q["question"]
+
+        # Skip questions already processed (resume logic)
+        if q_id in done_ids:
+            print(f"⏭️  Skipping [{idx+1}/{len(questions)}] {q_id} (already done)")
+            continue
+
         print(f"👉 Running [{idx+1}/{len(questions)}] {q_id}: '{query}' ...")
         
         t_start = time.time()
@@ -101,8 +124,8 @@ def main():
                         "title": row.get("Title"),
                         "imdb_id": row.get("imdb_id")
                     })
-                    
-            results.append({
+
+            result_entry = {
                 "id": q_id,
                 "question": query,
                 "difficulty": q.get("difficulty"),
@@ -110,14 +133,15 @@ def main():
                 "answer_result": answer_result,
                 "trace": trace,
                 "movies": movies
-            })
+            }
+            results.append(result_entry)
             duration = time.time() - t_start
             print(f"   [{idx+1}/{len(questions)}] {q_id} done in {duration:.2f}s")
             
         except Exception as e:
             duration = time.time() - t_start
             print(f"❌ [{idx+1}/{len(questions)}] {q_id} FAILED in {duration:.2f}s: {e}")
-            results.append({
+            result_entry = {
                 "id": q_id,
                 "question": query,
                 "difficulty": q.get("difficulty"),
@@ -126,16 +150,17 @@ def main():
                 "answer_result": f"Error during pipeline execution: {e}",
                 "trace": None,
                 "movies": []
-            })
-            
-    # 5. Save raw results to eval/hq_results_raw.json
-    try:
-        os.makedirs(os.path.dirname(results_path), exist_ok=True)
-        with open(results_path, "w", encoding="utf-8") as f:
-            json.dump(results, f, ensure_ascii=False, indent=2)
-        print(f"\n💾 Saved raw results to {results_path}")
-    except Exception as e:
-        print(f"❌ Failed to save results: {e}")
+            }
+            results.append(result_entry)
+
+        # ── Save after EVERY question (success or failure) ──────────────────
+        try:
+            save_results()
+            print(f"   💾 Saved progress ({len(results)} result(s)) → {results_path}")
+        except Exception as save_err:
+            print(f"   ⚠️  Could not save progress: {save_err}")
+
+    print(f"\n✅ All done. {len(results)} result(s) saved to {results_path}")
 
 if __name__ == "__main__":
     main()
