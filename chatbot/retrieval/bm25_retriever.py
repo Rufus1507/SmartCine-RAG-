@@ -4,82 +4,128 @@ import pandas as pd
 import numpy as np
 from rank_bm25 import BM25Okapi
 
+# Bản đồ dịch từ Việt sang Anh (Dùng cho cả Query và Corpus)
+TRANSLATION_MAP = {
+    "khoa học viễn tưởng": "sci-fi",
+    "viễn tưởng": "sci-fi",
+    "science fiction": "sci-fi",
+    "hành động": "action",
+    "hài hước": "comedy",
+    "ca nhạc": "music",
+    "âm nhạc": "music",
+    "tình cảm": "romance",
+    "lãng mạn": "romance",
+    "hoạt hình": "animation",
+    "phiêu lưu": "adventure",
+    "tội phạm": "crime",
+    "hình sự": "crime",
+    "giật gân": "thriller",
+    "thần thoại": "fantasy",
+    "tài liệu": "documentary",
+    "gia đình": "family",
+    "chiến tranh": "war",
+    "lịch sử": "history",
+    "miền tây": "western",
+    "nhật bản": "japan",
+    "hàn quốc": "south korea",
+    "united kingdom": "united kingdom",
+    "nước anh": "united kingdom",
+    "nước pháp": "france",
+    "trung quốc": "china",
+    "hồng kông": "hong kong",
+    "hong kong": "hong kong",
+    "đài loan": "taiwan",
+    "ấn độ": "india",
+    "nước đức": "germany",
+    "nước ý": "italy",
+    "tây ban nha": "spain",
+    "thái lan": "thailand",
+    "nước úc": "australia",
+    "hoa kỳ": "united states",
+    "hài": "comedy",
+    "mỹ": "united states",
+    "hàn": "south korea",
+    "nhật": "japan",
+    "anh": "united kingdom",
+    "pháp": "france",
+    "trung": "china",
+    "đức": "germany",
+    "ý": "italy",
+    "úc": "australia",
+    "thái": "thailand",
+    "ma": "horror",
+    "kinh dị": "horror",
+    "kịch tính": "drama",
+    "chính kịch": "drama",
+    "tâm lý": "drama",
+    "nhạc": "music",
+    "nga": "russia",
+    "gợi ý": "suggest",
+    "giống như": "like",
+    "giống": "like",
+    "tương tự": "like",
+    # Sửa lỗi mixed-language: dịch thêm các cụm từ tiếng Việt phổ biến
+    # thường xuất hiện sau khi các từ genre/country đã được dịch
+    "dành cho trẻ em": "for children",
+    "trẻ em": "children",
+    "dành cho": "for",
+    "tình bạn": "friendship",
+    "con người": "human",
+    "người máy": "robot",
+    "vũ trụ": "space",
+    "siêu anh hùng": "superhero",
+    "xuyên không": "time travel",
+    "du hành thời gian": "time travel",
+    "sống sót": "survival",
+    "báo thù": "revenge",
+    "phục thù": "revenge",
+    "thanh thiếu niên": "teen",
+    "lớn lên": "coming of age",
+    "trưởng thành": "coming of age",
+    "huyền bí": "mystery",
+    "bí ẩn": "mystery",
+    "thể thao": "sport",
+    "lãng mạng": "romance",
+    "tuổi thơ": "childhood",
+    # Glossary bổ sung cho P1
+    "kho báu bị chôn giấu": "buried treasure",
+    "kho báu": "treasure",
+    "bị chôn giấu": "buried",
+    "chôn giấu": "buried",
+    "hoang dã châu phi": "african wildlife",
+    "động vật hoang dã": "wildlife",
+    "hoang dã": "wildlife",
+    "động vật": "animal",
+    "châu phi": "africa",
+    "siêu anh hùng": "superhero",
+    "vũ trụ": "space",
+    "ngoài hành tinh": "alien",
+    "người ngoài hành tinh": "alien",
+    "quái vật": "monster",
+    "tận thế": "apocalypse",
+    "hậu tận thế": "post-apocalypse",
+    "khủng long": "dinosaur",
+    "thảm họa": "disaster"
+}
+
+# Tiền biên dịch (pre-compile) regex cho dịch thuật để tối ưu hóa hiệu năng
+_TRANSLATION_REGEXES = []
+for key in sorted(TRANSLATION_MAP.keys(), key=len, reverse=True):
+    val = TRANSLATION_MAP[key]
+    pattern = re.compile(rf'(?<!\w){re.escape(key)}(?!\w)', re.IGNORECASE)
+    _TRANSLATION_REGEXES.append((pattern, val))
+
 def replace_vietnamese_terms(text: str) -> str:
     """
     Dịch các từ/cụm từ thể loại và quốc gia tiếng Việt sang tiếng Anh 
     để khớp với dữ liệu tiếng Anh trong cơ sở dữ liệu.
     """
-    translation_map = {
-        "khoa học viễn tưởng": "sci-fi",
-        "viễn tưởng": "sci-fi",
-        "science fiction": "sci-fi",
-        "hành động": "action",
-        "hài hước": "comedy",
-        "ca nhạc": "music",
-        "âm nhạc": "music",
-        "tình cảm": "romance",
-        "lãng mạn": "romance",
-        "hoạt hình": "animation",
-        "phiêu lưu": "adventure",
-        "tội phạm": "crime",
-        "hình sự": "crime",
-        "giật gân": "thriller",
-        "thần thoại": "fantasy",
-        "tài liệu": "documentary",
-        "gia đình": "family",
-        "chiến tranh": "war",
-        "lịch sử": "history",
-        "miền tây": "western",
-        "nhật bản": "japan",
-        "hàn quốc": "south korea",
-        "united kingdom": "united kingdom",
-        "nước anh": "united kingdom",
-        "nước pháp": "france",
-        "trung quốc": "china",
-        "hồng kông": "hong kong",
-        "hong kong": "hong kong",
-        "đài loan": "taiwan",
-        "ấn độ": "india",
-        "nước đức": "germany",
-        "nước ý": "italy",
-        "tây ban nha": "spain",
-        "thái lan": "thailand",
-        "nước úc": "australia",
-        "hoa kỳ": "united states",
-        "hài": "comedy",
-        "mỹ": "united states",
-        "hàn": "south korea",
-        "nhật": "japan",
-        "anh": "united kingdom",
-        "pháp": "france",
-        "trung": "china",
-        "đức": "germany",
-        "ý": "italy",
-        "úc": "australia",
-        "thái": "thailand",
-        "ma": "horror",
-        "kinh dị": "horror",
-        "kịch tính": "drama",
-        "chính kịch": "drama",
-        "tâm lý": "drama",
-        "nhạc": "music",
-        "nga": "russia",
-        "gợi ý": "suggest",
-        "giống như": "like",
-        "giống": "like",
-        "tương tự": "like"
-    }
-    
-    # Chuẩn hóa Unicode NFC cho chuỗi đầu vào
+    if not text:
+        return text
     text = unicodedata.normalize('NFC', text)
     
-    # Sắp xếp các cụm từ theo chiều dài giảm dần để dịch các cụm từ dài trước
-    sorted_keys = sorted(translation_map.keys(), key=len, reverse=True)
-    
-    for key in sorted_keys:
-        val = translation_map[key]
-        # Sử dụng boundary check hỗ trợ unicode bằng regex lookaround
-        pattern = re.compile(rf'(?<!\w){re.escape(key)}(?!\w)', re.IGNORECASE)
+    # Duyệt qua các regex đã tiền biên dịch để thay thế cực nhanh
+    for pattern, val in _TRANSLATION_REGEXES:
         text = pattern.sub(val, text)
         
     return text
@@ -111,10 +157,7 @@ def clean_tokenize_corpus(text: str) -> list[str]:
     # 1. Chuyển chữ thường & Chuẩn hóa Unicode NFC
     text = unicodedata.normalize('NFC', text.lower())
     
-    # 2. Thay thế từ Việt sang Anh
-    text = replace_vietnamese_terms(text)
-    
-    # 3. Thay thế các ký tự đặc biệt bằng khoảng trắng
+    # 2. Thay thế các ký tự đặc biệt bằng khoảng trắng (Bỏ qua replace_vietnamese_terms vì corpus gốc đã thuần Anh, giúp tối ưu hiệu năng vượt trội)
     text = re.sub(r"[^\w\s]", " ", text)
     
     # 4. Tách từ & lọc
@@ -177,7 +220,14 @@ def preprocess_bm25_query(query: str) -> tuple[list[str], list[str]]:
         "đã", "da", "đang", "dang", "sẽ", "se", "từng", "tung", "làm", "lam",
         "đạo", "diễn", "dao", "dien", "viên", "vien", "vai", "chính", "phụ", "chinh", "phu",
         "thể", "loại", "the", "loai", "nào", "nao", "sản", "xuất", "san", "xuat",
-        "đề", "de", "ai", "là", "la", "này", "nay", "đó", "do", "bản", "ban", "nước", "nuoc"
+        "đề", "de", "ai", "là", "la", "này", "nay", "đó", "do", "bản", "ban", "nước", "nuoc",
+        # Các từ tiếng Việt phổ biến còn sót sau khi replace_vietnamese_terms
+        # (chưa có entry dịch sang tiếng Anh) — loại ra để cleaned_query thuần Anh
+        "giữa", "giua", "về", "ve", "hay", "nói", "noi", "bạn", "ban",
+        "tôi", "toi", "mình", "minh", "gì", "gi", "kể", "ke", "câu", "cau",
+        "chuyện", "chuyen", "lấy", "lay", "ở", "o", "khác", "khac", "theo",
+        "cùng", "cung", "liên", "lien", "quan", "giới", "gioi", "thiệu", "thieu",
+        "muốn", "muon", "xem", "gặp", "gap", "tìm", "nên", "nen", "thích", "thich"
     }
     
     tokenized_query = []
@@ -199,7 +249,27 @@ def preprocess_bm25_query(query: str) -> tuple[list[str], list[str]]:
             
         tokenized_query.append(token)
         
-    return tokenized_query, removed_tokens
+    # 7. Query Expansion (limited synonym expansion for P2)
+    SYNONYM_EXPANSIONS = {
+        "robot": ["android"],
+        "friendship": ["friend"],
+        "wildlife": ["animal"],
+        "space": ["universe"],
+        "dinosaur": ["jurassic"],
+        "superhero": ["hero"],
+        "treasure": ["gold"],
+        "alien": ["extraterrestrial"]
+    }
+    
+    expanded_query = []
+    for token in tokenized_query:
+        expanded_query.append(token)
+        if token in SYNONYM_EXPANSIONS:
+            for syn in SYNONYM_EXPANSIONS[token]:
+                if syn not in tokenized_query:
+                    expanded_query.append(syn)
+        
+    return expanded_query, removed_tokens
 
 def build_bm25_index(df: pd.DataFrame) -> BM25Okapi:
     """
@@ -216,13 +286,14 @@ def build_bm25_index(df: pd.DataFrame) -> BM25Okapi:
     # Kiểm tra tfidf_text trước tiên nếu có
     desc_col = "tfidf_text" if "tfidf_text" in df.columns else "description"
     
-    for _, row in df.iterrows():
-        title = str(row.get("Title", ""))
-        genres = str(row.get("genres", ""))
-        directors = str(row.get("directors", ""))
-        stars = str(row.get("stars", ""))
-        countries = str(row.get("countries_origin", ""))
-        description = str(row.get(desc_col, ""))
+    # Sử dụng itertuples để duyệt qua DataFrame nhanh gấp 10-20 lần so với iterrows
+    for row in df.itertuples(index=False):
+        title = str(getattr(row, "Title", ""))
+        genres = str(getattr(row, "genres", ""))
+        directors = str(getattr(row, "directors", ""))
+        stars = str(getattr(row, "stars", ""))
+        countries = str(getattr(row, "countries_origin", ""))
+        description = str(getattr(row, desc_col, ""))
         
         # Trọng số trường BM25 (P6 tuned):
         # - title ×3: tăng từ ×2 để khớp tốt hơn cho truy vấn exact-title

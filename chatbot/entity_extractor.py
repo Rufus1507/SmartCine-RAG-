@@ -9,11 +9,13 @@ IGNORE_FUZZY = {
     "nha", "nam", "diem", "tren", "duoi", "tuyen", "hay", "nhat", "co", "ve", 
     "chieu", "rap", "bom", "tan", "le", "bo", "my", "han", "trung", "viet", "nhat",
     "cua", "cac", "nhung", "la", "va", "hoac", "trong", "ngoai", "cao", "thap",
+    "hoang", "da", "hoang da", "chau", "phi", "chau phi",
     
     # Accented
     "tìm", "kiếm", "đạo", "diễn", "viên", "thể", "loại", "nhà", "năm", "điểm",
     "trên", "dưới", "tuyển", "có", "về", "chiếu", "rạp", "bộ", "mỹ", "hàn", 
-    "của", "các", "những", "là", "và", "hoặc", "viễn", "tưởng", "khoa", "học"
+    "của", "các", "những", "là", "và", "hoặc", "viễn", "tưởng", "khoa", "học",
+    "dã", "hoang dã", "châu", "phi", "châu phi"
 }
 
 @st.cache_data
@@ -124,6 +126,71 @@ def detect_entities(user_message: str, keyword_dict: dict, aliases_dict: dict) -
                 detected["content_keywords"].append(target_key)
                 
     return detected
+
+
+# Danh sách các cụm từ ghép tiếng Việt phổ biến trong lĩnh vực phim ảnh (P1 Noun-Phrase)
+COMPOUND_PHRASES = [
+    "động vật hoang dã", "hoang dã", "trí tuệ nhân tạo", "du hành vũ trụ", "du hành thời gian",
+    "ngoài hành tinh", "người ngoài hành tinh", "thế giới tương lai", "tận thế", "hậu tận thế",
+    "quái vật", "sát nhân", "pháp thuật", "ma thuật", "phù thủy", "tình bạn", "kho báu",
+    "rượt đuổi xe", "rượt đuổi xe hơi", "xe hơi", "đám cưới", "khủng long", "thảm họa",
+    "hoạt hình", "khoa học viễn tưởng", "viễn tưởng", "hành động", "hài hước", "tình cảm",
+    "lãng mạn", "phiêu lưu", "tội phạm", "hình sự", "giật gân", "thần thoại", "tài liệu",
+    "gia đình", "chiến tranh", "lịch sử", "miền tây", "kinh dị", "kịch tính", "chính kịch",
+    "tâm lý", "nhạc kịch", "ca nhạc", "âm nhạc", "động vật", "châu phi", "châu mỹ", "châu á",
+    "châu âu", "phim tài liệu", "siêu anh hùng", "bị chôn giấu"
+]
+
+# Danh sách stopword tiếng Việt dùng cho fallback content_keywords extraction
+# Khi query không có entity nào rõ ràng, giữ lại danh từ/cụm từ mô tả nội dung chính
+_VI_STOPWORDS = {
+    "tìm", "tim", "cho", "tôi", "toi", "mình", "minh", "một", "mot", "bộ", "bo",
+    "phim", "film", "movie", "có", "co", "nào", "nao", "không", "khong", "khi",
+    "nói", "noi", "về", "ve", "giữa", "giua", "và", "va", "với", "voi", "hay",
+    "được", "duoc", "của", "cua", "là", "la", "trong", "này", "nay", "đó", "do",
+    "theo", "ở", "o", "nên", "nen", "muốn", "muon", "xem", "gì", "gi",
+    "câu", "cau", "chuyện", "chuyen", "kể", "ke", "giới", "gioi", "thiệu", "thieu",
+    "gợi", "goi", "ý", "y", "xuất", "xuat", "sắc", "sac", "đặc", "dac",
+    "như", "nhu", "thế", "the", "nào", "nao", "thể", "the", "tìm", "kiếm",
+    "nhất", "nhat", "cũng", "cung", "nhiều", "nhieu", "ít", "it", "hơn", "hon",
+    "liên", "lien", "quan", "các", "cac", "những", "nhung", "đã", "da", "đang",
+    "sẽ", "se", "từng", "tung", "làm", "lam", "hoặc", "hoac", "cùng",
+    "a", "an", "the", "is", "are", "was", "were", "be", "been", "do", "does",
+    "did", "have", "has", "had", "of", "in", "on", "at", "to", "for", "with",
+    "about", "that", "this", "which", "who", "some", "any", "or", "and",
+}
+
+def extract_content_keywords_fallback(user_message: str, max_keywords: int = 4) -> list:
+    """
+    Trích từ khóa mô tả nội dung khi entity_detection không tìm được entity rõ ràng.
+    Lọc stopword tiếng Việt/Anh, ưu tiên giữ lại các cụm từ ghép có nghĩa trong COMPOUND_PHRASES.
+    Dùng làm fallback khi genres/directors/stars đều rỗng — đảm bảo content_keywords
+    không rỗng với câu hỏi ngữ nghĩa thuần (ví dụ: "tình bạn giữa con người và robot").
+    """
+    user_msg_lower = user_message.lower()
+    extracted = []
+    
+    # 1. Quét các cụm từ ghép có nghĩa trong danh sách trước
+    sorted_phrases = sorted(COMPOUND_PHRASES, key=len, reverse=True)
+    temp_msg = user_msg_lower
+    for phrase in sorted_phrases:
+        pattern = re.compile(rf'\b{re.escape(phrase)}\b', re.IGNORECASE)
+        if pattern.search(temp_msg):
+            extracted.append(phrase)
+            temp_msg = pattern.sub(' ', temp_msg)
+            
+    # 2. Tách các từ đơn còn lại sau khi đã loại bỏ cụm từ ghép
+    words = re.findall(r'\b\w+\b', temp_msg)
+    content_words = [
+        w for w in words
+        if w not in _VI_STOPWORDS and len(w) >= 3
+    ]
+    for w in content_words:
+        if w not in extracted and len(extracted) < max_keywords:
+            extracted.append(w)
+            
+    return extracted[:max_keywords]
+
 
 def is_refine_query(user_input: str) -> bool:
     """

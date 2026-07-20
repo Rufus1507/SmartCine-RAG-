@@ -2,7 +2,7 @@ import re
 import unicodedata
 import pandas as pd
 from langchain_core.language_models import BaseChatModel
-from chatbot.entity_extractor import detect_entities, is_refine_query
+from chatbot.entity_extractor import detect_entities, is_refine_query, extract_content_keywords_fallback
 from chatbot.chains.intent_chain import run_intent_chain
 from chatbot.chains.answer_chain import run_answer_chain
 from chatbot.retrieval.hybrid_search import hybrid_search
@@ -67,6 +67,10 @@ def run_rag_pipeline(
 
     # 1. Phát hiện thực thể
     detected = detect_entities(user_input, keyword_dict, aliases_dict)
+    # Fallback content_keywords: khi query không chứa entity rõ ràng (genres/directors/stars rỗng),
+    # tự động trích 2-4 danh từ/cụm từ mô tả nội dung để content dimension có ngữ cảnh truy xuất
+    if not any(detected.get(k) for k in ("genres", "directors", "stars")) and not detected.get("content_keywords"):
+        detected["content_keywords"] = extract_content_keywords_fallback(user_input, max_keywords=4)
     if debug and trace is not None:
         trace["entity_detection"] = detected.copy()
     
@@ -223,82 +227,120 @@ def run_rag_pipeline(
                 filtered_df = pd.DataFrame(not_found_row)
                 route_name = "aggregation_not_found"
                 
-        # Thực hiện Graph RAG tìm cộng tác viên chỉ nếu chưa được xử lý bởi P4 (aggregation_stat)
-        if person_name and route_name != "aggregation_stat":
+        # Thực hiện Graph RAG tìm cộng tác viên hoặc phim hợp tác chung (Co-collaboration)
+        if (filters.get("director") or filters.get("star")) and route_name != "aggregation_stat":
             try:
                 from chatbot.graph.build_movie_graph import load_or_build_graph
-                from chatbot.graph.graph_query import find_top_collaborator
                 G = load_or_build_graph(df)
-                top_collabs = find_top_collaborator(G, person_name, top_k=5)
                 
-                # Trace cho Graph RAG của aggregation
-                if debug and trace is not None:
-                    trace["stage0_graph"]["called"] = True
-                    serializable_graph = []
-                    for c in top_collabs:
-                        clean_c = {}
-                        for k, v in c.items():
-                            if isinstance(v, (np.integer, np.floating)):
-                                clean_c[k] = v.item()
-                            else:
-                                clean_c[k] = v
-                        serializable_graph.append(clean_c)
-                    trace["stage0_graph"]["candidates"] = serializable_graph
+                # Tách danh sách director và star để kiểm tra co-collaboration
+                import re
+                directors_list = []
+                if filters.get("director"):
+                    directors_list = [d.strip() for d in re.split(r'[,;]|\bvà\b|\bhoặc\b|\band\b|\bor\b', str(filters["director"]), flags=re.IGNORECASE) if d.strip()]
+                stars_list = []
+                if filters.get("star"):
+                    stars_list = [s.strip() for s in re.split(r'[,;]|\bvà\b|\bhoặc\b|\band\b|\bor\b', str(filters["star"]), flags=re.IGNORECASE) if s.strip()]
                 
-                if top_collabs:
-                    collab_rows = []
-                    for c in top_collabs:
-                        collab_name = c['name']
-                        # PRIORITY 5 FIX: Bổ sung danh sách phim chung và điểm IMDb trung bình
-                        # để LLM có thể trả lời câu hỏi multi-hop (vai chính/phụ, điểm TB...)
-                        _shared_movies_info = ""
-                        _avg_rating_info = ""
-                        _role_info = ""
-                        try:
-                            from chatbot.config import COL_RATING, COL_STARS
-                            # Tìm phim chung giữa person_name và collab_name trong dataset
-                            _shared = df[
-                                df.get('directors', pd.Series(dtype=str)).astype(str).str.contains(re.escape(person_name), case=False, na=False) &
-                                df.get('stars', pd.Series(dtype=str)).astype(str).str.contains(re.escape(collab_name), case=False, na=False)
-                            ] if 'directors' in df.columns and 'stars' in df.columns else pd.DataFrame()
-                            if _shared.empty:
-                                # Thử ngược lại: collab là đạo diễn, person_name là diễn viên
+                if len(directors_list) + len(stars_list) >= 2:
+                    # Truy vấn phim chung của nhiều thực thể (Co-collaboration)
+                    from chatbot.graph.graph_query import find_common_movies_of_entities
+                    common_movies = find_common_movies_of_entities(G, directors_list, stars_list)
+                    
+                    if debug and trace is not None:
+                        trace["stage0_graph"]["called"] = True
+                        trace["stage0_graph"]["candidates"] = [{"Title": m, "type": "Movie"} for m in common_movies]
+                        
+                    if common_movies:
+                        # Lấy thông tin chi tiết các phim chung từ DataFrame
+                        common_df = df[df["Title"].str.lower().isin([t.lower() for t in common_movies])]
+                        movie_rows = []
+                        for _, row in common_df.iterrows():
+                            # Lấy các trường cơ bản, bổ sung final_context đầy đủ để RAG trả lời đúng
+                            movie_rows.append({
+                                "Title": row.get("Title"),
+                                "Rating": row.get("Rating"),
+                                "Year": row.get("Year"),
+                                "genres": row.get("genres", ""),
+                                "directors": row.get("directors", ""),
+                                "countries_origin": row.get("countries_origin", ""),
+                                "stars": row.get("stars", ""),
+                                "Movie Link": row.get("Movie Link", ""),
+                                "final_context": f"Tên phim: {row.get('Title')} | Năm phát hành: {int(row.get('Year')) if pd.notna(row.get('Year')) else 'N/A'} | Điểm IMDb: {row.get('Rating')} | Đạo diễn: {row.get('directors')} | Diễn viên: {row.get('stars')} | Thể loại: {row.get('genres')}"
+                            })
+                        filtered_df = pd.DataFrame(movie_rows)
+                        route_name = "aggregation_graph"
+                    else:
+                        filtered_df = pd.DataFrame()
+                        route_name = "aggregation_no_results"
+                else:
+                    # Fallback tìm kiếm cộng tác viên đơn lẻ như cũ
+                    person_name = directors_list[0] if directors_list else (stars_list[0] if stars_list else None)
+                    from chatbot.graph.graph_query import find_top_collaborator
+                    top_collabs = find_top_collaborator(G, person_name, top_k=5)
+                    
+                    if debug and trace is not None:
+                        trace["stage0_graph"]["called"] = True
+                        serializable_graph = []
+                        for c in top_collabs:
+                            clean_c = {}
+                            for k, v in c.items():
+                                if isinstance(v, (np.integer, np.floating)):
+                                    clean_c[k] = v.item()
+                                else:
+                                    clean_c[k] = v
+                            serializable_graph.append(clean_c)
+                        trace["stage0_graph"]["candidates"] = serializable_graph
+                    
+                    if top_collabs:
+                        collab_rows = []
+                        for c in top_collabs:
+                            collab_name = c['name']
+                            _shared_movies_info = ""
+                            _avg_rating_info = ""
+                            _role_info = ""
+                            try:
+                                from chatbot.config import COL_RATING, COL_STARS
                                 _shared = df[
-                                    df['directors'].astype(str).str.contains(re.escape(collab_name), case=False, na=False) &
-                                    df['stars'].astype(str).str.contains(re.escape(person_name), case=False, na=False)
+                                    df.get('directors', pd.Series(dtype=str)).astype(str).str.contains(re.escape(person_name), case=False, na=False) &
+                                    df.get('stars', pd.Series(dtype=str)).astype(str).str.contains(re.escape(collab_name), case=False, na=False)
                                 ] if 'directors' in df.columns and 'stars' in df.columns else pd.DataFrame()
-                            if not _shared.empty:
-                                _movie_titles = _shared['Title'].tolist()[:5]
-                                _shared_movies_info = f" | Phim chung: {', '.join(_movie_titles)}"
-                                _avg_r = _shared[COL_RATING].dropna().mean() if COL_RATING in _shared.columns else None
-                                if _avg_r is not None:
-                                    _avg_rating_info = f" | Điểm IMDb trung bình: {round(_avg_r, 2)}"
-                                # Phát hiện vai chính/phụ dựa trên vị trí trong cột stars
-                                _lead_count = 0
-                                _support_count = 0
-                                for _, _sr in _shared.iterrows():
-                                    _stars_list = str(_sr.get('stars', '')).split(',')
-                                    _stars_clean = [s.strip() for s in _stars_list]
-                                    if _stars_clean and _stars_clean[0].lower().startswith(collab_name.lower()[:8]):
-                                        _lead_count += 1
-                                    else:
-                                        _support_count += 1
-                                _role_info = f" | Vai chính: {_lead_count} phim, Vai phụ: {_support_count} phim"
-                        except Exception:
-                            pass
-                        collab_rows.append({
-                            "Title": f"{collab_name} ({c['type']})",
-                            "Rating": c["weight"],
-                            "Year": None,
-                            "genres": "",
-                            "directors": person_name,
-                            "countries_origin": "",
-                            "stars": collab_name,
-                            "Movie Link": "",
-                            "final_context": f"Tên: {collab_name} | Vai trò: {c['type']} | Số lần hợp tác: {c['weight']}{_shared_movies_info}{_avg_rating_info}{_role_info}"
-                        })
-                    filtered_df = pd.DataFrame(collab_rows)
-                    route_name = "aggregation_graph"
+                                if _shared.empty:
+                                    _shared = df[
+                                        df['directors'].astype(str).str.contains(re.escape(collab_name), case=False, na=False) &
+                                        df['stars'].astype(str).str.contains(re.escape(person_name), case=False, na=False)
+                                    ] if 'directors' in df.columns and 'stars' in df.columns else pd.DataFrame()
+                                if not _shared.empty:
+                                    _movie_titles = _shared['Title'].tolist()[:5]
+                                    _shared_movies_info = f" | Phim chung: {', '.join(_movie_titles)}"
+                                    _avg_r = _shared[COL_RATING].dropna().mean() if COL_RATING in _shared.columns else None
+                                    if _avg_r is not None:
+                                        _avg_rating_info = f" | Điểm IMDb trung bình: {round(_avg_r, 2)}"
+                                    _lead_count = 0
+                                    _support_count = 0
+                                    for _, _sr in _shared.iterrows():
+                                        _stars_list = str(_sr.get('stars', '')).split(',')
+                                        _stars_clean = [s.strip() for s in _stars_list]
+                                        if _stars_clean and _stars_clean[0].lower().startswith(collab_name.lower()[:8]):
+                                            _lead_count += 1
+                                        else:
+                                            _support_count += 1
+                                    _role_info = f" | Vai chính: {_lead_count} phim, Vai phụ: {_support_count} phim"
+                            except Exception:
+                                pass
+                            collab_rows.append({
+                                "Title": f"{collab_name} ({c['type']})",
+                                "Rating": c["weight"],
+                                "Year": None,
+                                "genres": "",
+                                "directors": person_name,
+                                "countries_origin": "",
+                                "stars": collab_name,
+                                "Movie Link": "",
+                                "final_context": f"Tên: {collab_name} | Vai trò: {c['type']} | Số lần hợp tác: {c['weight']}{_shared_movies_info}{_avg_rating_info}{_role_info}"
+                            })
+                        filtered_df = pd.DataFrame(collab_rows)
+                        route_name = "aggregation_graph"
             except Exception as e:
                 print(f"Aggregation error: {e}")
         route_name = route_name or "aggregation_no_person"
@@ -332,7 +374,7 @@ def run_rag_pipeline(
         filtered_df = pd.DataFrame()
 
     # 6. Sinh câu trả lời (Tầng 2 LLM)
-    answer_result = run_answer_chain(llm, user_input, filtered_df, intent, stream=stream)
+    answer_result = run_answer_chain(llm, user_input, filtered_df, intent, stream=stream, trace=trace)
     
     # Đóng gói route_name vào detected để trả về mà không làm gãy signature
     detected["route_name"] = route_name

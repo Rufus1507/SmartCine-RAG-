@@ -14,7 +14,7 @@ RAG_USER_TEMPLATE = """Người dùng hỏi: "{input}"
 Danh sách phim tìm được:
 {movies_info}
 
-Hãy giới thiệu các phim này, đề cập đầy đủ tên phim, thể loại, đạo diễn, diễn viên, điểm IMDB, tóm tắt nội dung ngắn gọn và kèm theo link IMDb (nếu có) để người dùng click."""
+Hãy giới thiệu các phim này. Với mỗi phim, hãy đề cập đầy đủ các thông tin sau: tên phim, năm phát hành, quốc gia sản xuất, thể loại, đạo diễn, diễn viên, điểm IMDb, tóm tắt nội dung cực kỳ ngắn gọn (chỉ từ 1 đến 2 câu ngắn), và kèm theo link IMDb (nếu có) để người dùng click. Tuyệt đối không viết tóm tắt quá dài dòng."""
 
 def get_chitchat_prompt() -> ChatPromptTemplate:
     return ChatPromptTemplate.from_messages([

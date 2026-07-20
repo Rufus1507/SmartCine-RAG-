@@ -20,7 +20,8 @@ DEFAULT_WEIGHTS = {
 }
 
 def compute_genre_similarity(g1, g2) -> float:
-    """Jaccard Similarity for multi-hot genre vectors."""
+    # CONTINUOUS: Dùng Jaccard similarity vì một phim có thể thuộc nhiều thể loại, 
+    # tỷ lệ các thể loại trùng lặp phản ánh sự tương đồng liên tục có ý nghĩa.
     v1 = np.array(g1)
     v2 = np.array(g2)
     intersection = np.sum(np.minimum(v1, v2))
@@ -30,34 +31,29 @@ def compute_genre_similarity(g1, g2) -> float:
     return float(intersection / union)
 
 def compute_actor_similarity(a1, a2) -> float:
-    """Actor Overlap Score for list of actor indices."""
+    # CONTINUOUS: Dùng Jaccard similarity trên tập diễn viên (a1 & a2). 
+    # Giúp đo lường tỷ lệ các diễn viên trùng khớp thay vì chỉ kiểm tra một người duy nhất.
     s1 = set(a1)
     s2 = set(a2)
-    intersection = len(s1 & s2)
-    min_len = min(len(s1), len(s2))
-    if min_len == 0:
+    union_len = len(s1 | s2)
+    if union_len == 0:
         return 0.0
-    return float(intersection / min_len)
+    return float(len(s1 & s2) / union_len)
 
 def compute_director_similarity(d1, d2) -> float:
-    """Director Overlap Score for list of director indices."""
+    # CATEGORICAL: Nhị phân (0.0 hoặc 1.0) vì đạo diễn là thuộc tính định danh chính xác.
+    # Một bộ phim chỉ có thể đúng đạo diễn được yêu cầu (1.0) hoặc không (0.0).
     s1 = set(d1)
     s2 = set(d2)
-    intersection = len(s1 & s2)
-    min_len = min(len(s1), len(s2))
-    if min_len == 0:
-        return 0.0
-    return float(intersection / min_len)
+    return 1.0 if len(s1 & s2) > 0 else 0.0
 
 def compute_country_similarity(c1, c2) -> float:
-    """Country Overlap Score for multi-hot country vectors."""
+    # CATEGORICAL: Nhị phân (0.0 hoặc 1.0) vì quốc gia sản xuất là thuộc tính định danh phân loại.
+    # Một bộ phim hoặc sản xuất tại quốc gia yêu cầu (1.0) hoặc không (0.0).
     v1 = np.array(c1)
     v2 = np.array(c2)
     intersection = np.sum(np.minimum(v1, v2))
-    min_len = min(np.sum(v1), np.sum(v2))
-    if min_len == 0:
-        return 0.0
-    return float(intersection / min_len)
+    return 1.0 if intersection > 0 else 0.0
 
 def compute_decade_similarity(dec1_vec, dec2_vec) -> float:
     """Decade Distance Score from one-hot decade vectors."""
@@ -118,6 +114,8 @@ def compute_weighted_similarity(
         
     scores = {}
     active_weights = {}
+    # Theo dõi nguồn gốc của từng subscore: "computed" hoặc "fallback_no_entity"
+    subscore_source = {}
     
     # Helper: kiểm tra xem dimension có được phép active không
     def _dim_allowed(dim: str) -> bool:
@@ -129,8 +127,12 @@ def compute_weighted_similarity(
     if ref_emb is not None and movie_emb is not None and _dim_allowed("content"):
         scores["content_score"] = compute_content_similarity(movie_emb, ref_emb)
         active_weights["content"] = weights["content"]
+        subscore_source["content_score"] = "computed"
     else:
-        scores["content_score"] = 1.0
+        # Không có embedding tham chiếu → trả 0.0 và KHÔNG đưa vào active_weights
+        # (tránh phantom inflate final_score khi embedding chưa sẵn sàng)
+        scores["content_score"] = 0.0
+        subscore_source["content_score"] = "fallback_no_entity"
         
     # 2. Genre
     ref_genre = ref_features.get("genre_vector")
@@ -138,8 +140,11 @@ def compute_weighted_similarity(
     if ref_genre is not None and np.sum(ref_genre) > 0 and movie_genre is not None and _dim_allowed("genre"):
         scores["genre_score"] = compute_genre_similarity(movie_genre, ref_genre)
         active_weights["genre"] = weights["genre"]
+        subscore_source["genre_score"] = "computed"
     else:
-        scores["genre_score"] = 1.0
+        # Không có dữ liệu genre tham chiếu → loại khỏi trọng số, KHÔNG inflate = 1.0
+        scores["genre_score"] = 0.0
+        subscore_source["genre_score"] = "fallback_no_entity"
         
     # 3. Actor — chỉ active nếu query thực sự yêu cầu (tránh dùng cast của base movie)
     ref_actor = ref_features.get("actor_vector")
@@ -147,8 +152,11 @@ def compute_weighted_similarity(
     if ref_actor and movie_actor and _dim_allowed("actor"):
         scores["actor_score"] = compute_actor_similarity(movie_actor, ref_actor)
         active_weights["actor"] = weights["actor"]
+        subscore_source["actor_score"] = "computed"
     else:
-        scores["actor_score"] = 1.0
+        # Không có dữ liệu diễn viên tham chiếu → loại khỏi trọng số
+        scores["actor_score"] = 0.0
+        subscore_source["actor_score"] = "fallback_no_entity"
         
     # 4. Director — chỉ active nếu query thực sự yêu cầu (tránh dùng director của base movie)
     ref_dir = ref_features.get("director_vector")
@@ -156,8 +164,11 @@ def compute_weighted_similarity(
     if ref_dir and movie_dir and _dim_allowed("director"):
         scores["director_score"] = compute_director_similarity(movie_dir, ref_dir)
         active_weights["director"] = weights["director"]
+        subscore_source["director_score"] = "computed"
     else:
-        scores["director_score"] = 1.0
+        # Không có dữ liệu đạo diễn tham chiếu → loại khỏi trọng số
+        scores["director_score"] = 0.0
+        subscore_source["director_score"] = "fallback_no_entity"
         
     # 5. Country
     ref_country = ref_features.get("country_vector")
@@ -165,8 +176,11 @@ def compute_weighted_similarity(
     if ref_country is not None and np.sum(ref_country) > 0 and movie_country is not None and _dim_allowed("country"):
         scores["country_score"] = compute_country_similarity(movie_country, ref_country)
         active_weights["country"] = weights["country"]
+        subscore_source["country_score"] = "computed"
     else:
-        scores["country_score"] = 1.0
+        # Không có dữ liệu quốc gia tham chiếu → loại khỏi trọng số
+        scores["country_score"] = 0.0
+        subscore_source["country_score"] = "fallback_no_entity"
         
     # 6. Decade
     ref_dec = ref_features.get("decade_vector")
@@ -174,8 +188,11 @@ def compute_weighted_similarity(
     if ref_dec is not None and np.sum(ref_dec) > 0 and movie_dec is not None and _dim_allowed("decade"):
         scores["decade_score"] = compute_decade_similarity(movie_dec, ref_dec)
         active_weights["decade"] = weights["decade"]
+        subscore_source["decade_score"] = "computed"
     else:
-        scores["decade_score"] = 1.0
+        # Không có dữ liệu thập kỷ tham chiếu → loại khỏi trọng số
+        scores["decade_score"] = 0.0
+        subscore_source["decade_score"] = "fallback_no_entity"
         
     # 7. Award
     ref_award = ref_features.get("award_vector")
@@ -183,8 +200,11 @@ def compute_weighted_similarity(
     if ref_award is not None and np.sum(ref_award) > 0 and movie_award is not None and _dim_allowed("award"):
         scores["award_score"] = compute_award_similarity(movie_award, ref_award)
         active_weights["award"] = weights["award"]
+        subscore_source["award_score"] = "computed"
     else:
-        scores["award_score"] = 1.0
+        # Không có dữ liệu giải thưởng tham chiếu → loại khỏi trọng số
+        scores["award_score"] = 0.0
+        subscore_source["award_score"] = "fallback_no_entity"
         
     # 8. Graph Connection (Collaboration Path)
     ref_graph = ref_features.get("graph_score")
@@ -192,10 +212,15 @@ def compute_weighted_similarity(
     if ref_graph is not None and movie_graph is not None and _dim_allowed("graph"):
         scores["graph_score"] = float(movie_graph)
         active_weights["graph"] = weights["graph"]
+        subscore_source["graph_score"] = "computed"
     else:
-        scores["graph_score"] = 1.0
+        # Không có graph path → loại khỏi trọng số
+        scores["graph_score"] = 0.0
+        subscore_source["graph_score"] = "fallback_no_entity"
         
-    # Tính final_score có trọng số từ các dimension active
+    # Tính final_score có trọng số từ các dimension active (weight redistribution)
+    # Chỉ tính tổng trên các chiều có dữ liệu thực (active_weights),
+    # chia cho tổng trọng số active để tự động redistribute sang các chiều còn lại.
     total_active_weight = sum(active_weights.values())
     if total_active_weight > 0:
         final_score = 0.0
@@ -203,7 +228,12 @@ def compute_weighted_similarity(
             final_score += scores[f"{key}_score"] * w
         final_score = final_score / total_active_weight
     else:
-        final_score = 1.0
+        # Không có chiều nào active (ví dụ: không có embedding) → fallback trung bình
+        final_score = scores.get("content_score", 0.0)
         
     scores["final_score"] = final_score
+    # Bước 3: Thêm trường subscore_source để phân biệt computed vs fallback_no_entity trong trace
+    scores["subscore_source"] = subscore_source
+    # P4: Ghi nhận phân phối trọng số active thực tế sau redistribution
+    scores["active_weights"] = active_weights
     return scores

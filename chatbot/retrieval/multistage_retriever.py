@@ -11,6 +11,11 @@ from chatbot.similarity import compute_weighted_similarity
 from chatbot.representation.semantic_representation import make_profile
 
 class MultistageRetriever:
+    _all_directors = None
+    _all_actors = None
+    _all_genres = None
+    _all_countries = None
+
     def __init__(self):
         self.builder = MovieFeatureBuilder()
         self.bm25_index = None
@@ -178,6 +183,104 @@ class MultistageRetriever:
 
         # Sao chép và hiệu chỉnh bộ lọc cho các bước truy xuất
         filters_for_retrieval = filters.copy()
+
+        # Bước validate bộ lọc (P0): so khớp với database để tránh filter rác kích hoạt shortcut
+        if not hasattr(MultistageRetriever, "_all_directors") or MultistageRetriever._all_directors is None:
+            from chatbot.feature_engineering import clean_split, PARENT_GENRES
+            
+            directors_set = set()
+            for val in df['directors'].dropna().unique():
+                for d in clean_split(val):
+                    directors_set.add(d.strip().lower())
+            MultistageRetriever._all_directors = sorted(list(directors_set))
+
+            actors_set = set()
+            for val in df['stars'].dropna().unique():
+                for s in clean_split(val):
+                    actors_set.add(s.strip().lower())
+            MultistageRetriever._all_actors = sorted(list(actors_set))
+
+            genres_set = set()
+            for val in df['genres'].dropna().unique():
+                for g in clean_split(val):
+                    genres_set.add(g.strip().lower())
+            for g in PARENT_GENRES:
+                genres_set.add(g.strip().lower())
+            MultistageRetriever._all_genres = sorted(list(genres_set))
+
+            countries_set = set()
+            for val in df['countries_origin'].dropna().unique():
+                for c in clean_split(val):
+                    countries_set.add(c.strip().lower())
+            MultistageRetriever._all_countries = sorted(list(countries_set))
+
+        from rapidfuzz import process, fuzz
+        route_trigger_reason = {}
+        validation_mapping = {
+            "director": MultistageRetriever._all_directors,
+            "star": MultistageRetriever._all_actors,
+            "genre": MultistageRetriever._all_genres,
+            "country": MultistageRetriever._all_countries
+        }
+        
+        for field, valid_list in validation_mapping.items():
+            val = filters_for_retrieval.get(field)
+            if val:
+                # Tách nhiều giá trị bằng dấu phẩy hoặc các từ nối tiếng Việt/Anh thông dụng
+                parts = [p.strip() for p in re.split(r'[,;]|\bvà\b|\bhoặc\b|\band\b|\bor\b', str(val), flags=re.IGNORECASE) if p.strip()]
+                validated_parts = []
+                details = []
+                
+                for part in parts:
+                    part_clean = part.lower()
+                    is_exact = False
+                    for item in valid_list:
+                        if item == part_clean:
+                            is_exact = True
+                            validated_parts.append(part)
+                            details.append({"value": part, "match_type": "exact"})
+                            break
+                    
+                    if not is_exact:
+                        # Fuzzy match với ngưỡng cao (90.0)
+                        match_res = process.extractOne(part_clean, valid_list, scorer=fuzz.QRatio)
+                        if match_res:
+                            match, score, _ = match_res
+                            if score >= 90.0:
+                                validated_parts.append(match)
+                                details.append({"value": part, "match_type": "fuzzy", "matched_to": match, "score": float(score)})
+                
+                if validated_parts:
+                    # Gộp lại các phần tử hợp lệ bằng dấu phẩy
+                    corrected_val = ", ".join(validated_parts)
+                    filters_for_retrieval[field] = corrected_val
+                    route_trigger_reason[field] = {
+                        "field": field,
+                        "raw_value": val,
+                        "validated": True,
+                        "action": "kept",
+                        "corrected_value": corrected_val,
+                        "details": details
+                    }
+                else:
+                    route_trigger_reason[field] = {
+                        "field": field,
+                        "raw_value": val,
+                        "validated": False,
+                        "action": "dropped_and_fallback_to_hybrid"
+                    }
+                    filters_for_retrieval[field] = None
+
+        # Expose primary route_trigger_reason to trace
+        if trace is not None:
+            primary_reason = {}
+            for field in ["director", "star", "genre", "country"]:
+                if field in route_trigger_reason:
+                    primary_reason = route_trigger_reason[field]
+                    if route_trigger_reason[field]["validated"]:
+                        break
+            if primary_reason:
+                trace["route_trigger_reason"] = primary_reason
         
         # Chỉ xác định phim gốc khi có graph_candidates (tức là truy vấn tương tự đã được xác nhận từ router)
         base_row = None
@@ -401,12 +504,31 @@ class MultistageRetriever:
             sim_breakdown = compute_weighted_similarity(row_features, ref_features, active_dims=_active_dims)
             
             if trace is not None:
-                clean_sim = {}
-                for k, v in sim_breakdown.items():
-                    if isinstance(v, (np.integer, np.floating)):
-                        clean_sim[k] = v.item()
-                    else:
-                        clean_sim[k] = v
+                clean_sim = {
+                    "movie": row.get("Title"),
+                    "content": float(sim_breakdown["content_score"]),
+                    "genre": float(sim_breakdown["genre_score"]),
+                    "graph": float(sim_breakdown["graph_score"]),
+                    "award": float(sim_breakdown["award_score"]),
+                    "country": float(sim_breakdown["country_score"]),
+                    "director": float(sim_breakdown["director_score"]),
+                    "actor": float(sim_breakdown["actor_score"]),
+                    "decade": float(sim_breakdown.get("decade_score", 0.0)),
+                    "weighted": float(sim_breakdown["final_score"]),
+                    # Keep existing fields for backward compatibility
+                    "content_score": float(sim_breakdown["content_score"]),
+                    "genre_score": float(sim_breakdown["genre_score"]),
+                    "actor_score": float(sim_breakdown["actor_score"]),
+                    "director_score": float(sim_breakdown["director_score"]),
+                    "country_score": float(sim_breakdown["country_score"]),
+                    "decade_score": float(sim_breakdown.get("decade_score", 0.0)),
+                    "award_score": float(sim_breakdown["award_score"]),
+                    "graph_score": float(sim_breakdown["graph_score"]),
+                    "final_score": float(sim_breakdown["final_score"]),
+                    "subscore_source": sim_breakdown.get("subscore_source", {}),
+                    # P4: Ghi nhận trọng số active sau redistribution
+                    "active_weights": sim_breakdown.get("active_weights", {})
+                }
                 trace_similarity.append(clean_sim)
             
             # Attach score breakdown to movie row
@@ -497,13 +619,23 @@ class MultistageRetriever:
                                      base_movie_profile=base_movie_profile_str)
         
         if trace is not None and not reranked_df.empty:
+            rank_before_map = {}
+            for rank, (_, row) in enumerate(top_100_df.iterrows()):
+                link = row["Movie Link"]
+                rank_before_map[link] = rank + 1
+                
             rerank_trace = []
-            for _, row in reranked_df.iterrows():
+            for rank_after, (_, row) in enumerate(reranked_df.iterrows()):
                 val = row.get("rerank_score")
+                link = row["Movie Link"]
+                rank_before = rank_before_map.get(link, -1)
                 rerank_trace.append({
                     "title": row.get("Title"),
                     "imdb_id": row.get("imdb_id"),
-                    "rerank_score": val.item() if isinstance(val, (np.integer, np.floating)) else val
+                    "rerank_score": val.item() if isinstance(val, (np.integer, np.floating)) else val,
+                    "movie": row.get("Title"),
+                    "rank_before": rank_before,
+                    "rank_after": rank_after + 1
                 })
             trace["stage3_rerank"]["candidates"] = rerank_trace
         
@@ -579,5 +711,22 @@ class MultistageRetriever:
                 "weighted_similarity": len(matched_rows),
                 "cross_encoder": len(reranked_df) if not reranked_df.empty else 0
             }
+            # Thu thập các bộ lọc cứng thực tế được áp dụng (P0)
+            applied_filters = []
+            if filters_for_retrieval.get("genre"):
+                applied_filters.append("genre")
+            if filters_for_retrieval.get("year_min") or filters_for_retrieval.get("year_max"):
+                applied_filters.append("year")
+            if filters_for_retrieval.get("rating_min"):
+                applied_filters.append("rating")
+            if filters_for_retrieval.get("runtime_min") or filters_for_retrieval.get("runtime_max") or filters_for_retrieval.get("duration_min") or filters_for_retrieval.get("duration_max"):
+                applied_filters.append("runtime")
+            if filters_for_retrieval.get("country"):
+                applied_filters.append("country")
+            if filters_for_retrieval.get("director"):
+                applied_filters.append("director")
+            if filters_for_retrieval.get("star"):
+                applied_filters.append("star")
+            trace["hard_filter_applied"] = applied_filters
 
         return reranked_df.head(final_k)

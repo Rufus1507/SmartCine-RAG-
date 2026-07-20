@@ -35,7 +35,7 @@ COL_METASCORE  = "meta_score"        # Điểm Metacritic
 # ============================================================
 # CẤU HÌNH LLM (LOCAL & GEMINI)
 # ============================================================
-LLM_BASE_URL = os.getenv("LLM_BASE_URL", "http://localhost:20128/v1")
+LLM_BASE_URL = os.getenv("LLM_BASE_URL", "http://192.168.42.194:20128/v1")
 LLM_API_KEY  = os.getenv("LLM_API_KEY",  "any")
 LLM_MODEL    = os.getenv("LLM_MODEL",    "cx/gpt-5.5")
 

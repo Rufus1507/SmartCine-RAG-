@@ -1,0 +1,869 @@
+[
+  {
+    "id": "q81",
+    "question": "Diễn viên nào hợp tác với Christopher Nolan nhiều nhất và họ thường đóng vai chính hay vai phụ?",
+    "difficulty": "expert",
+    "category": "graph_reasoning",
+    "answer_result": "Chào bạn! Kết nối với AI gặp sự cố nhỏ (Error code: 429 - {'error': {'message': '[codex/gpt-5.5] [429]: The usage limit has been reached (reset after 17m 55s)'}}), nhưng tôi đã tìm thấy các phim phù hợp trong cơ sở dữ liệu:\n\n- **Inception** (2010) - ⭐ 8.8\n  *Quốc gia:* United States, United Kingdom\n  *Tóm tắt:* Dom Cobb is a skilled thief, the absolute best in the dangerous art of extraction, stealing valuable secrets from deep w...\n  *Link IMDb:* https://www.imdb.com/title/tt1375666/\n- **Dunkirk** (2017) - ⭐ 7.8\n  *Quốc gia:* United Kingdom, Netherlands, France, United States\n  *Tóm tắt:* May/June 1940. Four hundred thousand British and French soldiers are hole up in the French port town of Dunkirk. The onl...\n  *Link IMDb:* https://www.imdb.com/title/tt5013056/\n- **Oppenheimer** (2023) - ⭐ 8.2\n  *Quốc gia:* United States, United Kingdom\n  *Tóm tắt:* A dramatization of the life story of J. Robert Oppenheimer, the physicist who had a large hand in the development of the...\n  *Link IMDb:* https://www.imdb.com/title/tt15398776/\n- **Interstellar** (2014) - ⭐ 8.7\n  *Quốc gia:* United States, United Kingdom, Canada\n  *Tóm tắt:* When Earth becomes uninhabitable in the future, a farmer and ex-NASA pilot, Joseph Cooper, is tasked to pilot a spacecra...\n  *Link IMDb:* https://www.imdb.com/title/tt0816692/?ref_=sr_i_13\n- **Insomnia** (2002) - ⭐ 7.2\n  *Quốc gia:* United States, United Kingdom\n  *Tóm tắt:* In Nightmute, Alaska, seventeen year old resident Kay Connell is found murdered. As a favor to the local Nightmute polic...\n  *Link IMDb:* https://www.imdb.com/title/tt0278504/",
+    "trace": {
+      "entity_detection": {
+        "genres": [],
+        "directors": [
+          "christopher nolan"
+        ],
+        "stars": [],
+        "writers": [],
+        "content_keywords": []
+      },
+      "intent": {
+        "intent": "search",
+        "filters": {
+          "director": "christopher nolan"
+        },
+        "free_text": "Diễn viên nào hợp tác với Christopher Nolan nhiều nhất và họ thường đóng vai chính hay vai phụ?"
+      },
+      "stage0_graph": {
+        "called": false,
+        "candidates": []
+      },
+      "stage1_bm25": {
+        "top_k_requested": 100,
+        "candidates": []
+      },
+      "stage2_faiss": {
+        "candidates": []
+      },
+      "stage3_rerank": {
+        "candidates": []
+      },
+      "stage4_weighted_similarity": {
+        "per_candidate_scores": []
+      },
+      "final_filters": {
+        "director": "christopher nolan"
+      },
+      "final_route": "exact_filter_shortcut",
+      "actual_route": "exact_filter_shortcut",
+      "skipped_stages": [
+        "candidate_generation",
+        "bm25",
+        "faiss",
+        "weighted_similarity",
+        "cross_encoder"
+      ],
+      "executed_stages": [
+        "metadata_filter"
+      ],
+      "candidate_counts": {
+        "candidate_generation": 0,
+        "bm25": 0,
+        "faiss": 0,
+        "weighted_similarity": 0,
+        "cross_encoder": 0,
+        "metadata_filter": 13
+      }
+    },
+    "movies": [
+      {
+        "title": "Inception",
+        "imdb_id": "tt1375666"
+      },
+      {
+        "title": "Dunkirk",
+        "imdb_id": "tt5013056"
+      },
+      {
+        "title": "Oppenheimer",
+        "imdb_id": "tt15398776"
+      },
+      {
+        "title": "Interstellar",
+        "imdb_id": "tt0816692"
+      },
+      {
+        "title": "Insomnia",
+        "imdb_id": "tt0278504"
+      }
+    ]
+  },
+  {
+    "id": "q82",
+    "question": "Leonardo DiCaprio đã hợp tác với những đạo diễn nào nhiều hơn một lần?",
+    "difficulty": "expert",
+    "category": "graph_reasoning",
+    "answer_result": "Chào bạn! Kết nối với AI gặp sự cố nhỏ (Error code: 429 - {'error': {'message': '[codex/gpt-5.5] [429]: The usage limit has been reached (reset after 17m 48s)'}}), nhưng tôi đã tìm thấy các phim phù hợp trong cơ sở dữ liệu:\n\n- **Inception** (2010) - ⭐ 8.8\n  *Quốc gia:* United States, United Kingdom\n  *Tóm tắt:* Dom Cobb is a skilled thief, the absolute best in the dangerous art of extraction, stealing valuable secrets from deep w...\n  *Link IMDb:* https://www.imdb.com/title/tt1375666/\n- **Catch Me If You Can** (2002) - ⭐ 8.1\n  *Quốc gia:* United States, Canada\n  *Tóm tắt:* A true story about Frank Abagnale Jr. who, before his 19th birthday, successfully conned millions of dollars worth of ch...\n  *Link IMDb:* https://www.imdb.com/title/tt0264464/\n- **The Wolf of Wall Street** (2013) - ⭐ 8.2\n  *Quốc gia:* United States\n  *Tóm tắt:* Jordan Belfort (DiCaprio) is Long Island penny stockbroker who serves almost two years in prison for refusing to co-oper...\n  *Link IMDb:* https://www.imdb.com/title/tt0993846/\n- **Titanic** (1997) - ⭐ 8.0\n  *Quốc gia:* United States\n  *Tóm tắt:* 84 years later, a 100 year-old woman named Rose DeWitt Bukater tells the story to her granddaughter Lizzy Calvert, Brock...\n  *Link IMDb:* https://www.imdb.com/title/tt0120338/\n- **Django Unchained** (2012) - ⭐ 8.5\n  *Quốc gia:* United States\n  *Tóm tắt:* In 1858, a bounty hunter named King Schultz seeks out a slave named Django and buys him because he needs him to find som...\n  *Link IMDb:* https://www.imdb.com/title/tt1853728/",
+    "trace": {
+      "entity_detection": {
+        "genres": [],
+        "directors": [],
+        "stars": [
+          "leonardo dicaprio"
+        ],
+        "writers": [],
+        "content_keywords": []
+      },
+      "intent": {
+        "intent": "search",
+        "filters": {
+          "star": "leonardo dicaprio"
+        },
+        "free_text": "Leonardo DiCaprio đã hợp tác với những đạo diễn nào nhiều hơn một lần?"
+      },
+      "stage0_graph": {
+        "called": false,
+        "candidates": []
+      },
+      "stage1_bm25": {
+        "top_k_requested": 100,
+        "candidates": []
+      },
+      "stage2_faiss": {
+        "candidates": []
+      },
+      "stage3_rerank": {
+        "candidates": []
+      },
+      "stage4_weighted_similarity": {
+        "per_candidate_scores": []
+      },
+      "final_filters": {
+        "star": "leonardo dicaprio"
+      },
+      "final_route": "exact_filter_shortcut",
+      "actual_route": "exact_filter_shortcut",
+      "skipped_stages": [
+        "candidate_generation",
+        "bm25",
+        "faiss",
+        "weighted_similarity",
+        "cross_encoder"
+      ],
+      "executed_stages": [
+        "metadata_filter"
+      ],
+      "candidate_counts": {
+        "candidate_generation": 0,
+        "bm25": 0,
+        "faiss": 0,
+        "weighted_similarity": 0,
+        "cross_encoder": 0,
+        "metadata_filter": 15
+      }
+    },
+    "movies": [
+      {
+        "title": "Inception",
+        "imdb_id": "tt1375666"
+      },
+      {
+        "title": "Catch Me If You Can",
+        "imdb_id": "tt0264464"
+      },
+      {
+        "title": "The Wolf of Wall Street",
+        "imdb_id": "tt0993846"
+      },
+      {
+        "title": "Titanic",
+        "imdb_id": "tt0120338"
+      },
+      {
+        "title": "Django Unchained",
+        "imdb_id": "tt1853728"
+      }
+    ]
+  },
+  {
+    "id": "q83",
+    "question": "Đạo diễn Bong Joon-ho từng làm việc cùng những diễn viên nào nhiều lần?",
+    "difficulty": "expert",
+    "category": "graph_reasoning",
+    "answer_result": "Chào bạn! Kết nối với AI gặp sự cố nhỏ (Error code: 429 - {'error': {'message': '[codex/gpt-5.5] [429]: The usage limit has been reached (reset after 17m 41s)'}}), nhưng tôi đã tìm thấy các phim phù hợp trong cơ sở dữ liệu:\n\n- **Mother** (2009) - ⭐ 7.7\n  *Quốc gia:* South Korea\n  *Tóm tắt:* A mother lives quietly with her twenty-eight-year-old son, Do-joon, providing herbs and acupuncture to neighbors. One da...\n  *Link IMDb:* https://www.imdb.com/title/tt1216496/\n- **Memories of Murder** (2003) - ⭐ 8.1\n  *Quốc gia:* South Korea\n  *Tóm tắt:* In 1986, in the province of Gyunggi, in South Korea, a second young and beautiful woman is found dead, raped and tied an...\n  *Link IMDb:* https://www.imdb.com/title/tt0353969/\n- **Mickey 17** (2025) - ⭐ 6.7\n  *Quốc gia:* United States, South Korea\n  *Tóm tắt:* During a human expedition to colonize space, Mickey 17, a so-called \"expendable\" employee, is sent to explore an ice pla...\n  *Link IMDb:* https://www.imdb.com/title/tt12299608/\n- **Parasite** (2019) - ⭐ 8.5\n  *Quốc gia:* South Korea\n  *Tóm tắt:* The Kims - mother and father Chung-sook and Ki-taek, and their young adult offspring, son Ki-woo and daughter Ki-jung - ...\n  *Link IMDb:* https://www.imdb.com/title/tt6751668/\n- **The Host** (2006) - ⭐ 7.1\n  *Quốc gia:* South Korea, Japan\n  *Tóm tắt:* An American military base of Yongson releases toxic chemicals in the drain to the Han River under the direct order of an...\n  *Link IMDb:* https://www.imdb.com/title/tt0468492/",
+    "trace": {
+      "entity_detection": {
+        "genres": [],
+        "directors": [
+          "bong joon ho"
+        ],
+        "stars": [],
+        "writers": [],
+        "content_keywords": []
+      },
+      "intent": {
+        "intent": "search",
+        "filters": {
+          "director": "bong joon ho"
+        },
+        "free_text": "Đạo diễn Bong Joon-ho từng làm việc cùng những diễn viên nào nhiều lần?"
+      },
+      "stage0_graph": {
+        "called": false,
+        "candidates": []
+      },
+      "stage1_bm25": {
+        "top_k_requested": 100,
+        "candidates": []
+      },
+      "stage2_faiss": {
+        "candidates": []
+      },
+      "stage3_rerank": {
+        "candidates": []
+      },
+      "stage4_weighted_similarity": {
+        "per_candidate_scores": []
+      },
+      "final_filters": {
+        "director": "bong joon ho"
+      },
+      "final_route": "exact_filter_shortcut",
+      "actual_route": "exact_filter_shortcut",
+      "skipped_stages": [
+        "candidate_generation",
+        "bm25",
+        "faiss",
+        "weighted_similarity",
+        "cross_encoder"
+      ],
+      "executed_stages": [
+        "metadata_filter"
+      ],
+      "candidate_counts": {
+        "candidate_generation": 0,
+        "bm25": 0,
+        "faiss": 0,
+        "weighted_similarity": 0,
+        "cross_encoder": 0,
+        "metadata_filter": 9
+      }
+    },
+    "movies": [
+      {
+        "title": "Mother",
+        "imdb_id": "tt1216496"
+      },
+      {
+        "title": "Memories of Murder",
+        "imdb_id": "tt0353969"
+      },
+      {
+        "title": "Mickey 17",
+        "imdb_id": "tt12299608"
+      },
+      {
+        "title": "Parasite",
+        "imdb_id": "tt6751668"
+      },
+      {
+        "title": "The Host",
+        "imdb_id": "tt0468492"
+      }
+    ]
+  },
+  {
+    "id": "q84",
+    "question": "Christopher Nolan đã đạo diễn những bộ phim nào mà đồng thời ông cũng tham gia viết kịch bản?",
+    "difficulty": "expert",
+    "category": "graph_reasoning",
+    "answer_result": "Chào bạn! Kết nối với AI gặp sự cố nhỏ (Error code: 429 - {'error': {'message': '[codex/gpt-5.5] [429]: The usage limit has been reached (reset after 17m 33s)'}}), nhưng tôi đã tìm thấy các phim phù hợp trong cơ sở dữ liệu:\n\n- **Inception** (2010) - ⭐ 8.8\n  *Quốc gia:* United States, United Kingdom\n  *Tóm tắt:* Dom Cobb is a skilled thief, the absolute best in the dangerous art of extraction, stealing valuable secrets from deep w...\n  *Link IMDb:* https://www.imdb.com/title/tt1375666/\n- **Dunkirk** (2017) - ⭐ 7.8\n  *Quốc gia:* United Kingdom, Netherlands, France, United States\n  *Tóm tắt:* May/June 1940. Four hundred thousand British and French soldiers are hole up in the French port town of Dunkirk. The onl...\n  *Link IMDb:* https://www.imdb.com/title/tt5013056/\n- **Oppenheimer** (2023) - ⭐ 8.2\n  *Quốc gia:* United States, United Kingdom\n  *Tóm tắt:* A dramatization of the life story of J. Robert Oppenheimer, the physicist who had a large hand in the development of the...\n  *Link IMDb:* https://www.imdb.com/title/tt15398776/\n- **Interstellar** (2014) - ⭐ 8.7\n  *Quốc gia:* United States, United Kingdom, Canada\n  *Tóm tắt:* When Earth becomes uninhabitable in the future, a farmer and ex-NASA pilot, Joseph Cooper, is tasked to pilot a spacecra...\n  *Link IMDb:* https://www.imdb.com/title/tt0816692/?ref_=sr_i_13\n- **Insomnia** (2002) - ⭐ 7.2\n  *Quốc gia:* United States, United Kingdom\n  *Tóm tắt:* In Nightmute, Alaska, seventeen year old resident Kay Connell is found murdered. As a favor to the local Nightmute polic...\n  *Link IMDb:* https://www.imdb.com/title/tt0278504/",
+    "trace": {
+      "entity_detection": {
+        "genres": [],
+        "directors": [
+          "christopher nolan"
+        ],
+        "stars": [],
+        "writers": [],
+        "content_keywords": []
+      },
+      "intent": {
+        "intent": "search",
+        "filters": {
+          "director": "christopher nolan"
+        },
+        "free_text": "Christopher Nolan đã đạo diễn những bộ phim nào mà đồng thời ông cũng tham gia viết kịch bản?"
+      },
+      "stage0_graph": {
+        "called": false,
+        "candidates": []
+      },
+      "stage1_bm25": {
+        "top_k_requested": 100,
+        "candidates": []
+      },
+      "stage2_faiss": {
+        "candidates": []
+      },
+      "stage3_rerank": {
+        "candidates": []
+      },
+      "stage4_weighted_similarity": {
+        "per_candidate_scores": []
+      },
+      "final_filters": {
+        "director": "christopher nolan"
+      },
+      "final_route": "exact_filter_shortcut",
+      "actual_route": "exact_filter_shortcut",
+      "skipped_stages": [
+        "candidate_generation",
+        "bm25",
+        "faiss",
+        "weighted_similarity",
+        "cross_encoder"
+      ],
+      "executed_stages": [
+        "metadata_filter"
+      ],
+      "candidate_counts": {
+        "candidate_generation": 0,
+        "bm25": 0,
+        "faiss": 0,
+        "weighted_similarity": 0,
+        "cross_encoder": 0,
+        "metadata_filter": 13
+      }
+    },
+    "movies": [
+      {
+        "title": "Inception",
+        "imdb_id": "tt1375666"
+      },
+      {
+        "title": "Dunkirk",
+        "imdb_id": "tt5013056"
+      },
+      {
+        "title": "Oppenheimer",
+        "imdb_id": "tt15398776"
+      },
+      {
+        "title": "Interstellar",
+        "imdb_id": "tt0816692"
+      },
+      {
+        "title": "Insomnia",
+        "imdb_id": "tt0278504"
+      }
+    ]
+  },
+  {
+    "id": "q85",
+    "question": "Diễn viên nào từng đóng chung với Meryl Streep trong nhiều hơn một bộ phim?",
+    "difficulty": "expert",
+    "category": "graph_reasoning",
+    "answer_result": "Chào bạn! Kết nối với AI gặp sự cố nhỏ (Error code: 429 - {'error': {'message': '[codex/gpt-5.5] [429]: The usage limit has been reached (reset after 17m 26s)'}}), nhưng tôi đã tìm thấy các phim phù hợp trong cơ sở dữ liệu:\n\n- **Fantastic Mr. Fox** (2009) - ⭐ 7.9\n  *Quốc gia:* United States\n  *Tóm tắt:* This is the story of Mr. Fox (George Clooney) and his wild ways of hen heckling, turkey taking, and cider sipping, noctu...\n  *Link IMDb:* https://www.imdb.com/title/tt0432283/\n- **The Post** (2017) - ⭐ 7.2\n  *Quốc gia:* United States, India\n  *Tóm tắt:* A cover-up spanning four U.S. Presidents pushes the country's first female newspaper publisher and her editor to join an...\n  *Link IMDb:* https://www.imdb.com/title/tt6294822/?ref_=sr_i_39\n- **Adaptation.** (2002) - ⭐ 7.7\n  *Quốc gia:* United States\n  *Tóm tắt:* While his latest movie Being John Malkovich (1999) is in production, screenwriter Charlie Kaufman is hired by Valerie Th...\n  *Link IMDb:* https://www.imdb.com/title/tt0268126/\n- **Manhattan** (1979) - ⭐ 7.8\n  *Quốc gia:* United States\n  *Tóm tắt:* Forty-two year old Isaac Davis has a romanticized view of his hometown, New York City, most specifically Manhattan, as c...\n  *Link IMDb:* https://www.imdb.com/title/tt0079522/\n- **Doubt** (2008) - ⭐ 7.5\n  *Quốc gia:* United States\n  *Tóm tắt:* It's 1964, St. Nicholas in the Bronx. A charismatic priest, Father Flynn, is trying to upend the school's strict customs...\n  *Link IMDb:* https://www.imdb.com/title/tt0918927/",
+    "trace": {
+      "entity_detection": {
+        "genres": [],
+        "directors": [],
+        "stars": [
+          "meryl streep"
+        ],
+        "writers": [],
+        "content_keywords": []
+      },
+      "intent": {
+        "intent": "search",
+        "filters": {
+          "star": "meryl streep"
+        },
+        "free_text": "Diễn viên nào từng đóng chung với Meryl Streep trong nhiều hơn một bộ phim?"
+      },
+      "stage0_graph": {
+        "called": false,
+        "candidates": []
+      },
+      "stage1_bm25": {
+        "top_k_requested": 100,
+        "candidates": []
+      },
+      "stage2_faiss": {
+        "candidates": []
+      },
+      "stage3_rerank": {
+        "candidates": []
+      },
+      "stage4_weighted_similarity": {
+        "per_candidate_scores": []
+      },
+      "final_filters": {
+        "star": "meryl streep"
+      },
+      "final_route": "exact_filter_shortcut",
+      "actual_route": "exact_filter_shortcut",
+      "skipped_stages": [
+        "candidate_generation",
+        "bm25",
+        "faiss",
+        "weighted_similarity",
+        "cross_encoder"
+      ],
+      "executed_stages": [
+        "metadata_filter"
+      ],
+      "candidate_counts": {
+        "candidate_generation": 0,
+        "bm25": 0,
+        "faiss": 0,
+        "weighted_similarity": 0,
+        "cross_encoder": 0,
+        "metadata_filter": 15
+      }
+    },
+    "movies": [
+      {
+        "title": "Fantastic Mr. Fox",
+        "imdb_id": "tt0432283"
+      },
+      {
+        "title": "The Post",
+        "imdb_id": "tt6294822"
+      },
+      {
+        "title": "Adaptation.",
+        "imdb_id": "tt0268126"
+      },
+      {
+        "title": "Manhattan",
+        "imdb_id": "tt0079522"
+      },
+      {
+        "title": "Doubt",
+        "imdb_id": "tt0918927"
+      }
+    ]
+  },
+  {
+    "id": "q86",
+    "question": "Đạo diễn nào từng hợp tác với nhà soạn nhạc Hans Zimmer nhiều lần nhất?",
+    "difficulty": "expert",
+    "category": "graph_reasoning",
+    "answer_result": "Chào bạn! Kết nối với AI gặp sự cố nhỏ (Error code: 429 - {'error': {'message': '[codex/gpt-5.5] [429]: The usage limit has been reached (reset after 17m 19s)'}}), nhưng tôi đã tìm thấy các phim phù hợp trong cơ sở dữ liệu:\n\n- **Hans Zimmer Live in Prague** (2017) - ⭐ 9.1\n  *Quốc gia:* United Kingdom\n  *Tóm tắt:* The renowned film score composer leads a concert featuring his cinematic compositions....\n  *Link IMDb:* https://www.imdb.com/title/tt5732482/\n- **Hans Zimmer & Friends: Diamond in the Desert** (2025) - ⭐ 8.7\n  *Quốc gia:* United States, United Kingdom\n  *Tóm tắt:* A journey through Dubai featuring live performances at Coca-Cola Arena, intimate talks with friends, and stunning moment...\n  *Link IMDb:* https://www.imdb.com/title/tt35616060/?ref_=sr_i_148\n- **The World of Hans Zimmer - A New Dimension** (2025) - ⭐ nan\n  *Quốc gia:* Germany\n  *Tóm tắt:* Oscar winner Hans Zimmer's film music comes alive in Krakow with new arrangements from Dune 2, Lion King and more, featu...\n  *Link IMDb:* https://www.imdb.com/title/tt38704123/\n- **Hoist the Colours: The Opening Sequence** (2007) - ⭐ nan\n  *Quốc gia:* USA\n  *Tóm tắt:* This piece presents notes from Zimmer as it looks at the opening sequence and its song. The show offers a decent look at...\n  *Link IMDb:* https://www.imdb.com/title/tt5958252/",
+    "trace": {
+      "entity_detection": {
+        "genres": [],
+        "directors": [],
+        "stars": [
+          "hans zimmer"
+        ],
+        "writers": [],
+        "content_keywords": []
+      },
+      "intent": {
+        "intent": "search",
+        "filters": {
+          "star": "hans zimmer"
+        },
+        "free_text": "Đạo diễn nào từng hợp tác với nhà soạn nhạc Hans Zimmer nhiều lần nhất?"
+      },
+      "stage0_graph": {
+        "called": false,
+        "candidates": []
+      },
+      "stage1_bm25": {
+        "top_k_requested": 100,
+        "candidates": []
+      },
+      "stage2_faiss": {
+        "candidates": []
+      },
+      "stage3_rerank": {
+        "candidates": []
+      },
+      "stage4_weighted_similarity": {
+        "per_candidate_scores": []
+      },
+      "final_filters": {
+        "star": "hans zimmer"
+      },
+      "final_route": "exact_filter_shortcut",
+      "actual_route": "exact_filter_shortcut",
+      "skipped_stages": [
+        "candidate_generation",
+        "bm25",
+        "faiss",
+        "weighted_similarity",
+        "cross_encoder"
+      ],
+      "executed_stages": [
+        "metadata_filter"
+      ],
+      "candidate_counts": {
+        "candidate_generation": 0,
+        "bm25": 0,
+        "faiss": 0,
+        "weighted_similarity": 0,
+        "cross_encoder": 0,
+        "metadata_filter": 4
+      }
+    },
+    "movies": [
+      {
+        "title": "Hans Zimmer Live in Prague",
+        "imdb_id": "tt5732482"
+      },
+      {
+        "title": "Hans Zimmer & Friends: Diamond in the Desert",
+        "imdb_id": "tt35616060"
+      },
+      {
+        "title": "The World of Hans Zimmer - A New Dimension",
+        "imdb_id": "tt38704123"
+      },
+      {
+        "title": "Hoist the Colours: The Opening Sequence",
+        "imdb_id": "tt5958252"
+      }
+    ]
+  },
+  {
+    "id": "q87",
+    "question": "Tom Hanks và Steven Spielberg đã hợp tác với nhau trong những bộ phim nào?",
+    "difficulty": "expert",
+    "category": "graph_reasoning",
+    "answer_result": "Chào bạn! Kết nối với AI gặp sự cố nhỏ (Error code: 429 - {'error': {'message': '[codex/gpt-5.5] [429]: The usage limit has been reached (reset after 17m 12s)'}}), nhưng tôi đã tìm thấy các phim phù hợp trong cơ sở dữ liệu:\n\n- **Minority Report** (2002) - ⭐ 7.6\n  *Quốc gia:* United States\n  *Tóm tắt:* John works with the PreCrime police which stop crimes before they take place, with the help of three 'PreCogs' who can f...\n  *Link IMDb:* https://www.imdb.com/title/tt0181689/?ref_=sr_i_17\n- **Bridge of Spies** (2015) - ⭐ 7.6\n  *Quốc gia:* United States, India, Germany\n  *Tóm tắt:* In the cold war, a lawyer, James B. Donovan is recruited by the CIA and involved in an intense negotiation mission to re...\n  *Link IMDb:* https://www.imdb.com/title/tt3682448/\n- **Catch Me If You Can** (2002) - ⭐ 8.1\n  *Quốc gia:* United States, Canada\n  *Tóm tắt:* A true story about Frank Abagnale Jr. who, before his 19th birthday, successfully conned millions of dollars worth of ch...\n  *Link IMDb:* https://www.imdb.com/title/tt0264464/\n- **Schindler's List** (1994) - ⭐ 9.0\n  *Quốc gia:* United States\n  *Tóm tắt:* Oskar Schindler is a vain and greedy German businessman who becomes an unlikely humanitarian amid the barbaric German Na...\n  *Link IMDb:* https://www.imdb.com/title/tt0108052/\n- **Raiders of the Lost Ark** (1981) - ⭐ 8.4\n  *Quốc gia:* United States\n  *Tóm tắt:* The year is 1936. An archeology professor named Indiana Jones is venturing in the jungles of South America searching for...\n  *Link IMDb:* https://www.imdb.com/title/tt0082971/",
+    "trace": {
+      "entity_detection": {
+        "genres": [],
+        "directors": [
+          "steven spielberg",
+          "tom hanks"
+        ],
+        "stars": [],
+        "writers": [],
+        "content_keywords": []
+      },
+      "intent": {
+        "intent": "search",
+        "filters": {
+          "director": "steven spielberg"
+        },
+        "free_text": "Tom Hanks và Steven Spielberg đã hợp tác với nhau trong những bộ phim nào?"
+      },
+      "stage0_graph": {
+        "called": false,
+        "candidates": []
+      },
+      "stage1_bm25": {
+        "top_k_requested": 100,
+        "candidates": []
+      },
+      "stage2_faiss": {
+        "candidates": []
+      },
+      "stage3_rerank": {
+        "candidates": []
+      },
+      "stage4_weighted_similarity": {
+        "per_candidate_scores": []
+      },
+      "final_filters": {
+        "director": "steven spielberg"
+      },
+      "final_route": "exact_filter_shortcut",
+      "actual_route": "exact_filter_shortcut",
+      "skipped_stages": [
+        "candidate_generation",
+        "bm25",
+        "faiss",
+        "weighted_similarity",
+        "cross_encoder"
+      ],
+      "executed_stages": [
+        "metadata_filter"
+      ],
+      "candidate_counts": {
+        "candidate_generation": 0,
+        "bm25": 0,
+        "faiss": 0,
+        "weighted_similarity": 0,
+        "cross_encoder": 0,
+        "metadata_filter": 15
+      }
+    },
+    "movies": [
+      {
+        "title": "Minority Report",
+        "imdb_id": "tt0181689"
+      },
+      {
+        "title": "Bridge of Spies",
+        "imdb_id": "tt3682448"
+      },
+      {
+        "title": "Catch Me If You Can",
+        "imdb_id": "tt0264464"
+      },
+      {
+        "title": "Schindler's List",
+        "imdb_id": "tt0108052"
+      },
+      {
+        "title": "Raiders of the Lost Ark",
+        "imdb_id": "tt0082971"
+      }
+    ]
+  },
+  {
+    "id": "q88",
+    "question": "Diễn viên nào thường xuyên xuất hiện trong các phim của Quentin Tarantino?",
+    "difficulty": "expert",
+    "category": "graph_reasoning",
+    "answer_result": "Chào bạn! Kết nối với AI gặp sự cố nhỏ (Error code: 429 - {'error': {'message': '[codex/gpt-5.5] [429]: The usage limit has been reached (reset after 17m 4s)'}}), nhưng tôi đã tìm thấy các phim phù hợp trong cơ sở dữ liệu:\n\n- **The Hateful Eight** (2015) - ⭐ 7.8\n  *Quốc gia:* United States\n  *Tóm tắt:* In the dead of a Wyoming winter, a bounty hunter and his prisoner find shelter in a cabin currently inhabited by a colle...\n  *Link IMDb:* https://www.imdb.com/title/tt3460252/?ref_=sr_i_51\n- **Django Unchained** (2012) - ⭐ 8.5\n  *Quốc gia:* United States\n  *Tóm tắt:* In 1858, a bounty hunter named King Schultz seeks out a slave named Django and buys him because he needs him to find som...\n  *Link IMDb:* https://www.imdb.com/title/tt1853728/\n- **Kill Bill: Vol. 1** (2003) - ⭐ 8.2\n  *Quốc gia:* United States\n  *Tóm tắt:* Four years after taking a bullet in the head at her own wedding, The Bride emerges from a coma and decides it's time for...\n  *Link IMDb:* https://www.imdb.com/title/tt0266697/\n- **Kill Bill: Vol. 2** (2004) - ⭐ 8.0\n  *Quốc gia:* United States\n  *Tóm tắt:* Having already crossed two names from her Death List, the Bride resumes her quest for justice, taking aim at Budd and El...\n  *Link IMDb:* https://www.imdb.com/title/tt0378194/\n- **Inglourious Basterds** (2009) - ⭐ 8.4\n  *Quốc gia:* United States, Germany\n  *Tóm tắt:* In German-occupied France, young Jewish refugee Shosanna Dreyfus witnesses the slaughter of her family by Colonel Hans L...\n  *Link IMDb:* https://www.imdb.com/title/tt0361748/",
+    "trace": {
+      "entity_detection": {
+        "genres": [],
+        "directors": [
+          "quentin tarantino"
+        ],
+        "stars": [],
+        "writers": [],
+        "content_keywords": []
+      },
+      "intent": {
+        "intent": "search",
+        "filters": {
+          "director": "quentin tarantino"
+        },
+        "free_text": "Diễn viên nào thường xuyên xuất hiện trong các phim của Quentin Tarantino?"
+      },
+      "stage0_graph": {
+        "called": false,
+        "candidates": []
+      },
+      "stage1_bm25": {
+        "top_k_requested": 100,
+        "candidates": []
+      },
+      "stage2_faiss": {
+        "candidates": []
+      },
+      "stage3_rerank": {
+        "candidates": []
+      },
+      "stage4_weighted_similarity": {
+        "per_candidate_scores": []
+      },
+      "final_filters": {
+        "director": "quentin tarantino"
+      },
+      "final_route": "exact_filter_shortcut",
+      "actual_route": "exact_filter_shortcut",
+      "skipped_stages": [
+        "candidate_generation",
+        "bm25",
+        "faiss",
+        "weighted_similarity",
+        "cross_encoder"
+      ],
+      "executed_stages": [
+        "metadata_filter"
+      ],
+      "candidate_counts": {
+        "candidate_generation": 0,
+        "bm25": 0,
+        "faiss": 0,
+        "weighted_similarity": 0,
+        "cross_encoder": 0,
+        "metadata_filter": 15
+      }
+    },
+    "movies": [
+      {
+        "title": "The Hateful Eight",
+        "imdb_id": "tt3460252"
+      },
+      {
+        "title": "Django Unchained",
+        "imdb_id": "tt1853728"
+      },
+      {
+        "title": "Kill Bill: Vol. 1",
+        "imdb_id": "tt0266697"
+      },
+      {
+        "title": "Kill Bill: Vol. 2",
+        "imdb_id": "tt0378194"
+      },
+      {
+        "title": "Inglourious Basterds",
+        "imdb_id": "tt0361748"
+      }
+    ]
+  },
+  {
+    "id": "q89",
+    "question": "Đạo diễn nào đã hợp tác nhiều lần với diễn viên Cillian Murphy?",
+    "difficulty": "expert",
+    "category": "graph_reasoning",
+    "answer_result": "Chào bạn! Kết nối với AI gặp sự cố nhỏ (Error code: 429 - {'error': {'message': '[codex/gpt-5.5] [429]: The usage limit has been reached (reset after 16m 57s)'}}), nhưng tôi đã tìm thấy các phim phù hợp trong cơ sở dữ liệu:\n\n- **28 Days Later** (2002) - ⭐ 7.5\n  *Quốc gia:* United Kingdom, United States\n  *Tóm tắt:* Animal activists invade a laboratory with the intention of releasing chimpanzees that are undergoing experimentation, in...\n  *Link IMDb:* https://www.imdb.com/title/tt0289043/\n- **Inception** (2010) - ⭐ 8.8\n  *Quốc gia:* United States, United Kingdom\n  *Tóm tắt:* Dom Cobb is a skilled thief, the absolute best in the dangerous art of extraction, stealing valuable secrets from deep w...\n  *Link IMDb:* https://www.imdb.com/title/tt1375666/\n- **Oppenheimer** (2023) - ⭐ 8.2\n  *Quốc gia:* United States, United Kingdom\n  *Tóm tắt:* A dramatization of the life story of J. Robert Oppenheimer, the physicist who had a large hand in the development of the...\n  *Link IMDb:* https://www.imdb.com/title/tt15398776/\n- **A Quiet Place Part II** (2020) - ⭐ 7.2\n  *Quốc gia:* United States\n  *Tóm tắt:* Following the events at home, the Abbott family now face the terrors of the outside world. Forced to venture into the un...\n  *Link IMDb:* https://www.imdb.com/title/tt8332922/?ref_=sr_i_2\n- **The Dark Knight** (2008) - ⭐ 9.1\n  *Quốc gia:* United States, United Kingdom\n  *Tóm tắt:* Set within a year after the events of Batman Begins (2005), Batman, Lieutenant James Gordon, and new District Attorney H...\n  *Link IMDb:* https://www.imdb.com/title/tt0468569/",
+    "trace": {
+      "entity_detection": {
+        "genres": [],
+        "directors": [],
+        "stars": [
+          "cillian murphy"
+        ],
+        "writers": [],
+        "content_keywords": []
+      },
+      "intent": {
+        "intent": "search",
+        "filters": {
+          "star": "cillian murphy"
+        },
+        "free_text": "Đạo diễn nào đã hợp tác nhiều lần với diễn viên Cillian Murphy?"
+      },
+      "stage0_graph": {
+        "called": false,
+        "candidates": []
+      },
+      "stage1_bm25": {
+        "top_k_requested": 100,
+        "candidates": []
+      },
+      "stage2_faiss": {
+        "candidates": []
+      },
+      "stage3_rerank": {
+        "candidates": []
+      },
+      "stage4_weighted_similarity": {
+        "per_candidate_scores": []
+      },
+      "final_filters": {
+        "star": "cillian murphy"
+      },
+      "final_route": "exact_filter_shortcut",
+      "actual_route": "exact_filter_shortcut",
+      "skipped_stages": [
+        "candidate_generation",
+        "bm25",
+        "faiss",
+        "weighted_similarity",
+        "cross_encoder"
+      ],
+      "executed_stages": [
+        "metadata_filter"
+      ],
+      "candidate_counts": {
+        "candidate_generation": 0,
+        "bm25": 0,
+        "faiss": 0,
+        "weighted_similarity": 0,
+        "cross_encoder": 0,
+        "metadata_filter": 15
+      }
+    },
+    "movies": [
+      {
+        "title": "28 Days Later",
+        "imdb_id": "tt0289043"
+      },
+      {
+        "title": "Inception",
+        "imdb_id": "tt1375666"
+      },
+      {
+        "title": "Oppenheimer",
+        "imdb_id": "tt15398776"
+      },
+      {
+        "title": "A Quiet Place Part II",
+        "imdb_id": "tt8332922"
+      },
+      {
+        "title": "The Dark Knight",
+        "imdb_id": "tt0468569"
+      }
+    ]
+  },
+  {
+    "id": "q90",
+    "question": "Những diễn viên nào từng đóng cùng nhau trong ít nhất hai bộ phim của đạo diễn Martin Scorsese?",
+    "difficulty": "expert",
+    "category": "graph_reasoning",
+    "answer_result": "Chào bạn! Kết nối với AI gặp sự cố nhỏ (Error code: 429 - {'error': {'message': '[codex/gpt-5.5] [429]: The usage limit has been reached (reset after 16m 50s)'}}), nhưng tôi đã tìm thấy các phim phù hợp trong cơ sở dữ liệu:\n\n- **The Wolf of Wall Street** (2013) - ⭐ 8.2\n  *Quốc gia:* United States\n  *Tóm tắt:* Jordan Belfort (DiCaprio) is Long Island penny stockbroker who serves almost two years in prison for refusing to co-oper...\n  *Link IMDb:* https://www.imdb.com/title/tt0993846/\n- **The King of Comedy** (1982) - ⭐ 7.8\n  *Quốc gia:* United States\n  *Tóm tắt:* Rupert Pupkin is obsessed with becoming a comedy great. However, when he confronts his idol, talk show host Jerry Langfo...\n  *Link IMDb:* https://www.imdb.com/title/tt0085794/\n- **The Irishman** (2019) - ⭐ 7.8\n  *Quốc gia:* United States\n  *Tóm tắt:* Frank \"The Irishman\" Sheeran is a man with a lot on his mind. The former labor union high official and hitman, learned t...\n  *Link IMDb:* https://www.imdb.com/title/tt1302006/\n- **Shutter Island** (2010) - ⭐ 8.2\n  *Quốc gia:* United States\n  *Tóm tắt:* In 1954, up-and-coming U.S. marshal Teddy Daniels is assigned to investigate the disappearance of a patient from Boston'...\n  *Link IMDb:* https://www.imdb.com/title/tt1130884/\n- **After Hours** (1985) - ⭐ 7.6\n  *Quốc gia:* United States\n  *Tóm tắt:* A meek word processor in New York impulsively travels downtown to Soho for date with an attractive, but apparently distu...\n  *Link IMDb:* https://www.imdb.com/title/tt0088680/",
+    "trace": {
+      "entity_detection": {
+        "genres": [],
+        "directors": [
+          "martin scorsese"
+        ],
+        "stars": [],
+        "writers": [],
+        "content_keywords": []
+      },
+      "intent": {
+        "intent": "search",
+        "filters": {
+          "director": "martin scorsese"
+        },
+        "free_text": "Những diễn viên nào từng đóng cùng nhau trong ít nhất hai bộ phim của đạo diễn Martin Scorsese?"
+      },
+      "stage0_graph": {
+        "called": false,
+        "candidates": []
+      },
+      "stage1_bm25": {
+        "top_k_requested": 100,
+        "candidates": []
+      },
+      "stage2_faiss": {
+        "candidates": []
+      },
+      "stage3_rerank": {
+        "candidates": []
+      },
+      "stage4_weighted_similarity": {
+        "per_candidate_scores": []
+      },
+      "final_filters": {
+        "director": "martin scorsese"
+      },
+      "final_route": "exact_filter_shortcut",
+      "actual_route": "exact_filter_shortcut",
+      "skipped_stages": [
+        "candidate_generation",
+        "bm25",
+        "faiss",
+        "weighted_similarity",
+        "cross_encoder"
+      ],
+      "executed_stages": [
+        "metadata_filter"
+      ],
+      "candidate_counts": {
+        "candidate_generation": 0,
+        "bm25": 0,
+        "faiss": 0,
+        "weighted_similarity": 0,
+        "cross_encoder": 0,
+        "metadata_filter": 15
+      }
+    },
+    "movies": [
+      {
+        "title": "The Wolf of Wall Street",
+        "imdb_id": "tt0993846"
+      },
+      {
+        "title": "The King of Comedy",
+        "imdb_id": "tt0085794"
+      },
+      {
+        "title": "The Irishman",
+        "imdb_id": "tt1302006"
+      },
+      {
+        "title": "Shutter Island",
+        "imdb_id": "tt1130884"
+      },
+      {
+        "title": "After Hours",
+        "imdb_id": "tt0088680"
+      }
+    ]
+  }
+]

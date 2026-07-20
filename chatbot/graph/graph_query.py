@@ -414,3 +414,57 @@ def find_top_collaborator(graph: nx.MultiDiGraph, person_name: str, top_k: int =
     
     result = sorted(collaborators.values(), key=lambda x: x["weight"], reverse=True)
     return result[:top_k]
+
+def find_common_movies_of_entities(graph: nx.MultiDiGraph, directors: list[str], stars: list[str]) -> list[str]:
+    """
+    Tìm danh sách các bộ phim mà tất cả các đạo diễn và diễn viên được truyền vào đều tham gia hợp tác.
+    Lọc chính xác theo node_type == "Movie" và các quan hệ DIRECTED / ACTED_IN.
+    """
+    entity_nodes = []
+    
+    # Hàm phụ trợ tìm node không phân biệt hoa thường
+    def find_node_case_insensitive(name, allowed_types):
+        name_lower = name.lower().strip()
+        for node, data in graph.nodes(data=True):
+            if data.get("type") in allowed_types and clean_name(node).lower() == name_lower:
+                return node
+        return None
+
+    # Tìm node tương ứng cho từng thực thể
+    for d in directors:
+        d_node = find_node_case_insensitive(d, ["Director"])
+        if d_node:
+            entity_nodes.append(d_node)
+    for s in stars:
+        s_node = find_node_case_insensitive(s, ["Actor"])
+        if s_node:
+            entity_nodes.append(s_node)
+
+    # Nếu không tìm thấy node nào trong đồ thị, trả về rỗng
+    if not entity_nodes:
+        return []
+
+    movies_sets = []
+    for node in entity_nodes:
+        node_movies = set()
+        if graph.has_node(node):
+            # Với Director / Actor, các cạnh trỏ tới Movie là successors
+            for v in graph.successors(node):
+                vtype = graph.nodes[v].get("type")
+                if vtype == "Movie":
+                    # Kiểm tra xem có quan hệ DIRECTED hoặc ACTED_IN hay không
+                    for key in graph[node][v]:
+                        etype = graph[node][v][key].get("type")
+                        if etype in ("DIRECTED", "ACTED_IN"):
+                            node_movies.add(v)
+                            break
+        movies_sets.append(node_movies)
+
+    # Tìm giao của tất cả các tập hợp phim
+    if not movies_sets:
+        return []
+    common_movies = movies_sets[0]
+    for s in movies_sets[1:]:
+        common_movies = common_movies.intersection(s)
+
+    return [clean_name(m) for m in common_movies]

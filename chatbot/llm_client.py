@@ -25,7 +25,7 @@ def get_llm_client(provider: str, api_key: str, model_name: str, base_url: str =
         openai_api_base=url,
         model_name=model,
         temperature=0.7,
-        max_tokens=1024,
+        max_tokens=2048,
         timeout=30.0,
         max_retries=2
     )
