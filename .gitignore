@@ -51,7 +51,9 @@ scratch/
 task.md
 **/task.md
 
-# Local cache and temporary evaluation results
+# Tests & local cache / evaluation results
+chatbot/tests/
+tests/
 evaluation_v3/llm_cache.json
 evaluation_v3/intermediate_results*.json
 evaluation_v3/latency_results*.json
