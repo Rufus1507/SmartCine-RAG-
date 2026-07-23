@@ -1,35 +1,43 @@
-# Python cache
+# Python cache & bytecode
 __pycache__/
 **/__pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
 .pytest_cache/
 .ipynb_checkpoints/
 
-# Environments
+# Virtual Environments
 .venv/
 venv/
 ENV/
 env/
 
-# IDE / Editors
+# IDE, Editors & AI tools
 .vscode/
 .idea/
+.mimocode/
+.gemini/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.swp
+*.swo
+.DS_Store
+Thumbs.db
 
-# Large generated data/models
+# Large generated data, embeddings & models
 *.index
 *.pkl
+*.bin
+*.pt
+*.onnx
 chatbot/description_embeddings.index
 chatbot/movie_graph.pkl
 
 # Data directories (ignore raw/heavy data, crawls, temporary scratch space)
 data/*
+!data/.gitkeep
 movies_crawl_data/
 movie_master/
 scratch/
@@ -37,6 +45,7 @@ scratch/
 # Local environment files
 .env
 .env.*
+!.env.example
 
 # Temporary task / scratch files
 task.md
@@ -50,6 +59,6 @@ evaluation_v3/ablation_results*.json
 evaluation_v3/multihop_eval_results.json
 evaluation_v3/before_vs_after_report.md
 test_code/eda_results.json
-eval/*results_raw*.json
+eval/*results*.json
 chatbot/feedback_logs/
 feedback_logs/
