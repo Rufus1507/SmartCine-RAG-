@@ -1,6 +1,7 @@
 import os
 import ast
 import json
+import functools
 import pandas as pd
 import streamlit as st
 import faiss
@@ -250,10 +251,11 @@ def load_bm25_index(df):
     """
     return build_bm25_index(df)
 
-@st.cache_data
-def load_country_aliases():
+@functools.lru_cache(maxsize=1)
+def _load_country_aliases_cached():
     """
-    Nạp từ điển bí danh / dịch tên quốc gia.
+    Hàm nội bộ: nạp từ điển bí danh quốc gia với @lru_cache.
+    Chỉ đọc file 1 lần duy nhất — kết quả được giữ trong bộ nhớ process.
     """
     country_aliases_path = os.path.join(CHATBOT_DIR, "country_aliases.json")
     try:
@@ -261,4 +263,15 @@ def load_country_aliases():
             return json.load(f)
     except FileNotFoundError:
         return {}
+
+
+@st.cache_data
+def load_country_aliases():
+    """
+    Nạp từ điển bí danh / dịch tên quốc gia.
+    Có 2 tầng cache:
+      - @lru_cache (module-level): đảm bảo chỉ đọc file 1 lần kể cả ngoài Streamlit.
+      - @st.cache_data: tích hợp cache của Streamlit khi chạy trong app.
+    """
+    return _load_country_aliases_cached()
 

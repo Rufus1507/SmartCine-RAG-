@@ -101,8 +101,20 @@ def route_retrieval(
     """
     import numpy as np
     from chatbot.retrieval.multistage_retriever import MultistageRetriever
+
+    # Task 3 FIX: copy ngay đầu hàm để tránh mutate object filters của caller.
+    # rag_chain.py dùng {**last_filters, **new_filters} để merge context đa lượt;
+    # nếu object bị mutate tại đây, filter tạm (vd: title) sẽ rò rỉ sang lượt tiếp theo.
+    filters = filters.copy()
+
     retriever = MultistageRetriever()
-    
+
+    # Task 4 FIX: Đảm bảo key "stage0_graph" luôn tồn tại trong trace trước khi truy cập.
+    # Nếu nhánh similar-movie hoặc filmography không được kích hoạt, key này sẽ không được
+    # tạo ra → gây KeyError tiềm ẩn ở downstream code đọc trace["stage0_graph"].
+    if trace is not None:
+        trace.setdefault("stage0_graph", {"called": False, "candidates": []})
+
     graph_candidates = None
     
     # 1. Kiểm tra nếu là truy vấn phim tương tự
@@ -159,7 +171,7 @@ def route_retrieval(
                 if graph_rows:
                     graph_candidates = pd.DataFrame(graph_rows)
             except Exception as e:
-                print(f"⚠️ Lỗi khi lấy candidates từ Graph RAG: {e}")
+                print(f"Error getting candidates from Graph RAG: {e}")
     
     # 2. P3 FIX: Kiểm tra nếu là truy vấn multi-hop filmography của đạo diễn/diễn viên
     # Ví dụ: "Đạo diễn của Alien: Romulus đã từng làm những phim kinh dị nào khác?"
@@ -205,7 +217,7 @@ def route_retrieval(
                 if graph_rows:
                     graph_candidates = pd.DataFrame(graph_rows)
             except Exception as e:
-                print(f"⚠️ Lỗi khi lấy graph candidates cho filmography query: {e}")
+                print(f"Error getting graph candidates for filmography query: {e}")
                 
 
 

@@ -97,8 +97,6 @@ TRANSLATION_MAP = {
     "hoang dã": "wildlife",
     "động vật": "animal",
     "châu phi": "africa",
-    "siêu anh hùng": "superhero",
-    "vũ trụ": "space",
     "ngoài hành tinh": "alien",
     "người ngoài hành tinh": "alien",
     "quái vật": "monster",

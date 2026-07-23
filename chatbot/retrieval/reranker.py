@@ -13,7 +13,7 @@ def load_reranker_model() -> CrossEncoder:
         model = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
         return model
     except Exception as e:
-        print(f"⚠️ Không thể tải mô hình Cross-Encoder: {e}")
+        print(f"Error: Could not load Cross-Encoder model: {e}")
         return None
 
 def rerank_results(query: str, candidates_df: pd.DataFrame, top_k: int = 20,
@@ -65,5 +65,5 @@ def rerank_results(query: str, candidates_df: pd.DataFrame, top_k: int = 20,
         result = result.sort_values(by="rerank_score", ascending=False)
         return result.head(top_k).copy()
     except Exception as e:
-        print(f"⚠️ Lỗi trong quá trình Rerank: {e}")
+        print(f"Error during Rerank: {e}")
         return candidates_df.head(top_k).copy()

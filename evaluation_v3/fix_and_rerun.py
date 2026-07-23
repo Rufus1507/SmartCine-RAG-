@@ -34,7 +34,7 @@ import builtins
 def print(*args, **kwargs):
     builtins.print(*args, flush=True, **kwargs)
 
-workspace_dir = r"c:\Users\Admin\Desktop\4\DAP391m\code"
+workspace_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if workspace_dir not in sys.path:
     sys.path.append(workspace_dir)
 

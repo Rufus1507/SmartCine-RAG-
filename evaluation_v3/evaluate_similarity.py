@@ -12,7 +12,7 @@ import torch
 from sentence_transformers import SentenceTransformer
 
 # Add workspace dir to path
-workspace_dir = r"c:\Users\Admin\Desktop\4\DAP391m\code"
+workspace_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(workspace_dir)
 
 from chatbot.config import MIN_VOTES_THRESHOLD, CHATBOT_DIR

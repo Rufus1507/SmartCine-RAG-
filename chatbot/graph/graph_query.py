@@ -200,7 +200,8 @@ def get_limited_neighbors(graph: nx.MultiDiGraph, u: str, max_neighbors_per_hop:
     
     for v, (etype, weight, vtype) in by_node.items():
         if vtype == "Movie":
-            rating = graph.nodes[v].get("rating", 0.0) or 0.0
+            rating = graph.nodes[v].get("rating") or 0.0
+            rating = 0.0 if (rating != rating) else float(rating)  # NaN check
             votes = graph.nodes[v].get("num_votes", 0) or 0
             movies.append((v, etype, weight, rating, votes))
         else:

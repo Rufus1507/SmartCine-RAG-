@@ -128,10 +128,11 @@ def find_similar_movies_v2(df: pd.DataFrame, index, model, user_input: str, filt
     
     # Dùng toàn bộ phim; không loại phim thiếu vote/rating.
     df_filtered = df.reset_index(drop=True)
+    
     if profile_index.ntotal != len(df_filtered):
         print(
-            "⚠️ Profile index không khớp số dòng dữ liệu. "
-            "Hãy chạy lại generate_movie_profile_embeddings.py để recommend tương tự không lọc vote."
+            "Warning: Profile index does not match dataset length. "
+            "Please run generate_movie_profile_embeddings.py again to update the profile index."
         )
         return pd.DataFrame(), False
     

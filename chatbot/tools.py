@@ -1,4 +1,5 @@
 import re
+import logging
 import unicodedata
 import pandas as pd
 import numpy as np
@@ -290,8 +291,9 @@ def semantic_search_tool(query: str, df: pd.DataFrame, index, model, top_k: int 
         # Chỉ lấy các index hợp lệ nằm trong khoảng dòng của df
         valid_indices = [idx for idx in indices[0] if 0 <= idx < len(df)]
         return df.iloc[valid_indices].copy()
-    except Exception:
-        return df.copy()
+    except Exception as e:
+        logging.warning(f"semantic_search_tool failed: {e}")
+        return pd.DataFrame()
 
 def get_movie_detail_tool(df: pd.DataFrame, title: str) -> pd.DataFrame:
     """

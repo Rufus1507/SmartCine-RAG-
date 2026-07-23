@@ -32,7 +32,7 @@ def build_movie_graph(df: pd.DataFrame, vocab_data: dict, actor_metadata: dict, 
     # Không loại phim theo vote/rating: phim thiếu vote hoặc rating vẫn phải có thể được recommend.
     df_filtered = df.reset_index(drop=True)
     
-    print(f"Xây dựng đồ thị với {len(df_filtered)} bộ phim...")
+    print(f"Building graph with {len(df_filtered)} movies...")
     
     # 1. Thêm các node thể loại từ từ vựng (Genre)
     from chatbot.feature_engineering.movie_feature_builder import PARENT_GENRES
@@ -144,11 +144,11 @@ def load_or_build_graph(df: pd.DataFrame, force_rebuild: bool = False) -> nx.Mul
     from chatbot.feature_engineering.movie_feature_builder import VOCAB_PATH, ACTOR_METADATA_PATH, DIRECTOR_METADATA_PATH
     
     if not force_rebuild and os.path.exists(GRAPH_CACHE_PATH):
-        print(f"Đang tải đồ thị phim từ cache: {GRAPH_CACHE_PATH}...")
+        print(f"Loading movie graph from cache: {GRAPH_CACHE_PATH}...")
         try:
             with open(GRAPH_CACHE_PATH, "rb") as f:
                 G = pickle.load(f)
-            print(f"Đã tải thành công đồ thị với {G.number_of_nodes()} nodes và {G.number_of_edges()} edges.")
+            print(f"Successfully loaded graph with {G.number_of_nodes()} nodes and {G.number_of_edges()} edges.")
             cached_movie_count = sum(
                 1 for _, data in G.nodes(data=True)
                 if data.get("type") == "Movie"
@@ -160,15 +160,15 @@ def load_or_build_graph(df: pd.DataFrame, force_rebuild: bool = False) -> nx.Mul
             )
             if expected_movie_count and cached_movie_count < expected_movie_count:
                 print(
-                    "Cache đồ thị đang thiếu phim so với dữ liệu hiện tại "
+                    "Graph cache is missing movies compared to current dataset "
                     f"({cached_movie_count:,}/{expected_movie_count:,}). "
-                    "Tiến hành rebuild không lọc vote..."
+                    "Rebuilding without vote filtering..."
                 )
             else:
                 _loaded_graph = G
                 return G
         except Exception as e:
-            print(f"Không thể tải đồ thị từ cache: {e}. Tiến hành xây dựng lại đồ thị...")
+            print(f"Could not load graph from cache: {e}. Rebuilding graph...")
             
     # Đọc vocab và metadata
     with open(VOCAB_PATH, "r", encoding="utf-8") as f:
@@ -180,13 +180,13 @@ def load_or_build_graph(df: pd.DataFrame, force_rebuild: bool = False) -> nx.Mul
         
     G = build_movie_graph(df, vocab_data, actor_metadata, director_metadata)
     
-    print(f"Đang lưu đồ thị phim vào cache: {GRAPH_CACHE_PATH}...")
+    print(f"Saving movie graph to cache: {GRAPH_CACHE_PATH}...")
     try:
         with open(GRAPH_CACHE_PATH, "wb") as f:
             pickle.dump(G, f, protocol=pickle.HIGHEST_PROTOCOL)
-        print("Lưu cache đồ thị thành công!")
+        print("Successfully saved graph cache!")
     except Exception as e:
-        print(f"Lỗi khi lưu cache đồ thị: {e}")
+        print(f"Error saving graph cache: {e}")
         
     _loaded_graph = G
     return G

@@ -1,10 +1,37 @@
 import re
 import json
+import time
+import logging
 from typing import Optional
 from pydantic import BaseModel, Field, field_validator
 from langchain_core.language_models import BaseChatModel
 from chatbot.prompts.intent_prompt import get_intent_prompt
+from chatbot.rate_limiter import gemini_rate_limiter
 from rapidfuzz import fuzz
+from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception
+
+logger = logging.getLogger(__name__)
+
+
+def _is_rate_limit_error(exc: BaseException) -> bool:
+    """Trả về True nếu lỗi là 429 RESOURCE_EXHAUSTED."""
+    msg = str(exc).lower()
+    return "429" in msg or "resource_exhausted" in msg or "rate limit" in msg
+
+
+@retry(
+    wait=wait_exponential(multiplier=2, min=5, max=60),
+    stop=stop_after_attempt(4),
+    retry=retry_if_exception(_is_rate_limit_error),
+)
+def _invoke_llm_intent(llm, prompt: str):
+    """Gọi LLM với rate limiter + retry-on-429 cho intent chain."""
+    gemini_rate_limiter.wait()
+    t0 = time.monotonic()
+    result = llm.invoke(prompt)
+    logger.debug("[intent_chain] llm.invoke took %.2fs", time.monotonic() - t0)
+    return result
+
 
 # ============================================================
 # PYDANTIC SCHEMA CHO INTENT PARSING
@@ -128,8 +155,8 @@ def run_intent_chain(llm: BaseChatModel, user_message: str, detected_entities: d
     
     parsed = None
     try:
-        # Gọi LangChain LLM
-        response = llm.invoke(prompt_template.format(input=user_message))
+        # Gọi LLM qua rate limiter + retry-on-429
+        response = _invoke_llm_intent(llm, prompt_template.format(input=user_message))
         raw = response.content.strip()
         
         # Regex trích xuất JSON nếu LLM trả văn bản bao quanh

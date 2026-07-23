@@ -224,12 +224,9 @@ class MovieFeatureBuilder:
         if os.path.exists(VOCAB_PATH):
             with open(VOCAB_PATH, "r", encoding="utf-8") as f:
                 self.vocabularies = json.load(f)
-            if os.path.exists(ACTOR_METADATA_PATH):
-                with open(ACTOR_METADATA_PATH, "r", encoding="utf-8") as f:
-                    self.actor_metadata = json.load(f)
-            if os.path.exists(DIRECTOR_METADATA_PATH):
-                with open(DIRECTOR_METADATA_PATH, "r", encoding="utf-8") as f:
-                    self.director_metadata = json.load(f)
+            # Metadata is only populated/saved during fit, not needed for inference
+            self.actor_metadata = {}
+            self.director_metadata = {}
             
             # Map items for quick search
             self.actor_to_idx = {name: idx for idx, name in enumerate(self.vocabularies["actors"])}

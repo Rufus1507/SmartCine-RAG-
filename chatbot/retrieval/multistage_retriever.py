@@ -19,6 +19,37 @@ class MultistageRetriever:
     def __init__(self):
         self.builder = MovieFeatureBuilder()
         self.bm25_index = None
+
+    @staticmethod
+    def _merge_candidates(
+        graph_candidates: pd.DataFrame,
+        faiss_candidates: pd.DataFrame,
+        bm25_candidates: pd.DataFrame,
+        metadata_candidates: pd.DataFrame,
+        has_metadata_filters: bool,
+        cap: int = 500
+    ) -> list:
+        """Gộp và dedup candidate theo thứ tự ưu tiên: metadata > graph > faiss > bm25."""
+        candidate_list = []
+        seen_links = set()
+        dfs_to_combine = []
+        if has_metadata_filters and not metadata_candidates.empty:
+            dfs_to_combine.append(metadata_candidates)
+        if graph_candidates is not None and not graph_candidates.empty:
+            dfs_to_combine.append(graph_candidates)
+        dfs_to_combine.extend([faiss_candidates, bm25_candidates])
+        for candidates_df in dfs_to_combine:
+            if not candidates_df.empty:
+                for _, row in candidates_df.iterrows():
+                    link = row["Movie Link"]
+                    if link not in seen_links:
+                        seen_links.add(link)
+                        candidate_list.append(row)
+                        if len(candidate_list) >= cap:
+                            break
+            if len(candidate_list) >= cap:
+                break
+        return candidate_list
         
     def _get_base_movie(self, df: pd.DataFrame, query: str, filters: dict) -> tuple[pd.Series, bool]:
         """
@@ -374,26 +405,18 @@ class MultistageRetriever:
             metadata_candidates = search_movies_tool(df, filters_for_retrieval, top_k=500)
             
         # Combine and deduplicate candidates
-        candidate_list = []
-        seen_links = set()
-        
-        # Priority order: graph candidates (if any), FAISS candidates, BM25 candidates, then metadata candidates
-        dfs_to_combine = []
-        if graph_candidates is not None and not graph_candidates.empty:
-            dfs_to_combine.append(graph_candidates)
-        dfs_to_combine.extend([faiss_candidates, bm25_candidates, metadata_candidates])
-        
-        for candidates_df in dfs_to_combine:
-            if not candidates_df.empty:
-                for _, row in candidates_df.iterrows():
-                    link = row["Movie Link"]
-                    if link not in seen_links:
-                        seen_links.add(link)
-                        candidate_list.append(row)
-                        if len(candidate_list) >= 500:
-                            break
-            if len(candidate_list) >= 500:
-                break
+        # Priority order (P0 FIX): metadata_candidates FIRST to guarantee hard-filter matches
+        # enter the pool before the 500-cap is hit.
+        # Old order: graph(300) + faiss(150) + bm25(100) = 550 → cap hit before metadata joined.
+        # New order: metadata first, then graph, then faiss, then bm25.
+        candidate_list = self._merge_candidates(
+            graph_candidates=graph_candidates,
+            faiss_candidates=faiss_candidates,
+            bm25_candidates=bm25_candidates,
+            metadata_candidates=metadata_candidates,
+            has_metadata_filters=has_metadata_filters,
+            cap=500
+        )
                 
         if not candidate_list:
             # Fallback to general filtered list if no query and no matches

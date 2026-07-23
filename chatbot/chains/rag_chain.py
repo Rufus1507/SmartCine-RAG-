@@ -141,9 +141,8 @@ def run_rag_pipeline(
         
         # PRIORITY 4 FIX: Phát hiện truy vấn tính thống kê (trung bình, cao hơn mức trung bình...)
         # và tính TRỰC TIẾP từ toàn bộ df theo filter, không qua tập ứng viên bị giới hạn top-K.
-        import re as _re
         _stat_pattern = r'trung\s*b[ìi]nh|average|avg|cao\s*h[ơo]n.*m[uứ]c|so\s*s[áa]nh|mean|median|điểm\s*tb|điểm\s*trung\s*b[ìi]nh'
-        if _re.search(_stat_pattern, user_input, _re.IGNORECASE) and not person_name:
+        if re.search(_stat_pattern, user_input, re.IGNORECASE) and not person_name:
             from chatbot.tools import search_movies_tool
             from chatbot.config import COL_RATING, COL_GENRE, COL_YEAR
             # Chỉ áp dụng filter thể loại/năm/quốc gia — không bị giới hạn bởi top-K retrieval
@@ -234,7 +233,6 @@ def run_rag_pipeline(
                 G = load_or_build_graph(df)
                 
                 # Tách danh sách director và star để kiểm tra co-collaboration
-                import re
                 directors_list = []
                 if filters.get("director"):
                     directors_list = [d.strip() for d in re.split(r'[,;]|\bvà\b|\bhoặc\b|\band\b|\bor\b', str(filters["director"]), flags=re.IGNORECASE) if d.strip()]

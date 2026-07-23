@@ -32,15 +32,23 @@ COL_NOMINATION = "has_nomination"    # Có đề cử (1/0)
 COL_DURATION   = "duration_min"      # Thời lượng phim (phút)
 COL_METASCORE  = "meta_score"        # Điểm Metacritic
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv(os.path.join(BASE_DIR, ".env"))
+    load_dotenv()
+except ImportError:
+    pass
+
 # ============================================================
 # CẤU HÌNH LLM (LOCAL & GEMINI)
 # ============================================================
-LLM_BASE_URL = os.getenv("LLM_BASE_URL", "http://192.168.42.194:20128/v1")
+LLM_BASE_URL = os.getenv("LLM_BASE_URL", "http://localhost:20128/v1")
 LLM_API_KEY  = os.getenv("LLM_API_KEY",  "any")
 LLM_MODEL    = os.getenv("LLM_MODEL",    "cx/gpt-5.5")
 
 GEMINI_DEFAULT_KEY = os.getenv("GEMINI_API_KEY", "")
-GEMINI_DEFAULT_MODEL = "gemini-2.5-flash"
+GEMINI_DEFAULT_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+GEMINI_RATE_LIMIT_RPM = int(os.getenv("GEMINI_RATE_LIMIT_RPM", "12"))  # Dư 3 so với 15 RPM free tier
 
 # ============================================================
 # THAM SỐ TÌM KIẾM (RAG)

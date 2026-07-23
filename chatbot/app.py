@@ -13,7 +13,7 @@ import pandas as pd
 from chatbot.config import (
     KEYWORD_DICT_PATH, ALIASES_PATH,
     COL_TITLE, COL_GENRE, COL_DIRECTOR, COL_STARS, COL_YEAR, COL_RATING, COL_OVERVIEW, COL_LINK,
-    LLM_BASE_URL, LLM_API_KEY, LLM_MODEL
+    LLM_BASE_URL, LLM_API_KEY, LLM_MODEL, GEMINI_DEFAULT_KEY, GEMINI_DEFAULT_MODEL
 )
 # Nạp dữ liệu qua bộ loader dùng chung
 from chatbot.data_loader import (
@@ -204,7 +204,7 @@ with st.sidebar:
         st.info("🔌 Sử dụng Google Gemini API")
         gemini_api_key = st.text_input(
             "Gemini API Key",
-            value=os.getenv("GEMINI_API_KEY", ""),
+            value=os.getenv("GEMINI_API_KEY", GEMINI_DEFAULT_KEY),
             type="password",
             key="gemini_api_key"
         )
@@ -445,7 +445,9 @@ if user_input:
             provider = st.session_state.get("llm_provider", "Local LLM")
             if provider == "Gemini API":
                 api_key = st.session_state.get("gemini_api_key", "")
-                model_name = st.session_state.get("gemini_model", "gemini-2.5-flash")
+                if not api_key:
+                    api_key = GEMINI_DEFAULT_KEY
+                model_name = st.session_state.get("gemini_model", GEMINI_DEFAULT_MODEL)
                 base_url = None
             else:
                 provider = "Local LLM"
@@ -453,6 +455,12 @@ if user_input:
                 api_key = st.session_state.get("local_api_key", LLM_API_KEY)
                 model_name = st.session_state.get("local_model", LLM_MODEL)
                 
+            intent = "UNKNOWN"
+            filters = {}
+            detected = {}
+            filtered_df = pd.DataFrame()
+            full_response = ""
+
             try:
                 # 1. Khởi tạo đối tượng ChatOpenAI qua cache
                 llm = get_llm_client(provider, api_key, model_name, base_url)

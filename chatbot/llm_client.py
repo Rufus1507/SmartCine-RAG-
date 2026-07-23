@@ -1,6 +1,6 @@
 import streamlit as st
 from langchain_openai import ChatOpenAI
-from chatbot.config import LLM_BASE_URL, LLM_API_KEY, LLM_MODEL
+from chatbot.config import LLM_BASE_URL, LLM_API_KEY, LLM_MODEL, GEMINI_DEFAULT_KEY, GEMINI_DEFAULT_MODEL
 
 @st.cache_resource
 def get_llm_client(provider: str, api_key: str, model_name: str, base_url: str = None) -> ChatOpenAI:
@@ -11,8 +11,8 @@ def get_llm_client(provider: str, api_key: str, model_name: str, base_url: str =
     if provider == "Gemini API":
         # Sử dụng API OpenAI compatibility của Google Gemini
         url = "https://generativelanguage.googleapis.com/v1beta/openai/"
-        key = api_key if api_key else ""
-        model = model_name if model_name else "gemini-2.5-flash"
+        key = api_key if api_key else GEMINI_DEFAULT_KEY
+        model = model_name if model_name else GEMINI_DEFAULT_MODEL
     else:
         # Local LLM
         url = base_url if base_url else LLM_BASE_URL
