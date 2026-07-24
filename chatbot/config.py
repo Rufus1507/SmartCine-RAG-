@@ -50,6 +50,45 @@ GEMINI_DEFAULT_KEY = os.getenv("GEMINI_API_KEY", "")
 GEMINI_DEFAULT_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 GEMINI_RATE_LIMIT_RPM = int(os.getenv("GEMINI_RATE_LIMIT_RPM", "12"))  # Dư 3 so với 15 RPM free tier
 
+def update_env_variable(key: str, value: str):
+    """
+    Cập nhật biến môi trường trong os.environ và ghi đồng bộ vào file .env
+    để toàn bộ hệ thống và các script khác sử dụng API Key/Cấu hình mới.
+    """
+    if value is None:
+        value = ""
+    os.environ[key] = value
+    env_path = os.path.join(BASE_DIR, ".env")
+    
+    lines = []
+    if os.path.exists(env_path):
+        try:
+            with open(env_path, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+        except Exception:
+            lines = []
+            
+    found = False
+    new_lines = []
+    for line in lines:
+        if line.strip().startswith(f"{key}="):
+            new_lines.append(f"{key}={value}\n")
+            found = True
+        else:
+            new_lines.append(line)
+            
+    if not found:
+        if new_lines and not new_lines[-1].endswith("\n"):
+            new_lines.append("\n")
+        new_lines.append(f"{key}={value}\n")
+        
+    try:
+        with open(env_path, "w", encoding="utf-8") as f:
+            f.writelines(new_lines)
+    except Exception:
+        pass
+
+
 # ============================================================
 # THAM SỐ TÌM KIẾM (RAG)
 # ============================================================

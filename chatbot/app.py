@@ -13,7 +13,8 @@ import pandas as pd
 from chatbot.config import (
     KEYWORD_DICT_PATH, ALIASES_PATH,
     COL_TITLE, COL_GENRE, COL_DIRECTOR, COL_STARS, COL_YEAR, COL_RATING, COL_OVERVIEW, COL_LINK,
-    LLM_BASE_URL, LLM_API_KEY, LLM_MODEL, GEMINI_DEFAULT_KEY, GEMINI_DEFAULT_MODEL
+    LLM_BASE_URL, LLM_API_KEY, LLM_MODEL, GEMINI_DEFAULT_KEY, GEMINI_DEFAULT_MODEL,
+    update_env_variable
 )
 # Nạp dữ liệu qua bộ loader dùng chung
 from chatbot.data_loader import (
@@ -188,6 +189,33 @@ if "feedback_invalidated" not in st.session_state:
 st.title("🎬 CineBot — Chatbot Tìm Phim Thông Minh")
 st.caption("Hỏi bất kỳ điều gì về phim: thể loại, đạo diễn, diễn viên, năm, điểm IMDB...")
 
+# --- Callbacks đồng bộ cấu hình vào os.environ & file .env ---
+def sync_gemini_key():
+    val = st.session_state.get("gemini_api_key", "").strip()
+    if val:
+        update_env_variable("GEMINI_API_KEY", val)
+        st.toast("✅ Đã đồng bộ Gemini API Key mới vào hệ thống (.env)")
+
+def sync_gemini_model():
+    val = st.session_state.get("gemini_model", "").strip()
+    if val:
+        update_env_variable("GEMINI_MODEL", val)
+
+def sync_local_url():
+    val = st.session_state.get("local_base_url", "").strip()
+    if val:
+        update_env_variable("LLM_BASE_URL", val)
+
+def sync_local_key():
+    val = st.session_state.get("local_api_key", "").strip()
+    if val:
+        update_env_variable("LLM_API_KEY", val)
+
+def sync_local_model():
+    val = st.session_state.get("local_model", "").strip()
+    if val:
+        update_env_variable("LLM_MODEL", val)
+
 # --- Sidebar: Cấu hình tài nguyên và API ---
 with st.sidebar:
     st.header("⚙️ Cấu hình")
@@ -206,33 +234,38 @@ with st.sidebar:
             "Gemini API Key",
             value=os.getenv("GEMINI_API_KEY", GEMINI_DEFAULT_KEY),
             type="password",
-            key="gemini_api_key"
+            key="gemini_api_key",
+            on_change=sync_gemini_key
         )
         gemini_model = st.selectbox(
             "Chọn Model Gemini",
             ["gemini-2.5-flash", "gemini-2.0-flash-lite", "gemini-2.0-flash-001"],
             index=0,
-            key="gemini_model"
+            key="gemini_model",
+            on_change=sync_gemini_model
         )
     else:
         st.info(f"🔌 Kết nối Local Endpoint")
         local_base_url = st.text_input(
             "Endpoint URL",
             value=LLM_BASE_URL,
-            key="local_base_url"
+            key="local_base_url",
+            on_change=sync_local_url
         )
         local_api_key = st.text_input(
             "API Key (nếu có)",
             value=LLM_API_KEY,
             type="password",
-            key="local_api_key"
+            key="local_api_key",
+            on_change=sync_local_key
         )
         model_options = ["cx/gpt-5.5", "cx/gpt-5.4", "cx/gpt-5.3-codex", "cx/gpt-5.3-codex-high"]
         local_model = st.selectbox(
             "Chọn Model Local",
             model_options,
             index=0,
-            key="local_model"
+            key="local_model",
+            on_change=sync_local_model
         )
 
     st.divider()
@@ -444,15 +477,19 @@ if user_input:
             # Cấu hình tham số gọi client LLM từ Sidebar
             provider = st.session_state.get("llm_provider", "Local LLM")
             if provider == "Gemini API":
-                api_key = st.session_state.get("gemini_api_key", "")
+                api_key = st.session_state.get("gemini_api_key", "").strip()
                 if not api_key:
                     api_key = GEMINI_DEFAULT_KEY
+                else:
+                    update_env_variable("GEMINI_API_KEY", api_key)
                 model_name = st.session_state.get("gemini_model", GEMINI_DEFAULT_MODEL)
                 base_url = None
             else:
                 provider = "Local LLM"
                 base_url = st.session_state.get("local_base_url", LLM_BASE_URL)
                 api_key = st.session_state.get("local_api_key", LLM_API_KEY)
+                if api_key:
+                    update_env_variable("LLM_API_KEY", api_key)
                 model_name = st.session_state.get("local_model", LLM_MODEL)
                 
             intent = "UNKNOWN"
