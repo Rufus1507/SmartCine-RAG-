@@ -235,6 +235,21 @@ def load_faiss_index():
     return faiss.read_index(INDEX_PATH)
 
 @st.cache_resource
+def load_traditional_faiss_index():
+    """
+    Nạp tệp chỉ mục FAISS của RAG truyền thống (traditional_context.index).
+    Nếu không tìm thấy, tự động chuyển về INDEX_PATH.
+    """
+    traditional_path = os.path.join(os.path.dirname(CHATBOT_DIR), "data", "traditional_context.index")
+    if os.path.exists(traditional_path):
+        return faiss.read_index(traditional_path)
+    elif os.path.exists(INDEX_PATH):
+        return faiss.read_index(INDEX_PATH)
+    else:
+        raise FileNotFoundError(f"Không tìm thấy chỉ mục FAISS tại {traditional_path} hoặc {INDEX_PATH}")
+
+
+@st.cache_resource
 def load_embedder_model():
     """
     Nạp mô hình SentenceTransformer sinh vector nhúng.
