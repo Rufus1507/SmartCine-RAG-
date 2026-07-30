@@ -1,4 +1,6 @@
 import re
+import time
+import logging
 import numpy as np
 import pandas as pd
 from chatbot.config import FINAL_TOP_K
@@ -9,6 +11,8 @@ from chatbot.retrieval.reranker import rerank_results
 from chatbot.feature_engineering import MovieFeatureBuilder, clean_split, PARENT_GENRES, DECADES
 from chatbot.similarity import compute_weighted_similarity
 from chatbot.representation.semantic_representation import make_profile
+
+logger = logging.getLogger(__name__)
 
 class MultistageRetriever:
     _all_directors = None
@@ -369,7 +373,9 @@ class MultistageRetriever:
                 base_desc = base_row.get(COL_OVERVIEW) or base_row.get("description", "")
                 if base_desc and str(base_desc).strip():
                     faiss_query = str(base_desc).strip()
+            t_faiss = time.monotonic()
             faiss_candidates = semantic_search_retriever(faiss_query, df, faiss_index, embedder_model, top_k=150)
+            logger.debug("[multistage_retriever] FAISS search took %.3fs (n=%d)", time.monotonic() - t_faiss, len(faiss_candidates))
             
         if trace is not None and not faiss_candidates.empty:
             faiss_trace = []
@@ -392,7 +398,9 @@ class MultistageRetriever:
             if self.bm25_index is None:
                 from chatbot.data_loader import load_bm25_index
                 self.bm25_index = load_bm25_index(df)
+            t_bm25 = time.monotonic()
             bm25_candidates = bm25_search(query, df, self.bm25_index, top_k=100, trace=trace)
+            logger.debug("[multistage_retriever] BM25 search took %.3fs (n=%d)", time.monotonic() - t_bm25, len(bm25_candidates))
             
         # Tracing for bm25 is now handled directly inside bm25_search to capture detailed token-level preprocessing.
             
@@ -402,13 +410,16 @@ class MultistageRetriever:
             "genre", "director", "star", "title", "year_min", "year_max", "rating_min", "country", "has_awards", "has_oscar", "has_nomination"
         ])
         if has_metadata_filters:
+            t_meta = time.monotonic()
             metadata_candidates = search_movies_tool(df, filters_for_retrieval, top_k=500)
+            logger.debug("[multistage_retriever] Metadata filter (search_movies_tool) took %.3fs (n=%d)", time.monotonic() - t_meta, len(metadata_candidates))
             
         # Combine and deduplicate candidates
         # Priority order (P0 FIX): metadata_candidates FIRST to guarantee hard-filter matches
         # enter the pool before the 500-cap is hit.
         # Old order: graph(300) + faiss(150) + bm25(100) = 550 → cap hit before metadata joined.
         # New order: metadata first, then graph, then faiss, then bm25.
+        t_merge = time.monotonic()
         candidate_list = self._merge_candidates(
             graph_candidates=graph_candidates,
             faiss_candidates=faiss_candidates,
@@ -417,6 +428,7 @@ class MultistageRetriever:
             has_metadata_filters=has_metadata_filters,
             cap=500
         )
+        logger.debug("[multistage_retriever] Merge candidates (_merge_candidates) took %.3fs (n=%d)", time.monotonic() - t_merge, len(candidate_list))
                 
         if not candidate_list:
             # Fallback to general filtered list if no query and no matches
@@ -467,13 +479,17 @@ class MultistageRetriever:
             
         # 2. Compute similarity for each candidate
         candidate_embeddings = []
-        if embedder_model is not None and not filtered_df.empty:
-            candidate_profiles = [make_profile(row, version) for _, row in filtered_df.iterrows()]
+        candidate_records = filtered_df.to_dict("records") if not filtered_df.empty else []
+        if embedder_model is not None and candidate_records:
+            candidate_profiles = [make_profile(row, version) for row in candidate_records]
+            t_encode = time.monotonic()
             candidate_embeddings = embedder_model.encode(candidate_profiles, convert_to_numpy=True)
+            logger.debug("[multistage_retriever] Candidate embedding encode took %.3fs (n_candidates=%d)", time.monotonic() - t_encode, len(candidate_profiles))
             
+        t_sim = time.monotonic()
         matched_rows = []
         trace_similarity = []
-        for idx, (_, row) in enumerate(filtered_df.iterrows()):
+        for idx, row in enumerate(candidate_records):
             row_features = self.builder.transform_row(row)
             
             # Get candidate embedding
@@ -589,6 +605,7 @@ class MultistageRetriever:
             row_copy["similarity_reason"] = "Phim " + ", ".join(reasons) + "."
             matched_rows.append(row_copy)
             
+        logger.debug("[multistage_retriever] Weighted similarity scoring took %.3fs", time.monotonic() - t_sim)
         if trace is not None:
             trace["stage4_weighted_similarity"]["per_candidate_scores"] = trace_similarity
             
@@ -622,7 +639,7 @@ class MultistageRetriever:
         ranked_df = pd.DataFrame(matched_rows)
         # Sort by weighted score descending
         ranked_df = ranked_df.sort_values(by="final_similarity_score", ascending=False)
-        top_100_df = ranked_df.head(100).copy()
+        top_50_df = ranked_df.head(50).copy()
         
         # --- Stage 4: Cross-Encoder Reranking ---
         # Sử dụng câu truy vấn gốc của user để rerank chính xác hơn về nội dung/chủ đề
@@ -638,12 +655,14 @@ class MultistageRetriever:
         if is_similar and base_row is not None:
             base_movie_profile_str = make_profile(base_row, version)
             
-        reranked_df = rerank_results(query_rerank, top_100_df, top_k=20,
+        t_rerank = time.monotonic()
+        reranked_df = rerank_results(query_rerank, top_50_df, top_k=20,
                                      base_movie_profile=base_movie_profile_str)
+        logger.debug("[multistage_retriever] Cross-Encoder rerank took %.3fs (n_candidates=%d)", time.monotonic() - t_rerank, len(top_50_df))
         
         if trace is not None and not reranked_df.empty:
             rank_before_map = {}
-            for rank, (_, row) in enumerate(top_100_df.iterrows()):
+            for rank, (_, row) in enumerate(top_50_df.iterrows()):
                 link = row["Movie Link"]
                 rank_before_map[link] = rank + 1
                 
@@ -695,8 +714,13 @@ class MultistageRetriever:
             dur_min = filters.get("duration_min") or filters.get("runtime_min")
             if dur_min is not None:
                 try:
-                    hard_filtered = reranked_df[reranked_df[COL_DURATION] >= float(dur_min)]
-                    if len(hard_filtered) >= max(1, final_k // 2):
+                    # Loại phim có duration_min = NaN hoặc không đáp ứng điều kiện tối thiểu
+                    hard_filtered = reranked_df[
+                        reranked_df[COL_DURATION].notna() &
+                        (pd.to_numeric(reranked_df[COL_DURATION], errors='coerce') >= float(dur_min))
+                    ]
+                    # Áp dụng cứng — chấp nhận kết quả rống nếu không có phìm nào thỏa mãn
+                    if not hard_filtered.empty:
                         reranked_df = hard_filtered
                 except Exception:
                     pass
@@ -704,8 +728,12 @@ class MultistageRetriever:
             dur_max = filters.get("duration_max") or filters.get("runtime_max")
             if dur_max is not None:
                 try:
-                    hard_filtered = reranked_df[reranked_df[COL_DURATION] <= float(dur_max)]
-                    if len(hard_filtered) >= max(1, final_k // 2):
+                    # Loại phim có duration_min = NaN hoặc vượt quá giới hạn tối đa
+                    hard_filtered = reranked_df[
+                        reranked_df[COL_DURATION].notna() &
+                        (pd.to_numeric(reranked_df[COL_DURATION], errors='coerce') <= float(dur_max))
+                    ]
+                    if not hard_filtered.empty:
                         reranked_df = hard_filtered
                 except Exception:
                     pass

@@ -13,7 +13,9 @@ import pandas as pd
 from chatbot.config import (
     KEYWORD_DICT_PATH, ALIASES_PATH,
     COL_TITLE, COL_GENRE, COL_DIRECTOR, COL_STARS, COL_YEAR, COL_RATING, COL_OVERVIEW, COL_LINK,
-    LLM_BASE_URL, LLM_API_KEY, LLM_MODEL, GEMINI_DEFAULT_KEY, GEMINI_DEFAULT_MODEL,
+    LLM_BASE_URL, LLM_API_KEY, LLM_MODEL,
+    OLLAMA_BASE_URL, OLLAMA_MODEL,
+    GEMINI_DEFAULT_KEY, GEMINI_DEFAULT_MODEL,
     update_env_variable
 )
 # Nạp dữ liệu qua bộ loader dùng chung
@@ -223,7 +225,7 @@ with st.sidebar:
     # Chọn nhà cung cấp LLM
     llm_provider = st.selectbox(
         "Nhà cung cấp LLM",
-        ["Local LLM", "Gemini API"],
+        ["Local LLM", "Ollama Server", "Gemini API"],
         index=0,
         key="llm_provider"
     )
@@ -244,6 +246,24 @@ with st.sidebar:
             key="gemini_model",
             on_change=sync_gemini_model
         )
+    elif llm_provider == "Ollama Server":
+        st.info("🦙 Kết nối Ollama Server (100.84.199.109)")
+        ollama_base_url = st.text_input(
+            "Endpoint URL",
+            value=os.getenv("OLLAMA_BASE_URL", OLLAMA_BASE_URL),
+            key="ollama_base_url"
+        )
+        ollama_api_key = st.text_input(
+            "API Key (nếu có)",
+            value="any",
+            type="password",
+            key="ollama_api_key"
+        )
+        ollama_model = st.text_input(
+            "Model Name",
+            value=os.getenv("OLLAMA_MODEL", OLLAMA_MODEL),
+            key="ollama_model"
+        )
     else:
         st.info(f"🔌 Kết nối Local Endpoint")
         local_base_url = st.text_input(
@@ -259,11 +279,15 @@ with st.sidebar:
             key="local_api_key",
             on_change=sync_local_key
         )
-        model_options = ["cx/gpt-5.5", "cx/gpt-5.4", "cx/gpt-5.3-codex", "cx/gpt-5.3-codex-high"]
+        model_options = ["cx/gpt-5.5", "cx/gpt-5.4", "cx/gpt-5.3-codex", "cx/gpt-5.3-codex-high", "qwen3.5:4b-q4_K_M"]
+        try:
+            default_idx = model_options.index(LLM_MODEL)
+        except ValueError:
+            default_idx = 0
         local_model = st.selectbox(
             "Chọn Model Local",
             model_options,
-            index=0,
+            index=default_idx,
             key="local_model",
             on_change=sync_local_model
         )
@@ -484,6 +508,10 @@ if user_input:
                     update_env_variable("GEMINI_API_KEY", api_key)
                 model_name = st.session_state.get("gemini_model", GEMINI_DEFAULT_MODEL)
                 base_url = None
+            elif provider == "Ollama Server":
+                base_url = st.session_state.get("ollama_base_url", OLLAMA_BASE_URL)
+                api_key = st.session_state.get("ollama_api_key", "any")
+                model_name = st.session_state.get("ollama_model", OLLAMA_MODEL)
             else:
                 provider = "Local LLM"
                 base_url = st.session_state.get("local_base_url", LLM_BASE_URL)

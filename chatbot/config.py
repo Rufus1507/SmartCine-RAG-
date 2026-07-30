@@ -40,11 +40,16 @@ except ImportError:
     pass
 
 # ============================================================
-# CẤU HÌNH LLM (LOCAL & GEMINI)
+# CẤU HÌNH LLM (LOCAL, OLLAMA & GEMINI)
 # ============================================================
 LLM_BASE_URL = os.getenv("LLM_BASE_URL", "http://localhost:20128/v1")
 LLM_API_KEY  = os.getenv("LLM_API_KEY",  "any")
 LLM_MODEL    = os.getenv("LLM_MODEL",    "cx/gpt-5.5")
+
+# Cấu hình bổ sung cho Ollama Server
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://100.84.199.109:11434/v1")
+OLLAMA_API_KEY  = os.getenv("OLLAMA_API_KEY",  "any")
+OLLAMA_MODEL    = os.getenv("OLLAMA_MODEL",    "qwen3.5:4b-q4_K_M")
 
 GEMINI_DEFAULT_KEY = os.getenv("GEMINI_API_KEY", "")
 GEMINI_DEFAULT_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")

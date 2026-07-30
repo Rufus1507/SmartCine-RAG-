@@ -1,4 +1,6 @@
 import re
+import time
+import logging
 import unicodedata
 import pandas as pd
 from chatbot.config import FINAL_TOP_K
@@ -7,6 +9,8 @@ from chatbot.retrieval.bm25_retriever import bm25_search
 from chatbot.data_loader import load_bm25_index
 from chatbot.retrieval.hybrid_search import hybrid_search
 from chatbot.retrieval.reranker import rerank_results
+
+logger = logging.getLogger(__name__)
 
 def is_similar_movie_query(query: str, filters: dict) -> bool:
     """
@@ -102,9 +106,8 @@ def route_retrieval(
     import numpy as np
     from chatbot.retrieval.multistage_retriever import MultistageRetriever
 
-    # Task 3 FIX: copy ngay đầu hàm để tránh mutate object filters của caller.
-    # rag_chain.py dùng {**last_filters, **new_filters} để merge context đa lượt;
-    # nếu object bị mutate tại đây, filter tạm (vd: title) sẽ rò rỉ sang lượt tiếp theo.
+    # Task 3 FIX: copy ngay đầu hàm để tránh mutate object filters của caller    
+    t0_total = time.monotonic()
     filters = filters.copy()
 
     retriever = MultistageRetriever()
@@ -120,7 +123,9 @@ def route_retrieval(
     # 1. Kiểm tra nếu là truy vấn phim tương tự
     if is_similar_movie_query(query, filters):
         # Trích xuất phim gốc
+        t_base = time.monotonic()
         base_row, is_similar = retriever._get_base_movie(df, query, filters)
+        logger.debug("[retrieval_router] _get_base_movie took %.3fs", time.monotonic() - t_base)
         if is_similar and base_row is not None:
             reference_movie_title = base_row["Title"]
             
@@ -129,13 +134,13 @@ def route_retrieval(
                 from chatbot.graph.build_movie_graph import load_or_build_graph
                 from chatbot.graph.graph_query import find_movies_by_collab_path
                 
+                t_gload = time.monotonic()
                 G = load_or_build_graph(df)
-                # Tìm phim có đường đi quan hệ trên đồ thị (max_hops=3)
-                # Giới hạn max_hops=2 để chỉ lấy phim có chung nhân sự trực tiếp 1-hop
-                # (Phim gốc → Diễn viên/Đạo diễn → Phim khác).
-                # max_hops=3 trước đây cho phép chuỗi 2-hop nhân sự không liên quan nội dung
-                # (ví dụ: Interstellar → Jessica Chastain → Director X → phim của Director X).
+                logger.debug("[retrieval_router] load_or_build_graph took %.3fs", time.monotonic() - t_gload)
+                
+                t_graph = time.monotonic()
                 graph_results = find_movies_by_collab_path(G, reference_movie_title, max_hops=2, max_neighbors_per_hop=20)
+                logger.debug("[multistage_retriever] Graph Stage0 took %.3fs (n_candidates=%d)", time.monotonic() - t_graph, len(graph_results))
                 
                 if trace is not None:
                     trace["stage0_graph"]["called"] = True
@@ -150,45 +155,42 @@ def route_retrieval(
                         serializable_graph.append(clean_res)
                     trace["stage0_graph"]["candidates"] = serializable_graph
                 
+                t_conv = time.monotonic()
                 graph_rows = []
-                # Tối ưu hóa: Tạo map tra cứu tiêu đề O(1) thay vì quét DataFrame O(N) trong vòng lặp
                 title_map = {str(t).lower(): idx for idx, t in enumerate(df["Title"])}
                 
-                # Giới hạn số lượng ứng viên đồ thị ở mức 300 để tránh quá tải
                 for res in graph_results[:300]:
                     title = res["Title"]
-                    explanation = res["graph_path_explanation"]
+                    explanation = res.get("graph_path_explanation", "")
                     p_type = res.get("graph_path_type", "personnel")
                     
                     idx = title_map.get(title.lower())
                     if idx is not None:
-                        row_copy = df.iloc[idx].copy()
+                        row_copy = df.iloc[idx].to_dict()
                         row_copy["graph_path_explanation"] = explanation
                         row_copy["graph_path_type"] = p_type
-                        row_copy["graph_hop_count"] = res.get("hop_count", 2)  # Số hop, mặc định 2 nếu không có thông tin
+                        row_copy["graph_hop_count"] = res.get("hop_count", 2)
                         graph_rows.append(row_copy)
                         
                 if graph_rows:
                     graph_candidates = pd.DataFrame(graph_rows)
+                logger.debug("[retrieval_router] Graph candidate conversion took %.3fs (n=%d)", time.monotonic() - t_conv, len(graph_rows))
             except Exception as e:
                 print(f"Error getting candidates from Graph RAG: {e}")
     
     # 2. P3 FIX: Kiểm tra nếu là truy vấn multi-hop filmography của đạo diễn/diễn viên
-    # Ví dụ: "Đạo diễn của Alien: Romulus đã từng làm những phim kinh dị nào khác?"
-    # LLM parse ra director=Fede Alvarez → exact_filter_shortcut vô tình đúng nhưng
-    # không phải graph multi-hop. Cần trigger graph từ seed movie để đảm bảo route chính xác.
     elif is_director_filmography_query(query, filters, df):
         movie_title = filters.get("title") or extract_title_from_query(query, df)
         if movie_title:
-            # Lưu lại vào filters để đồng bộ với phần còn lại của pipeline
             filters["title"] = movie_title
             try:
                 from chatbot.graph.build_movie_graph import load_or_build_graph
                 from chatbot.graph.graph_query import find_movies_by_collab_path
                 
                 G = load_or_build_graph(df)
-                # Tìm phim có đường đi quan hệ từ phim seed qua graph (movie -> director -> other movies)
+                t_graph = time.monotonic()
                 graph_results = find_movies_by_collab_path(G, movie_title, max_hops=2, max_neighbors_per_hop=30)
+                logger.debug("[multistage_retriever] Graph Stage0 took %.3fs (n_candidates=%d)", time.monotonic() - t_graph, len(graph_results))
                 
                 if trace is not None:
                     trace["stage0_graph"]["called"] = True
@@ -203,24 +205,23 @@ def route_retrieval(
                         serializable_graph.append(clean_res)
                     trace["stage0_graph"]["candidates"] = serializable_graph
                 
+                t_conv = time.monotonic()
                 graph_rows = []
                 title_map = {str(t).lower(): idx for idx, t in enumerate(df["Title"])}
                 for res in graph_results[:300]:
                     title = res["Title"]
                     idx = title_map.get(title.lower())
                     if idx is not None:
-                        row_copy = df.iloc[idx].copy()
-                        row_copy["graph_path_explanation"] = res["graph_path_explanation"]
+                        row_copy = df.iloc[idx].to_dict()
+                        row_copy["graph_path_explanation"] = res.get("graph_path_explanation", "")
                         row_copy["graph_path_type"] = res.get("graph_path_type", "personnel")
                         row_copy["graph_hop_count"] = res.get("hop_count", 2)
                         graph_rows.append(row_copy)
                 if graph_rows:
                     graph_candidates = pd.DataFrame(graph_rows)
+                logger.debug("[retrieval_router] Graph candidate conversion took %.3fs (n=%d)", time.monotonic() - t_conv, len(graph_rows))
             except Exception as e:
                 print(f"Error getting graph candidates for filmography query: {e}")
-                
-
-
                 
     local_trace = trace if trace is not None else {}
     result = retriever.retrieve(
@@ -235,4 +236,5 @@ def route_retrieval(
         trace=local_trace
     )
     actual_route = local_trace.get("actual_route", "multistage_hybrid")
+    logger.debug("[retrieval_router] route_retrieval total took %.3fs", time.monotonic() - t0_total)
     return result, actual_route

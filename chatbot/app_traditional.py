@@ -12,7 +12,9 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from chatbot.config import (
     KEYWORD_DICT_PATH, ALIASES_PATH,
     COL_TITLE, COL_GENRE, COL_DIRECTOR, COL_STARS, COL_YEAR, COL_RATING, COL_OVERVIEW, COL_LINK,
-    LLM_BASE_URL, LLM_API_KEY, LLM_MODEL, GEMINI_DEFAULT_KEY, GEMINI_DEFAULT_MODEL,
+    LLM_BASE_URL, LLM_API_KEY, LLM_MODEL,
+    OLLAMA_BASE_URL, OLLAMA_MODEL,
+    GEMINI_DEFAULT_KEY, GEMINI_DEFAULT_MODEL,
     update_env_variable
 )
 from chatbot.data_loader import (
@@ -25,11 +27,15 @@ from chatbot.llm_client import get_llm_client
 from eval.traditional_rag import run_traditional_rag_pipeline, retrieve_traditional
 
 # Import CineBot V3 pipeline for Side-by-Side comparison
+CINEBOT_IMPORT_ERROR = None
 try:
     from chatbot.chains.rag_chain import run_rag_pipeline as run_cinebot_pipeline
     CINEBOT_AVAILABLE = True
 except Exception as e:
     CINEBOT_AVAILABLE = False
+    CINEBOT_IMPORT_ERROR = str(e)
+    import traceback
+    CINEBOT_IMPORT_ERROR = traceback.format_exc()
 
 # ============================================================
 # CẤU HÌNH TRANG STREAMLIT & CUSTOM STYLING
@@ -184,11 +190,23 @@ def main():
     st.sidebar.subheader("🤖 Cấu hình LLM")
     llm_provider = st.sidebar.selectbox(
         "Nhà cung cấp LLM:",
-        ["Gemini API", "Local LLM / Custom API"],
+        ["Ollama Server", "Local LLM / Custom API", "Gemini API"],
         index=0
     )
 
-    if llm_provider == "Gemini API":
+    if llm_provider == "Ollama Server":
+        current_ollama_url = os.getenv("OLLAMA_BASE_URL", OLLAMA_BASE_URL)
+        current_ollama_model = os.getenv("OLLAMA_MODEL", OLLAMA_MODEL)
+
+        ollama_url = st.sidebar.text_input("Ollama Base URL:", value=current_ollama_url)
+        ollama_model = st.sidebar.text_input("Model Name:", value=current_ollama_model)
+
+        if st.sidebar.button("Lưu cấu hình Ollama"):
+            update_env_variable("OLLAMA_BASE_URL", ollama_url)
+            update_env_variable("OLLAMA_MODEL", ollama_model)
+            st.sidebar.success("Đã lưu cấu hình Ollama Server!")
+
+    elif llm_provider == "Gemini API":
         current_gemini_key = os.getenv("GEMINI_API_KEY", GEMINI_DEFAULT_KEY)
         gemini_key = st.sidebar.text_input(
             "Gemini API Key:",
@@ -253,10 +271,14 @@ def main():
 
     # Get LLM Client
     try:
-        if llm_provider == "Gemini API":
+        if llm_provider == "Ollama Server":
+            active_url = ollama_url if 'ollama_url' in locals() and ollama_url else OLLAMA_BASE_URL
+            active_model = ollama_model if 'ollama_model' in locals() and ollama_model else OLLAMA_MODEL
+            llm = get_llm_client(provider="Ollama Server", base_url=active_url, api_key="any", model_name=active_model)
+        elif llm_provider == "Gemini API":
             active_key = gemini_key if 'gemini_key' in locals() and gemini_key else GEMINI_DEFAULT_KEY
             active_model = gemini_model if 'gemini_model' in locals() else GEMINI_DEFAULT_MODEL
-            llm = get_llm_client(provider="Gemini", api_key=active_key, model_name=active_model)
+            llm = get_llm_client(provider="Gemini API", api_key=active_key, model_name=active_model)
         else:
             active_url = base_url if 'base_url' in locals() else LLM_BASE_URL
             active_key = api_key if 'api_key' in locals() else LLM_API_KEY
@@ -276,7 +298,12 @@ def main():
         # Render message history
         for msg in st.session_state.messages_trad:
             with st.chat_message(msg["role"]):
-                st.markdown(msg["content"])
+                # Hiển thị tiêu đề rõ ràng cho câu trả lời LLM trong lịch sử
+                if msg["role"] == "assistant":
+                    st.markdown(f"### 💬 Câu trả lời từ LLM (Traditional RAG):")
+                    st.markdown(msg["content"])
+                else:
+                    st.markdown(msg["content"])
                 if "metrics" in msg:
                     m = msg["metrics"]
                     st.caption(f"⏱️ Retrieval: `{m['retrieval_ms']:.1f}ms` | LLM: `{m['llm_ms']:.1f}ms` | Total: `{m['total_ms']:.1f}ms` | Top-K: `{m['count']}` phim")
@@ -300,15 +327,13 @@ def main():
                 with st.spinner("🧠 Đang truy xuất vector & sinh câu trả lời..."):
                     start_total = time.time()
                     
-                    # Step 1: Retrieval timer
+                    # Gọi pipeline 1 lần duy nhất (tránh double retrieval)
                     start_ret = time.time()
-                    retrieved_df = retrieve_traditional(query, traditional_index, embedder_model, df, top_k=top_k)
+                    answer_text, retrieved_df = run_traditional_rag_pipeline(
+                        query, llm, df, traditional_index, embedder_model, top_k=top_k
+                    )
                     retrieval_ms = (time.time() - start_ret) * 1000
-                    
-                    # Step 2: Generation timer
-                    start_gen = time.time()
-                    answer_text, _ = run_traditional_rag_pipeline(query, llm, df, traditional_index, embedder_model, top_k=top_k)
-                    llm_ms = (time.time() - start_gen) * 1000
+                    llm_ms = retrieval_ms  # pipeline đã bao gồm cả retrieval + generation
                     
                     total_ms = (time.time() - start_total) * 1000
 
@@ -318,9 +343,10 @@ def main():
                         context_lines.append(f"[{r.get(COL_TITLE)}] (Similarity: {r.get('similarity', 0):.4f})\n{r.get('final_context')}\n")
                     context_str = "\n".join(context_lines)
 
-                    # Display result
+                    # Hiển thị câu trả lời từ LLM rõ ràng
+                    st.markdown("### 💬 Câu trả lời từ LLM (Traditional RAG):")
                     st.markdown(answer_text)
-                    st.caption(f"⏱️ Retrieval: `{retrieval_ms:.1f}ms` | LLM: `{llm_ms:.1f}ms` | Total: `{total_ms:.1f}ms` | Found: `{len(retrieved_df)}` phim")
+                    st.caption(f"⏱️ Total: `{total_ms:.1f}ms` | Found: `{len(retrieved_df)}` phim")
                     
                     if not retrieved_df.empty:
                         with st.expander("🎬 Danh sách phim trích xuất (Naive Vector Match)", expanded=True):
@@ -360,7 +386,7 @@ def main():
             
             with col_t:
                 st.markdown("<span class='badge-trad'>🟧 Traditional Naive RAG</span>", unsafe_allow_html=True)
-                st.markdown(item["trad_ans"])
+                st.markdown(f"**💬 Câu trả lời LLM:**\n\n{item['trad_ans']}")
                 m_t = item["trad_metrics"]
                 st.caption(f"⏱️ Total: `{m_t['total_ms']:.1f}ms` | Retrieval: `{m_t['retrieval_ms']:.1f}ms` | LLM: `{m_t['llm_ms']:.1f}ms` | Found: `{m_t['count']}`")
                 if not item["trad_movies"].empty:
@@ -369,7 +395,7 @@ def main():
                         
             with col_c:
                 st.markdown("<span class='badge-cinebot'>🟦 CineBot V3 (Hybrid Graph-Pandas)</span>", unsafe_allow_html=True)
-                st.markdown(item["cine_ans"])
+                st.markdown(f"**💬 Câu trả lời LLM:**\n\n{item['cine_ans']}")
                 m_c = item["cine_metrics"]
                 st.caption(f"⏱️ Total: `{m_c['total_ms']:.1f}ms` | Intent: `{item['cine_intent']}` | Filters: `{item['cine_filters']}` | Found: `{m_c['count']}`")
                 if not item["cine_movies"].empty:
@@ -397,7 +423,7 @@ def main():
                     t_llm_ms = (time.time() - t_llm0) * 1000
                     t_total_ms = (time.time() - t0) * 1000
 
-                    st.markdown(trad_answer)
+                    st.markdown(f"**💬 Câu trả lời LLM:**\n\n{trad_answer}")
                     st.caption(f"⏱️ Total: `{t_total_ms:.1f}ms` | Retrieval: `{t_ret_ms:.1f}ms` | LLM: `{t_llm_ms:.1f}ms` | Found: `{len(trad_df)}`")
                     if not trad_df.empty:
                         with st.expander("📜 Top Phim Vector Matched", expanded=True):
@@ -407,7 +433,10 @@ def main():
             with col_cine_active:
                 st.markdown("<span class='badge-cinebot'>🟦 CineBot V3 (Hybrid Graph-Pandas)</span>", unsafe_allow_html=True)
                 if not CINEBOT_AVAILABLE:
-                    st.error("❌ CineBot V3 pipeline không sẵn sàng.")
+                    st.error("❌ CineBot V3 pipeline không sẵn sàng — import lỗi.")
+                    if CINEBOT_IMPORT_ERROR:
+                        with st.expander("🔍 Chi tiết lỗi import CineBot", expanded=True):
+                            st.code(CINEBOT_IMPORT_ERROR, language="text")
                     cine_answer = "Lỗi nạp CineBot V3 pipeline."
                     cine_df = pd.DataFrame()
                     cine_intent = "none"

@@ -7,8 +7,11 @@ Instance `gemini_rate_limiter` là module-level singleton — import cái này
 """
 
 import time
+import logging
 import threading
 from chatbot.config import GEMINI_RATE_LIMIT_RPM
+
+logger = logging.getLogger(__name__)
 
 
 class RateLimiter:
@@ -29,6 +32,7 @@ class RateLimiter:
             elapsed = time.monotonic() - self._last_call
             remaining = self.min_interval - elapsed
             if remaining > 0:
+                logger.debug("[rate_limiter] waiting %.3fs before next call", remaining)
                 time.sleep(remaining)
             self._last_call = time.monotonic()
 

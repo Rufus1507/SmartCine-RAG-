@@ -67,19 +67,21 @@ def run_traditional_rag_pipeline(
         
     movies_info = "\n".join(movies_info_list)
     
-    # 3. Tạo Prompt & gọi LLM
+    # 3. Tạo Prompt & gọi LLM qua chain (đúng cách để system + human messages được gửi đúng)
     prompt_template = get_rag_prompt()
-    prompt_input = {
-        "input": query,
-        "movies_info": movies_info
-    }
-    
-    formatted_prompt = prompt_template.format(**prompt_input)
+    chain = prompt_template | llm
     
     try:
-        response = llm.invoke(formatted_prompt)
+        response = chain.invoke({
+            "input": query,
+            "movies_info": movies_info
+        })
         answer_result = response.content.strip()
+        # Loại bỏ thinking tags của một số model (ví dụ: <think>...</think>)
+        if "<think>" in answer_result and "</think>" in answer_result:
+            think_end = answer_result.rfind("</think>")
+            answer_result = answer_result[think_end + len("</think>"):].strip()
     except Exception as e:
-        answer_result = f"Error calling LLM in Traditional RAG: {e}"
+        answer_result = f"Lỗi khi gọi LLM trong Traditional RAG: {e}"
         
     return answer_result, retrieved_df

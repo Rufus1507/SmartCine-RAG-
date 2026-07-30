@@ -25,10 +25,22 @@ def _is_rate_limit_error(exc: BaseException) -> bool:
     retry=retry_if_exception(_is_rate_limit_error),
 )
 def _invoke_llm_intent(llm, prompt: str):
-    """Gọi LLM với rate limiter + retry-on-429 cho intent chain."""
-    gemini_rate_limiter.wait()
+    """Gọi LLM với rate limiter (chỉ khi dùng Gemini) + retry-on-429 cho intent chain."""
+    provider = getattr(llm, "provider", None)
+    model_name = getattr(llm, "model_name", getattr(llm, "model", "unknown"))
+    openai_api_base = str(getattr(llm, "openai_api_base", ""))
+    
+    logger.debug("[intent_chain] LLM invocation start: provider=%s, model=%s", provider, model_name)
+    
+    # Task B3: Chỉ wait khi provider là Gemini API
+    is_gemini = (provider == "Gemini API") or ("generativelanguage.googleapis.com" in openai_api_base)
+    if is_gemini:
+        gemini_rate_limiter.wait()
+
     t0 = time.monotonic()
-    result = llm.invoke(prompt)
+    # Task B2: Bind max_tokens=300 cho intent chain (JSON ngắn)
+    llm_call = llm.bind(max_tokens=300) if hasattr(llm, "bind") else llm
+    result = llm_call.invoke(prompt)
     logger.debug("[intent_chain] llm.invoke took %.2fs", time.monotonic() - t0)
     return result
 

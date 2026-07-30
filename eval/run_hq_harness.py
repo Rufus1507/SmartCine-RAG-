@@ -19,7 +19,7 @@ if workspace_dir not in sys.path:
 from chatbot.data_loader import load_data, load_faiss_index, load_embedder_model, load_keyword_dict, load_aliases
 from chatbot.llm_client import get_llm_client
 from chatbot.chains.rag_chain import run_rag_pipeline
-from chatbot.config import LLM_BASE_URL, LLM_API_KEY, LLM_MODEL
+from chatbot.config import OLLAMA_BASE_URL, OLLAMA_API_KEY, OLLAMA_MODEL
 
 def main():
     print("🎬 Startup initialization...")
@@ -33,12 +33,12 @@ def main():
         faiss_index = load_faiss_index()
         embedder_model = load_embedder_model()
         
-        # Load local LLM client using same configuration logic as app startup
+        # Load Ollama LLM client
         llm = get_llm_client(
-            provider="Local LLM",
-            api_key=LLM_API_KEY,
-            model_name=LLM_MODEL,
-            base_url=LLM_BASE_URL
+            provider="Ollama Server",
+            api_key=OLLAMA_API_KEY,
+            model_name=OLLAMA_MODEL,
+            base_url=OLLAMA_BASE_URL
         )
         print(f"✔️ Initialization completed in {time.time() - start_init:.2f}s")
     except Exception as e:

@@ -318,8 +318,12 @@ def run_rag_pipeline(
                                     _support_count = 0
                                     for _, _sr in _shared.iterrows():
                                         _stars_list = str(_sr.get('stars', '')).split(',')
-                                        _stars_clean = [s.strip() for s in _stars_list]
-                                        if _stars_clean and _stars_clean[0].lower().startswith(collab_name.lower()[:8]):
+                                        _stars_clean = [s.strip() for s in _stars_list if s.strip()]
+                                        match_len = min(8, len(collab_name))
+                                        if _stars_clean and (
+                                            collab_name.lower() in _stars_clean[0].lower() or
+                                            _stars_clean[0].lower().startswith(collab_name.lower()[:match_len])
+                                        ):
                                             _lead_count += 1
                                         else:
                                             _support_count += 1
@@ -372,7 +376,7 @@ def run_rag_pipeline(
         filtered_df = pd.DataFrame()
 
     # 6. Sinh câu trả lời (Tầng 2 LLM)
-    answer_result = run_answer_chain(llm, user_input, filtered_df, intent, stream=stream, trace=trace)
+    answer_result = run_answer_chain(llm, user_input, filtered_df, intent, stream=stream, trace=trace, route_name=route_name)
     
     # Đóng gói route_name vào detected để trả về mà không làm gãy signature
     detected["route_name"] = route_name

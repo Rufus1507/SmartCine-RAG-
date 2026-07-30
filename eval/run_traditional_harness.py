@@ -18,7 +18,7 @@ def print(*args, **kwargs):
 
 from chatbot.data_loader import load_data, load_faiss_index, load_embedder_model
 from chatbot.llm_client import get_llm_client
-from chatbot.config import LLM_BASE_URL, LLM_API_KEY, LLM_MODEL
+from chatbot.config import OLLAMA_BASE_URL, OLLAMA_API_KEY, OLLAMA_MODEL
 from eval.traditional_rag import run_traditional_rag_pipeline
 
 import argparse
@@ -46,10 +46,10 @@ def main():
         
         # Load LLM client
         llm = get_llm_client(
-            provider="Local LLM",
-            api_key=LLM_API_KEY,
-            model_name=LLM_MODEL,
-            base_url=LLM_BASE_URL
+            provider="Ollama Server",
+            api_key=OLLAMA_API_KEY,
+            model_name=OLLAMA_MODEL,
+            base_url=OLLAMA_BASE_URL
         )
         print(f"✔️ Hoàn thành khởi tạo trong {time.time() - start_init:.2f}s")
     except Exception as e:
@@ -118,7 +118,8 @@ def main():
                     })
                     
             duration = time.time() - t_start
-            results.append({
+            print(f"   [{real_idx+1}/{len(all_questions)}] {q_id} hoàn thành trong {duration:.2f}s")
+            print(f"   💬 Câu trả lời từ LLM:\n{answer_result}\n")
                 "id": q_id,
                 "question": query,
                 "difficulty": q.get("difficulty"),
