@@ -242,16 +242,16 @@ def main():
 
     # Retrieval parameters
     st.sidebar.subheader("🔍 Tham số Retrieval")
-    top_k = st.sidebar.slider("Top K kết quả vector (Naive Retrieval):", min_value=1, max_value=10, value=5)
+    top_k = st.sidebar.slider("Top K kết quả ứng viên (Hybrid RAG):", min_value=1, max_value=30, value=20)
 
     st.sidebar.markdown("---")
     st.sidebar.subheader("📊 Thông tin Kiến trúc")
     st.sidebar.info(
-        "**Traditional Naive RAG**:\n"
-        "- Vectorize câu hỏi trực tiếp bằng SentenceTransformer.\n"
-        "- Cosine similarity trên FAISS index (`traditional_context.index`).\n"
-        "- Đưa trực tiếp Top-K context thô vào Prompt LLM.\n"
-        "- *Không* có Pandas Attribute Filtering, *Không* Graph RAG, *Không* BM25/Reranker."
+        "**Traditional Standard Hybrid RAG**:\n"
+        "- Vectorize câu hỏi bằng SentenceTransformer đa ngữ cảnh song ngữ.\n"
+        "- Hybrid Retrieval: FAISS FlatIP (Dense) ∪ BM25Okapi (Sparse Keyword) với RRF Rank Fusion.\n"
+        "- Đưa Top-K ứng viên đa thuộc tính đầy đủ vào Prompt cho LLM đánh giá.\n"
+        "- *Không* có Pandas Dynamic Code Exec, *Không* Graph RAG BFS."
     )
 
     # Initialize data & models

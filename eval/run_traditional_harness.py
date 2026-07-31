@@ -18,7 +18,11 @@ def print(*args, **kwargs):
 
 from chatbot.data_loader import load_data, load_faiss_index, load_embedder_model
 from chatbot.llm_client import get_llm_client
-from chatbot.config import OLLAMA_BASE_URL, OLLAMA_API_KEY, OLLAMA_MODEL
+from chatbot.config import (
+    OLLAMA_BASE_URL, OLLAMA_API_KEY, OLLAMA_MODEL,
+    LLM_BASE_URL, LLM_API_KEY, LLM_MODEL,
+    GEMINI_DEFAULT_KEY, GEMINI_DEFAULT_MODEL
+)
 from eval.traditional_rag import run_traditional_rag_pipeline
 
 import argparse
@@ -28,6 +32,9 @@ def main():
     parser.add_argument("--start", type=int, default=0, help="Index of question to start from (0-based)")
     parser.add_argument("--limit", type=int, default=None, help="Number of questions to run")
     parser.add_argument("--dry-run", action="store_true", help="Print questions without running")
+    parser.add_argument("--llm", type=str, default="local",
+                        choices=["local", "ollama", "gemini"],
+                        help="LLM provider: local (default), ollama, gemini")
     args = parser.parse_args()
 
     print("🎬 [Traditional RAG Harness] Khởi tạo hệ thống...")
@@ -44,13 +51,31 @@ def main():
         import faiss
         traditional_index = faiss.read_index(traditional_index_path)
         
-        # Load LLM client
-        llm = get_llm_client(
-            provider="Ollama Server",
-            api_key=OLLAMA_API_KEY,
-            model_name=OLLAMA_MODEL,
-            base_url=OLLAMA_BASE_URL
-        )
+        # Load LLM client theo provider được chỉ định
+        llm_provider = args.llm
+        if llm_provider == "ollama":
+            llm = get_llm_client(
+                provider="Ollama Server",
+                api_key=OLLAMA_API_KEY,
+                model_name=OLLAMA_MODEL,
+                base_url=OLLAMA_BASE_URL
+            )
+            print(f"🤖 LLM: Ollama ({OLLAMA_MODEL} @ {OLLAMA_BASE_URL})")
+        elif llm_provider == "gemini":
+            llm = get_llm_client(
+                provider="Gemini API",
+                api_key=GEMINI_DEFAULT_KEY,
+                model_name=GEMINI_DEFAULT_MODEL
+            )
+            print(f"🤖 LLM: Gemini ({GEMINI_DEFAULT_MODEL})")
+        else:  # local (default) — khớp với cấu hình benchmark gốc
+            llm = get_llm_client(
+                provider="Local LLM",
+                base_url=LLM_BASE_URL,
+                api_key=LLM_API_KEY,
+                model_name=LLM_MODEL
+            )
+            print(f"🤖 LLM: Local ({LLM_MODEL} @ {LLM_BASE_URL})")
         print(f"✔️ Hoàn thành khởi tạo trong {time.time() - start_init:.2f}s")
     except Exception as e:
         print(f"❌ Khởi tạo thất bại: {e}")
@@ -105,7 +130,7 @@ def main():
                 df=df,
                 index=traditional_index,
                 model=embedder_model,
-                top_k=5
+                top_k=20
             )
             
             movies = []
@@ -120,6 +145,7 @@ def main():
             duration = time.time() - t_start
             print(f"   [{real_idx+1}/{len(all_questions)}] {q_id} hoàn thành trong {duration:.2f}s")
             print(f"   💬 Câu trả lời từ LLM:\n{answer_result}\n")
+            results.append({
                 "id": q_id,
                 "question": query,
                 "difficulty": q.get("difficulty"),
@@ -128,7 +154,7 @@ def main():
                 "movies": movies,
                 "latency_s": round(duration, 2)
             })
-            print(f"   [{real_idx+1}/{len(all_questions)}] {q_id} hoàn thành trong {duration:.2f}s")
+
             
         except Exception as e:
             duration = time.time() - t_start

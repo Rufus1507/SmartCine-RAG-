@@ -11,10 +11,13 @@ RAG_SYSTEM = (
 
 RAG_USER_TEMPLATE = """Người dùng hỏi: "{input}"
 
-Danh sách phim tìm được:
+Danh sách phim ứng viên được tìm thấy:
 {movies_info}
 
-Hãy giới thiệu các phim này bằng tiếng Việt. Với mỗi phim, hãy đề cập đầy đủ các thông tin sau (nếu có trong dữ liệu):
+Hãy đọc kỹ câu hỏi của người dùng và danh sách các phim ứng viên ở trên:
+1. Đánh giá xem bộ phim nào thỏa mãn các điều kiện trong câu hỏi (ví dụ: thể loại, nội dung/chủ đề cốt truyện, năm phát hành, điểm IMDb, thời lượng, quốc gia sản xuất, giải thưởng).
+2. Giới thiệu các phim phù hợp nhất cho người dùng bằng tiếng Việt tự nhiên.
+3. Với mỗi phim được chọn giới thiệu, hãy liệt kê các thuộc tính có trong dữ liệu:
 - **Tên phim**
 - Năm phát hành
 - Quốc gia sản xuất
@@ -23,11 +26,12 @@ Hãy giới thiệu các phim này bằng tiếng Việt. Với mỗi phim, hãy
 - Thời lượng (phút)
 - Diễn viên chính
 - Điểm IMDb
-- Tóm tắt nội dung chi tiết (viết đầy đủ, không cắt ngắn)
-- Link IMDb: (PHẢI đưa vào nếu có trong dữ liệu, dạng markdown [Xem trên IMDb](url))
+- Tóm tắt nội dung chi tiết
+- Link IMDb (nếu có trong dữ liệu, dạng markdown [Xem trên IMDb](url))
 
-KHÔNG đưa vào output: Giải thưởng, Mã IMDb, số lượt bình chọn, meta score.
-Nếu thông tin nào không có trong dữ liệu thì bỏ qua hoàn toàn dòng đó (không viết "Không có")."""
+Lưu ý:
+- Nếu danh sách ứng viên có phim phù hợp với các tiêu chí trong câu hỏi, hãy trình bày rõ ràng các phim đó.
+- Nếu không có phim nào trong danh sách thỏa mãn đầy đủ các điều kiện cứng của người dùng, hãy giải thích lịch sự dựa trên dữ liệu được cung cấp."""
 
 AGGREGATION_SYSTEM = (
     "Bạn là trợ lý phim thân thiện. Trả lời bằng tiếng Việt, thân thiện và tự nhiên.\n"
